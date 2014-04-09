@@ -173,7 +173,12 @@ namespace TinySite.Models
                     var minute = match.Groups[5].Success ? Convert.ToInt32(match.Groups[5].Value, 10) : 0;
                     var second = match.Groups[6].Success ? Convert.ToInt32(match.Groups[6].Value, 10) : 0;
 
-                    this.Date = new DateTime(year, month, day, hour, minute, second);
+                    // If the parser didn't override the date, use the date from the filename.
+                    //
+                    if (!parser.Date.HasValue)
+                    {
+                        this.Date = new DateTime(year, month, day, hour, minute, second);
+                    }
 
                     fileName = fileName.Substring(match.Length);
 
