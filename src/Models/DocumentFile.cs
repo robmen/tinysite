@@ -79,6 +79,8 @@ namespace TinySite.Models
 
         public dynamic GetAsDynamic(bool selfRender)
         {
+            var now = DateTime.Now;
+
             dynamic data = new CaseInsenstiveExpando();
 
             this.Metadata.Assign(data as IDictionary<string, object>);
@@ -93,7 +95,13 @@ namespace TinySite.Models
             data.FullUrl = this.RootUrl.EnsureEndsWith("/") + this.Url.TrimStart('/');
             data.Draft = this.Draft;
             data.Date = this.Date;
+            data.DateUtc = this.Date.ToUniversalTime();
             data.FriendlyDate = this.Date.ToString("D");
+            data.StandardUtcDate = this.Date.ToUniversalTime().ToString("yyyy-MM-ddThh:mm:ssZ");
+            data.Now = now;
+            data.NowUtc = now.ToUniversalTime();
+            data.NowFriendlyDate = now.ToString("D");
+            data.NowStandardUtcDate = now.ToUniversalTime().ToString("yyyy-MM-ddThh:mm:ssZ");
             data.Content = selfRender ? null : this.Content;
             data.Summary = selfRender ? null : this.Summary;
 
