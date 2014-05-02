@@ -367,7 +367,12 @@ namespace TinySite.Models
         private string RenderContentForExtension(bool renderingSelf, string extension, string template, LayoutFile layout, Paginator paginator)
         {
             var engine = RenderingTransaction.Current.Engines[extension];
-            var data = new { site = RenderingTransaction.Current.Site.GetAsDynamic(), layout = layout.GetAsDynamic(), document = this.GetAsDynamic(renderingSelf), paginator };
+
+            dynamic data = new CaseInsenstiveExpando();
+            data.Site = RenderingTransaction.Current.Site.GetAsDynamic();
+            data.Layout = layout.GetAsDynamic();
+            data.Document = this.GetAsDynamic(renderingSelf);
+            data.Paginator = paginator == null ? null : paginator.GetAsDynamic();
 
             return engine.Render(template, data);
         }
