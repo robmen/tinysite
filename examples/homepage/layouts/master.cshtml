@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>@Model.Document.Title</title>
+</head>
+<body>
+  <h1><a href="@Model.Site.Url">@Model.Site.Title</a></h1>
+
+  <hr />
+
+  <div class="content">
+    @Raw(Model.Document.Content)
+  </div>
+
+  <hr />
+
+  <footer>
+    <p>Powered by <a href="http://github.com/robmen/tinysite">tinysite</a>.</p>
+  </footer>
+</body>
+</html>
