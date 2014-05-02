@@ -9,6 +9,7 @@ namespace TinySite.Rendering
         /// <summary>
         /// Renders the template with the provided data.
         /// </summary>
+        /// <param name="path">Path of template to render.</param>
         /// <param name="template">Template to render.</param>
         /// <param name="data">Data provided to template.</param>
         /// <returns>Rendered template content.</returns>
