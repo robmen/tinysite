@@ -13,7 +13,12 @@ namespace TinySite.Renderers
     {
         public string Render(string template, object data)
         {
+            string result = null;
+
             var config = new TemplateServiceConfiguration() { Resolver = new TemplateResolver() };
+
+            config.Namespaces.Add("System.IO");
+            config.Namespaces.Add("RazorEngine.Text");
 
             using (var service = new TemplateService(config))
             {
@@ -21,10 +26,20 @@ namespace TinySite.Renderers
 
                 var cacheName = template.GetHashCode().ToString();
 
-                var result = Razor.Parse(template, data, cacheName);
-
-                return result;
+                try
+                {
+                    result = Razor.Parse(template, data, cacheName);
+                }
+                catch (TemplateCompilationException e)
+                {
+                    foreach (var error in e.Errors)
+                    {
+                        Console.Error.WriteLine(error);
+                    }
+                }
             }
+
+            return result;
         }
 
         private class TemplateResolver : ITemplateResolver
