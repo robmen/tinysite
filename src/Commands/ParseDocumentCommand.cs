@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using TinySite.Models;
 
 namespace TinySite.Commands
@@ -23,17 +24,17 @@ namespace TinySite.Commands
 
         public MetadataCollection Metadata { get; private set; }
 
-        public void Execute()
+        public async Task ExecuteAsync()
         {
             this.Metadata = new MetadataCollection();
 
             string content;
             using (var reader = new StreamReader(this.DocumentPath))
             {
-                var line = ParseMetadataHeader(reader);
-
-                content = String.Concat(line, "\r\n", reader.ReadToEnd()).Trim();
+                content = await reader.ReadToEndAsync();
             }
+
+            content = ParseMetadataHeaderFromContent(content);
 
             //if (!String.IsNullOrEmpty(content) && !String.IsNullOrEmpty(this.SummaryMarker))
             //{
@@ -43,18 +44,23 @@ namespace TinySite.Commands
             this.Content = content;
         }
 
-        private string ParseMetadataHeader(StreamReader reader)
+        private string ParseMetadataHeaderFromContent(string content)
         {
+            var startOfLine = 0;
+            var endOfLine = -1;
             var preambleOpened = false;
             var preambleSkipped = false;
-            string line;
 
-            while ((line = reader.ReadLine()) != null)
+            while ((endOfLine = content.IndexOf("\n", startOfLine)) > 0)
             {
+                var line = content.Substring(startOfLine, endOfLine - startOfLine + 1).TrimEnd();
+
                 // Eat any blank lines or comments at the top of the document or in the header.
                 //
                 if (String.IsNullOrEmpty(line) || line.StartsWith(";") || line.StartsWith("//"))
                 {
+                    startOfLine = endOfLine + 1;
+
                     continue;
                 }
 
@@ -65,6 +71,8 @@ namespace TinySite.Commands
                         line = String.Empty;
                         break;
                     }
+
+                    startOfLine = endOfLine + 1;
 
                     preambleOpened = true;
                 }
@@ -109,10 +117,12 @@ namespace TinySite.Commands
                     {
                         break;
                     }
+
+                    startOfLine = endOfLine + 1;
                 }
             }
 
-            return line;
+            return content.Substring(startOfLine).TrimEnd();
         }
 
         private DateTime? ParseDateTimeSmarter(string value)

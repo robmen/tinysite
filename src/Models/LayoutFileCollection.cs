@@ -5,16 +5,12 @@ namespace TinySite.Models
 {
     public class LayoutFileCollection : KeyedCollection<string, LayoutFile>
     {
-        public static LayoutFileCollection Create(IEnumerable<LayoutFile> layouts)
+        public LayoutFileCollection(IEnumerable<LayoutFile> layouts)
         {
-            var collection = new LayoutFileCollection();
-
             foreach (var layout in layouts)
             {
-                collection.Add(layout);
+                this.Add(layout);
             }
-
-            return collection;
         }
 
         protected override string GetKeyForItem(LayoutFile item)

@@ -45,10 +45,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LoadLayoutsCommandFixture.cs" />
+    <Compile Include="ParseDocumentCommandFixture.cs" />
     <Compile Include="SiteFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="data\documents\draft.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\documents\nometa.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\layouts\master.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="data\site.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

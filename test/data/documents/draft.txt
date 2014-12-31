@@ -1,0 +1,4 @@
+﻿draft: true
+
+This is a draft.
+   It has metadata.

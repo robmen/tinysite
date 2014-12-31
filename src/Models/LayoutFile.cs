@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
-using TinySite.Commands;
 using TinySite.Extensions;
 
 namespace TinySite.Models
 {
     public class LayoutFile
     {
-        public LayoutFile(string path, string rootPath)
+        public LayoutFile(string path, string rootPath, string content, MetadataCollection metadata)
         {
             this.SourcePath = Path.GetFullPath(path);
 
@@ -22,6 +20,10 @@ namespace TinySite.Models
             var info = new FileInfo(this.SourcePath);
 
             this.Modified = info.LastWriteTime < info.CreationTime ? info.CreationTime : info.LastWriteTime;
+
+            this.Content = content;
+
+            this.Metadata = metadata;
         }
 
         public string Id { get; private set; }
@@ -35,17 +37,6 @@ namespace TinySite.Models
         public string Content { get; private set; }
 
         public MetadataCollection Metadata { get; private set; }
-
-        public void Load()
-        {
-            var parser = new ParseDocumentCommand();
-            parser.DocumentPath = this.SourcePath;
-            parser.Execute();
-
-            this.Content = parser.Content;
-
-            this.Metadata = parser.Metadata;
-        }
 
         public dynamic GetAsDynamic()
         {

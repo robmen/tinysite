@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using TinySite.Commands;
 using TinySite.Models;
 using TinySite.Services;
@@ -14,10 +15,6 @@ namespace TinySite
         {
             Statistics.Current = new Statistics();
         }
-
-        public IDictionary<string, RenderingEngine> Engines { get; set; }
-
-        public Site Site { get; set; }
 
         public static int Main(string[] args)
         {
@@ -43,7 +40,7 @@ namespace TinySite
 
                 using (var capture = Statistics.Current.Start(StatisticTiming.Overall))
                 {
-                    program.Run(commandLine);
+                    program.Run(commandLine).Wait(); // technically Wait() is not the correct thing to use with async.
                 }
 
                 Statistics.Current.Report();
@@ -57,19 +54,17 @@ namespace TinySite
             return 0;
         }
 
-        public void Run(CommandLine commandLine)
+        public async Task Run(CommandLine commandLine)
         {
-            // Load the engines and configuration.
-            //
-            var config = LoadConfiguration(commandLine);
+            var engines = RenderingEngine.Load();
 
             // Load the site documents.
             //
-            this.LoadSite(config);
+            var site = await this.LoadSite(commandLine.SitePath, commandLine.OutputPath, engines.Keys);
 
             // Paginate the documents.
             //
-            this.PaginateDocuments();
+            this.PaginateDocuments(site);
 
             // TODO: do any other sweeping updates to the documents here.
 
@@ -78,56 +73,88 @@ namespace TinySite
             //
             // Render the documents.
             //
-            this.RenderDocuments();
+            this.RenderDocuments(site, engines);
         }
 
-        private SiteConfig LoadConfiguration(CommandLine commandLine)
+        private async Task<Site> LoadSite(string sitePath, string outputPath, IEnumerable<string> renderedExtensions)
         {
+            Site site;
+
+            SiteConfig config;
+
             using (var capture = Statistics.Current.Start(StatisticTiming.LoadedConfiguration))
             {
-                this.Engines = RenderingEngine.Load();
-
-                var config = SiteConfig.Load(Path.Combine(commandLine.SitePath, "site.config"));
-
-                config.OutputPath = String.IsNullOrEmpty(commandLine.OutputPath) ? Path.GetFullPath(config.OutputPath) : Path.GetFullPath(commandLine.OutputPath);
-
-                return config;
+                var command = new LoadSiteConfigCommand();
+                command.ConfigPath = Path.Combine(sitePath, "site.config");
+                command.OutputPath = outputPath;
+                config = await command.ExecuteAsync();
             }
-        }
 
-        private void LoadSite(SiteConfig config)
-        {
             using (var capture = Statistics.Current.Start(StatisticTiming.LoadedSite))
             {
-                this.Site = Site.Load(config, this.Engines.Keys);
+                // Load documents.
+                IEnumerable<DocumentFile> documents;
+                {
+                    var load = new LoadDocumentsCommand();
+                    load.Author = config.Author;
+                    load.OutputPath = config.OutputPath;
+                    load.RenderedExtensions = renderedExtensions;
+                    load.DocumentsPath = config.DocumentsPath;
+                    load.RootUrl = config.RootUrl;
+                    load.Url = config.Url;
+                    documents = await load.ExecuteAsync();
+                }
+
+                // Load files.
+                IEnumerable<StaticFile> files;
+                {
+                    var load = new LoadFilesCommand();
+                    load.OutputPath = config.OutputPath;
+                    load.FilesPath = config.FilesPath;
+                    load.RootUrl = config.RootUrl;
+                    load.Url = config.Url;
+                    files = load.Execute();
+                }
+
+                // Load layouts.
+                IEnumerable<LayoutFile> layouts;
+                {
+                    var load = new LoadLayoutsCommand();
+                    load.LayoutsPath = config.LayoutsPath;
+                    layouts = await load.ExecuteAsync();
+                }
+
+                site = new Site(config, documents, files, layouts);
             }
 
-            Statistics.Current.SiteFiles = this.Site.Documents.Count() + this.Site.Files.Count() + this.Site.Layouts.Count();
+            Statistics.Current.SiteFiles = site.Documents.Count + site.Files.Count + site.Layouts.Count;
+
+            return site;
         }
 
-        private void PaginateDocuments()
+        private void PaginateDocuments(Site site)
         {
             using (var capture = Statistics.Current.Start(StatisticTiming.Pagination))
             {
                 var paginate = new PaginateCommand();
-                paginate.RootUrl = this.Site.Url;
-                paginate.Documents = this.Site.Documents;
+                paginate.RootUrl = site.Url;
+                paginate.Documents = site.Documents;
                 paginate.Execute();
 
                 foreach (var doc in paginate.PagedDocuments)
                 {
-                    this.Site.Documents.Add(doc);
+                    site.Documents.Add(doc);
 
                     ++Statistics.Current.PagedFiles;
                 }
             }
         }
 
-        private void RenderDocuments()
+        private void RenderDocuments(Site site, IDictionary<string, RenderingEngine> engines)
         {
             using (var capture = Statistics.Current.Start(StatisticTiming.Rendered))
             {
-                var render = new RenderCommand() { Engines = this.Engines, Site = this.Site };
+                var render = new RenderCommand() { Engines = engines, Site = site };
                 render.Execute();
             }
         }

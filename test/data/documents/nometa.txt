@@ -1,0 +1,2 @@
+﻿This is text.
+   It has no metadata.

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TinySite.Models
 {
-    public class MetadataCollection // : IEnumerable<KeyValuePair<string, object>>
+    public class MetadataCollection : IEnumerable<KeyValuePair<string, object>>
     {
         public MetadataCollection()
         {
@@ -56,7 +56,6 @@ namespace TinySite.Models
             }
         }
 
-
         public void Overwrite(string key, object value)
         {
             this.Dictionary[key] = value;
@@ -67,14 +66,14 @@ namespace TinySite.Models
             return this.Dictionary.Remove(key);
         }
 
-        //public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
-        //{
-        //    return this.Dictionary.GetEnumerator();
-        //}
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
+        {
+            return this.Dictionary.GetEnumerator();
+        }
 
-        //IEnumerator IEnumerable.GetEnumerator()
-        //{
-        //    return this.Dictionary.GetEnumerator();
-        //}
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return this.Dictionary.GetEnumerator();
+        }
     }
 }

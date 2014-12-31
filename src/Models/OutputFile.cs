@@ -46,21 +46,21 @@ namespace TinySite.Models
             this.Rendering = original.Rendering;
         }
 
-        public DateTime Modified { get; protected set; }
+        public DateTime Modified { get; set; }
 
-        public string OutputPath { get; protected set; }
+        public string OutputPath { get; set; }
 
         public string OutputRootPath { get; set; }
 
-        public string RelativePath { get; protected set; }
+        public string RelativePath { get; set; }
 
-        public string RelativeSourcePath { get; protected set; }
+        public string RelativeSourcePath { get; set; }
 
-        public string SourcePath { get; protected set; }
+        public string SourcePath { get; set; }
 
-        public string Url { get; protected set; }
+        public string Url { get; set; }
 
-        public string RootUrl { get; protected set; }
+        public string RootUrl { get; set; }
 
         public string Content
         {
@@ -74,7 +74,7 @@ namespace TinySite.Models
                 return _content;
             }
 
-            protected set
+            set
             {
                 this.Rendered = false;
                 _content = value;

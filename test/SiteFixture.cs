@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using TinySite.Commands;
 using TinySite.Models;
 using Xunit;
 
@@ -14,7 +15,9 @@ namespace RobMensching.TinySite.Test
             //TimeZoneInfo tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
             var dataFolder = Path.GetFullPath(@"data\");
 
-            var config = SiteConfig.Load(dataFolder + "site.config");
+            var command = new LoadSiteConfigCommand() { ConfigPath = dataFolder + "site.config" };
+            var config = command.ExecuteAsync().Result;
+
             Assert.Empty(config.SubsiteConfigs);
             Assert.Equal(dataFolder + @"build\here\", config.OutputPath);
             //Assert.Equal(tzi, config.TimeZone);
@@ -26,7 +29,9 @@ namespace RobMensching.TinySite.Test
             TimeZoneInfo tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
             var dataFolder = Path.GetFullPath(@"data\");
 
-            var config = SiteConfig.Load(dataFolder + "parent.config");
+            var command = new LoadSiteConfigCommand() { ConfigPath = dataFolder + "parent.config" };
+            var config = command.ExecuteAsync().Result;
+
             Assert.Equal(dataFolder + @"parent_build\", config.OutputPath);
             Assert.NotEmpty(config.SubsiteConfigs);
             Assert.Equal(1, config.SubsiteConfigs.Length);
@@ -39,9 +44,13 @@ namespace RobMensching.TinySite.Test
         [Fact]
         public void CanGetDefaultUrlFromData()
         {
-            var config = SiteConfig.Load("data\\site.config");
-            //var data = config.GetAsDyamic();
-            //Assert.Equal("/", data.Url);
+            var command = new LoadSiteConfigCommand() { ConfigPath = "data\\site.config" };
+            var config = command.ExecuteAsync().Result;
+            var site = new Site(config, Enumerable.Empty<DocumentFile>(), Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
+
+            var data = site.GetAsDynamic();
+
+            Assert.Equal("/blog/", data.Url);
         }
 
         //[Fact]
@@ -82,8 +91,10 @@ namespace RobMensching.TinySite.Test
         [Fact]
         public void CanGetTitle()
         {
-            var config = SiteConfig.Load("data\\site.config");
-            var site = Site.Load(config, Enumerable.Empty<string>());
+            var command = new LoadSiteConfigCommand() { ConfigPath = "data\\site.config" };
+            var config = command.ExecuteAsync().Result;
+
+            var site = new Site(config, Enumerable.Empty<DocumentFile>(), Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
 
             var data = site.GetAsDynamic();
 
