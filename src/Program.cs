@@ -36,6 +36,8 @@ namespace TinySite
             //
             try
             {
+                Console.WriteLine("Processing site: {0}", Path.GetFullPath(commandLine.SitePath));
+
                 var program = new Program();
 
                 using (var capture = Statistics.Current.Start(StatisticTiming.Overall))
@@ -60,11 +62,11 @@ namespace TinySite
 
             // Load the site documents.
             //
-            var site = await this.LoadSite(commandLine.SitePath, commandLine.OutputPath, engines.Keys);
+            var site = await this.Load(commandLine.SitePath, commandLine.OutputPath, engines.Keys);
 
             // Paginate the documents.
             //
-            this.PaginateDocuments(site);
+            this.Paginate(site);
 
             // TODO: do any other sweeping updates to the documents here.
 
@@ -73,10 +75,10 @@ namespace TinySite
             //
             // Render the documents.
             //
-            this.RenderDocuments(site, engines);
+            await this.Render(site, engines);
         }
 
-        private async Task<Site> LoadSite(string sitePath, string outputPath, IEnumerable<string> renderedExtensions)
+        private async Task<Site> Load(string sitePath, string outputPath, IEnumerable<string> renderedExtensions)
         {
             Site site;
 
@@ -132,7 +134,7 @@ namespace TinySite
             return site;
         }
 
-        private void PaginateDocuments(Site site)
+        private void Paginate(Site site)
         {
             using (var capture = Statistics.Current.Start(StatisticTiming.Pagination))
             {
@@ -150,12 +152,33 @@ namespace TinySite
             }
         }
 
-        private void RenderDocuments(Site site, IDictionary<string, RenderingEngine> engines)
+        private async Task Render(Site site, IDictionary<string, RenderingEngine> engines)
         {
-            using (var capture = Statistics.Current.Start(StatisticTiming.Rendered))
+            using (var rendering = Statistics.Current.Start(StatisticTiming.Rendered))
             {
-                var render = new RenderCommand() { Engines = engines, Site = site };
-                render.Execute();
+                using (var capture = Statistics.Current.Start(StatisticTiming.RenderDocuments))
+                {
+                    var render = new RenderDocumentsCommand() { Engines = engines, Site = site };
+                    render.Execute();
+
+                    Statistics.Current.RenderedDocuments = render.RenderedDocuments;
+                }
+
+                using (var capture = Statistics.Current.Start(StatisticTiming.WriteDocuments))
+                {
+                    var write = new WriteDocumentsCommand() { Documents = site.Documents };
+                    await write.ExecuteAsync();
+
+                    Statistics.Current.WroteDocuments = write.WroteDocuments;
+                }
+
+                using (var capture = Statistics.Current.Start(StatisticTiming.CopyStaticFiles))
+                {
+                    var copy = new CopyStaticFilesCommand() { Files = site.Files };
+                    await copy.ExecuteAsync();
+
+                    Statistics.Current.CopiedFiles = copy.CopiedFiles;
+                }
             }
         }
     }
