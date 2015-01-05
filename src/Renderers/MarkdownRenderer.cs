@@ -16,9 +16,12 @@ namespace TinySite.Renderers
 
         public string Render(string template, object data)
         {
-            var result = this.MarkdownEngine.Transform(template).Trim();
+            lock (this.MarkdownEngine)
+            {
+                var result = this.MarkdownEngine.Transform(template).Trim();
 
-            return result;
+                return result;
+            }
         }
     }
 }
