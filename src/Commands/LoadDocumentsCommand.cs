@@ -166,20 +166,7 @@ namespace TinySite.Commands
             //
             if (!String.IsNullOrEmpty(updateFileName) || !String.IsNullOrEmpty(updateInPath))
             {
-                if (String.IsNullOrEmpty(updateFileName))
-                {
-                    updateFileName = fileName;
-                }
-
-                var updateInUrl = String.IsNullOrEmpty(updateInPath) ? String.Empty : updateInPath.Replace('\\', '/') + '/';
-
-                documentFile.RelativePath = Path.Combine(Path.GetDirectoryName(documentFile.RelativePath), updateInPath, updateFileName);
-
-                documentFile.OutputPath = Path.Combine(Path.GetDirectoryName(documentFile.OutputPath), updateInPath, updateFileName);
-
-                var lastSlash = documentFile.Url.LastIndexOf('/');
-
-                documentFile.Url = String.Concat(documentFile.Url.Substring(0, lastSlash + 1), updateInUrl, updateFileName.Equals("index.html", StringComparison.OrdinalIgnoreCase) ? String.Empty : updateFileName);
+                documentFile.UpdateOutputPaths(updateInPath, updateFileName);
             }
 
             return documentFile;
