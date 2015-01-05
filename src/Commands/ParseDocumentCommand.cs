@@ -64,19 +64,32 @@ namespace TinySite.Commands
                     continue;
                 }
 
+                // If start or end of header.
                 if (line.Equals("---"))
                 {
+                    startOfLine = endOfLine + 1;
+
                     if (preambleOpened || preambleSkipped)
                     {
-                        line = String.Empty;
+                        // Eat any blank lines after the preamble.
+                        while ((endOfLine = content.IndexOf("\n", startOfLine)) > 0)
+                        {
+                            line = content.Substring(startOfLine, endOfLine - startOfLine + 1).TrimEnd();
+
+                            if (!String.IsNullOrEmpty(line))
+                            {
+                                break;
+                            }
+
+                            startOfLine = endOfLine + 1;
+                        }
+
                         break;
                     }
 
-                    startOfLine = endOfLine + 1;
-
                     preambleOpened = true;
                 }
-                else
+                else // try to parse for metadata.
                 {
                     var match = MetadataKeyValue.Match(line);
                     if (match.Success)
@@ -113,7 +126,7 @@ namespace TinySite.Commands
                                 break;
                         }
                     }
-                    else if (!preambleOpened) // no preamble, non-matches mean we're done with the header.
+                    else if (!preambleOpened) // no preamble and not metadata means we're done with the header.
                     {
                         break;
                     }

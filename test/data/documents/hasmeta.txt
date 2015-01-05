@@ -1,0 +1,6 @@
+﻿---
+title: Title from the metadata.
+---
+
+This is text.
+   It has title metadata.

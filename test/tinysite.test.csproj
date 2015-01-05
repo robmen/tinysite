@@ -54,6 +54,9 @@
     <Content Include="data\documents\draft.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="data\documents\hasmeta.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="data\documents\nometa.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

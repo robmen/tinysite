@@ -23,6 +23,22 @@ namespace RobMensching.TinySite.Test
         }
 
         [Fact]
+        public void CanParseMetadata()
+        {
+            var path = Path.GetFullPath(@"data\documents\hasmeta.txt");
+            string expected = "This is text.\r\n   It has title metadata.";
+
+            var command = new ParseDocumentCommand();
+            command.DocumentPath = path;
+            command.ExecuteAsync().Wait();
+
+            Assert.Null(command.Date);
+            Assert.NotEmpty(command.Metadata);
+            Assert.Equal("Title from the metadata.", command.Metadata.Get<string>("title"));
+            Assert.Equal(expected, command.Content);
+        }
+
+        [Fact]
         public void CanParseDraft()
         {
             var path = Path.GetFullPath(@"data\documents\draft.txt");
