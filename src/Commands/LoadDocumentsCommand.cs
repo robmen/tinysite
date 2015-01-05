@@ -177,9 +177,9 @@ namespace TinySite.Commands
 
                 documentFile.OutputPath = Path.Combine(Path.GetDirectoryName(documentFile.OutputPath), updateInPath, updateFileName);
 
-                var lastSlash = this.Url.LastIndexOf('/');
+                var lastSlash = documentFile.Url.LastIndexOf('/');
 
-                documentFile.Url = String.Concat(this.Url.Substring(0, lastSlash + 1), updateInUrl, updateFileName.Equals("index.html", StringComparison.OrdinalIgnoreCase) ? String.Empty : updateFileName);
+                documentFile.Url = String.Concat(documentFile.Url.Substring(0, lastSlash + 1), updateInUrl, updateFileName.Equals("index.html", StringComparison.OrdinalIgnoreCase) ? String.Empty : updateFileName);
             }
 
             return documentFile;
