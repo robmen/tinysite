@@ -17,6 +17,7 @@ namespace TinySite.Commands
         {
             var dupes = new List<DocumentFile>();
 
+            // TODO: this needs to be replaced with a more general purpose query mechanism.
             var pagedPosts = this.Documents.Where(d => d.RelativeSourcePath.StartsWith(@"documents\posts\", StringComparison.OrdinalIgnoreCase)).ToList();
             var count = pagedPosts.Count();
 
@@ -50,11 +51,11 @@ namespace TinySite.Commands
             this.PagedDocuments = dupes;
         }
 
-        private Paginator CreatePaginator(int page, int perPage, int pages, string format, IEnumerable<DocumentFile> posts)
+        private Paginator CreatePaginator(int page, int perPage, int pages, string format, IEnumerable<DocumentFile> documents)
         {
             var paginator = new Paginator();
 
-            paginator.Posts = posts.OrderByDescending(d => d.Date).Skip((page - 1) * perPage).Take(perPage).Select(p => p.GetAsDynamic(false));
+            paginator.Documents = documents.OrderByDescending(d => d.Date).Skip((page - 1) * perPage).Take(perPage).Select(d => d.GetAsDynamic(false));
 
             if (pages > 1 && !String.IsNullOrEmpty(format))
             {

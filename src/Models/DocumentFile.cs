@@ -133,7 +133,7 @@ namespace TinySite.Models
         {
             if (RenderingTransaction.Current == null)
             {
-                throw new InvalidOperationException("Rendering a document's content can only occur inside a rendering transaction. Create a rendering transaction and the operation again.");
+                throw new InvalidOperationException("Rendering a document's content can only occur inside a rendering transaction. Create a rendering transaction and try the operation again.");
             }
 
             if (this.Rendered)
