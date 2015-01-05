@@ -7,7 +7,7 @@ namespace TinySite.Models
 {
     public class LayoutFile
     {
-        public LayoutFile(string path, string rootPath, string content, MetadataCollection metadata)
+        public LayoutFile(string path, string rootPath, string sourceContent, MetadataCollection metadata)
         {
             this.SourcePath = Path.GetFullPath(path);
 
@@ -21,7 +21,7 @@ namespace TinySite.Models
 
             this.Modified = info.LastWriteTime < info.CreationTime ? info.CreationTime : info.LastWriteTime;
 
-            this.Content = content;
+            this.SourceContent = sourceContent;
 
             this.Metadata = metadata;
         }
@@ -34,7 +34,7 @@ namespace TinySite.Models
 
         public string SourcePath { get; private set; }
 
-        public string Content { get; private set; }
+        public string SourceContent { get; private set; }
 
         public MetadataCollection Metadata { get; private set; }
 
@@ -48,7 +48,7 @@ namespace TinySite.Models
             data.Modified = this.Modified;
             data.Path = this.SourcePath;
             data.Name = Path.GetFileName(this.SourcePath);
-            data.Content = this.Content;
+            data.SourceContent = this.SourceContent;
 
             return data;
         }

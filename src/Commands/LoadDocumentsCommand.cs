@@ -55,7 +55,7 @@ namespace TinySite.Commands
 
             var documentFile = new DocumentFile(file, this.DocumentsPath, this.OutputPath, this.Url, this.RootUrl, this.Author);
 
-            documentFile.Content = parser.Content;
+            documentFile.SourceContent = parser.Content;
 
             if (parser.Date.HasValue)
             {

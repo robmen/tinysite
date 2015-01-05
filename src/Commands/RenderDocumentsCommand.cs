@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
+using TinySite.Extensions;
 using TinySite.Models;
 using TinySite.Services;
 
@@ -19,29 +20,92 @@ namespace TinySite.Commands
         {
             using (var tx = new RenderingTransaction(this.Engines, this.Site))
             {
-                // TODO: Eventually skip documents that are up to date and don't need to be rendered again.
+                var renderedDocuments = this.Site.Documents
+                    .Where(d => !d.Draft)
+                    .AsParallel()
+                    .Select(this.RenderDocument)
+                    .ToList();
 
-                // TODO: do not enable parallel render until we sort out how to get the document summary
-                //       always set correctly when rendering in parallel.
-                //Statistics.Current.RenderedDocuments = this.Site.Documents
-                //    .Where(d => !d.Draft)
-                //    .AsParallel()
-                //    .Select(
-                //        document =>
-                //        {
-                //            document.RenderDocument();
-
-                //            return document;
-                //        })
-                //    .Count();
-
-                foreach (var document in this.Site.Documents.Where(d => !d.Draft))
+                foreach (var document in renderedDocuments)
                 {
-                    document.RenderDocument();
+                    var layoutName = document.Metadata.Get<string>("layout", "default");
 
-                    ++this.RenderedDocuments;
+                    var layout = this.Site.Layouts[layoutName];
+
+                    document.RenderedContent = this.RenderDocumentContentUsingLayout(document, document.Content, layout);
+
+                    document.Rendered = true;
                 }
+
+                this.RenderedDocuments = renderedDocuments.Count();
             }
+        }
+
+        private DocumentFile RenderDocument(DocumentFile document)
+        {
+            var content = document.SourceContent;
+
+            var layoutName = document.Metadata.Get<string>("layout", "default");
+
+            var layout = this.Site.Layouts[layoutName];
+
+            foreach (var extension in document.ExtensionsForRendering)
+            {
+                content = this.RenderContentForExtension(content, extension, document, content, layout);
+            }
+
+            document.Content = content;
+
+            if (String.IsNullOrEmpty(document.Summary) && !String.IsNullOrEmpty(document.Content))
+            {
+                document.Summary = Summarize(document.Content);
+            }
+
+            return document;
+        }
+
+        private string RenderContentForExtension(string content, string extension, DocumentFile document, string documentContent, LayoutFile layout)
+        {
+            var engine = this.Engines[extension];
+
+            var paginator = document.Metadata.Get<Paginator>("paginator");
+
+            dynamic data = new CaseInsenstiveExpando();
+            data.Site = this.Site.GetAsDynamic();
+            data.Layout = layout == null ? null : layout.GetAsDynamic();
+            data.Document = document.GetAsDynamic(documentContent);
+            data.Paginator = paginator == null ? null : paginator.GetAsDynamic();
+
+            return engine.Render(content, data);
+        }
+
+        private string RenderDocumentContentUsingLayout(DocumentFile document, string documentContent, LayoutFile layout)
+        {
+            var content = this.RenderContentForExtension(layout.SourceContent, layout.Extension, document, documentContent, layout);
+
+            string parentLayoutName;
+
+            if (layout.Metadata.TryGet<string>("layout", out parentLayoutName))
+            {
+                var parentLayout = this.Site.Layouts[parentLayoutName];
+
+                content = this.RenderDocumentContentUsingLayout(document, content, parentLayout);
+            }
+
+            return content;
+        }
+
+        private static string Summarize(string content)
+        {
+            string summary = null;
+
+            Match match = Regex.Match(content, "<p>.*?</p>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            if (match.Success && match.Value != content)
+            {
+                summary = match.Value;
+            }
+
+            return summary;
         }
     }
 }

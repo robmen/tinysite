@@ -27,7 +27,7 @@ namespace TinySite.Commands
 
                     Directory.CreateDirectory(folder);
 
-                    var utf8 = Encoding.UTF8.GetBytes(document.Content);
+                    var utf8 = Encoding.UTF8.GetBytes(document.RenderedContent);
 
                     var writer = File.Open(document.OutputPath, FileMode.Create, FileAccess.Write, FileShare.Read | FileShare.Delete);
 

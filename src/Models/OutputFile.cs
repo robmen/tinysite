@@ -6,8 +6,6 @@ namespace TinySite.Models
 {
     public abstract class OutputFile
     {
-        private string _content;
-
         public OutputFile(string path, string rootPath, string outputRootPath, string relativeUrl, string rootUrl)
         {
             var actualRootPath = Path.GetDirectoryName(rootPath.TrimEnd('\\'));
@@ -35,15 +33,12 @@ namespace TinySite.Models
         {
             this.Modified = original.Modified;
             this.OutputPath = original.OutputPath;
+            this.OutputRootPath = original.OutputRootPath;
             this.RelativePath = original.RelativePath;
             this.RelativeSourcePath = original.RelativeSourcePath;
             this.SourcePath = original.SourcePath;
             this.Url = original.Url;
             this.RootUrl = original.RootUrl;
-
-            this._content = original._content;
-            this.Rendered = original.Rendered;
-            this.Rendering = original.Rendering;
         }
 
         public DateTime Modified { get; set; }
@@ -61,39 +56,5 @@ namespace TinySite.Models
         public string Url { get; set; }
 
         public string RootUrl { get; set; }
-
-        public string Content
-        {
-            get
-            {
-                if (!this.Rendered && !this.Rendering)
-                {
-                    this.RenderContent();
-                }
-
-                return _content;
-            }
-
-            set
-            {
-                this.Rendered = false;
-                _content = value;
-            }
-        }
-
-        public bool Rendered { get; private set; }
-
-        public bool Rendering { get; private set; }
-
-        protected virtual void RenderContent()
-        {
-            this.Rendered = true;
-            this.Rendering = false;
-        }
-
-        protected void StartRendering()
-        {
-            this.Rendering = true;
-        }
     }
 }

@@ -55,7 +55,9 @@ namespace TinySite.Commands
         {
             var paginator = new Paginator();
 
-            paginator.Documents = documents.OrderByDescending(d => d.Date).Skip((page - 1) * perPage).Take(perPage).Select(d => d.GetAsDynamic(false));
+            // It is important that this query is not executed here (aka: do not add ToList() or ToArray()). This
+            // query should be executed by the rendering engine so the returned documents are rendered first.
+            paginator.Documents = documents.OrderByDescending(d => d.Date).Skip((page - 1) * perPage).Take(perPage).Select(d => d.GetAsDynamic());
 
             if (pages > 1 && !String.IsNullOrEmpty(format))
             {

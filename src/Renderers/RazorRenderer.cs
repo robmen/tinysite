@@ -57,7 +57,7 @@ namespace TinySite.Renderers
                     // TODO: throw new exception.
                 }
 
-                return layout.Content;
+                return layout.SourceContent;
             }
         }
     }
