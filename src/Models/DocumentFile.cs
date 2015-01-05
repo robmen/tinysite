@@ -150,7 +150,7 @@ namespace TinySite.Models
 
                 base.StartRendering();
 
-                var layoutName = this.Metadata.Get<string>("layout", "post");
+                var layoutName = this.Metadata.Get<string>("layout", "default");
 
                 var layout = RenderingTransaction.Current.Layouts[layoutName];
 
