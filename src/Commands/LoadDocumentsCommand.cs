@@ -11,6 +11,7 @@ namespace TinySite.Commands
     public class LoadDocumentsCommand
     {
         private static readonly Regex DateFromFileName = new Regex(@"^\s*(?<year>\d{4})-(?<month>\d{1,2})-(?<day>\d{1,2})([Tt@](?<hour>\d{1,2})\.(?<minute>\d{1,2})(\.(?<second>\d{1,2}))?)?[-\s]\s*", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+        private static readonly Regex OrderFromFileName = new Regex(@"^\s*(?<order>\d+)\.[-\s]\s*", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
         public string DocumentsPath { private get; set; }
 
@@ -39,7 +40,7 @@ namespace TinySite.Commands
             {
                 foreach (var path in Directory.GetFiles(this.DocumentsPath, "*", SearchOption.AllDirectories))
                 {
-                    yield return this.LoadDocumentAsync(path, LoadDocumentFlags.DateFromFileName | LoadDocumentFlags.DateInPath | LoadDocumentFlags.CleanUrls, this.RenderedExtensions);
+                    yield return this.LoadDocumentAsync(path, LoadDocumentFlags.DateFromFileName | LoadDocumentFlags.DateInPath | LoadDocumentFlags.OrderFromFileName | LoadDocumentFlags.CleanUrls, this.RenderedExtensions);
                 }
             }
         }
@@ -63,6 +64,8 @@ namespace TinySite.Commands
             }
 
             documentFile.Draft = (parser.Draft || documentFile.Date > DateTime.Now);
+
+            documentFile.Order = parser.Metadata.Get<int>("order", 0);
 
             documentFile.Paginate = parser.Metadata.Get<int>("paginate", 0);
             parser.Metadata.Remove("paginate");
@@ -112,18 +115,39 @@ namespace TinySite.Commands
 
                 if (match.Success)
                 {
-                    var year = Convert.ToInt32(match.Groups[1].Value, 10);
-                    var month = Convert.ToInt32(match.Groups[2].Value, 10);
-                    var day = Convert.ToInt32(match.Groups[3].Value, 10);
-                    var hour = match.Groups[4].Success ? Convert.ToInt32(match.Groups[4].Value, 10) : 0;
-                    var minute = match.Groups[5].Success ? Convert.ToInt32(match.Groups[5].Value, 10) : 0;
-                    var second = match.Groups[6].Success ? Convert.ToInt32(match.Groups[6].Value, 10) : 0;
-
                     // If the parser didn't override the date, use the date from the filename.
                     //
                     if (!parser.Date.HasValue)
                     {
+                        var year = Convert.ToInt32(match.Groups[1].Value, 10);
+                        var month = Convert.ToInt32(match.Groups[2].Value, 10);
+                        var day = Convert.ToInt32(match.Groups[3].Value, 10);
+                        var hour = match.Groups[4].Success ? Convert.ToInt32(match.Groups[4].Value, 10) : 0;
+                        var minute = match.Groups[5].Success ? Convert.ToInt32(match.Groups[5].Value, 10) : 0;
+                        var second = match.Groups[6].Success ? Convert.ToInt32(match.Groups[6].Value, 10) : 0;
+
                         documentFile.Date = new DateTime(year, month, day, hour, minute, second);
+                    }
+
+                    fileName = fileName.Substring(match.Length);
+
+                    updateFileName = fileName;
+                }
+            }
+
+            if (LoadDocumentFlags.OrderFromFileName == (flags & LoadDocumentFlags.OrderFromFileName))
+            {
+                var match = OrderFromFileName.Match(fileName);
+
+                if (match.Success)
+                {
+                    var order = Convert.ToInt32(match.Groups[1].Value, 10);
+
+                    // If the parser didn't override the order, use the order from the filename.
+                    //
+                    if (documentFile.Order == 0)
+                    {
+                        documentFile.Order = order;
                     }
 
                     fileName = fileName.Substring(match.Length);

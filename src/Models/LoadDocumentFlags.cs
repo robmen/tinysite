@@ -9,5 +9,6 @@ namespace TinySite.Models
         CleanUrls = 0x1,
         DateFromFileName = 0x2,
         DateInPath = 0x4,
+        OrderFromFileName = 0x8,
     }
 }

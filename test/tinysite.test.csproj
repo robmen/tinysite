@@ -46,11 +46,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LoadLayoutsCommandFixture.cs" />
+    <Compile Include="LoadDocumentsCommandFixture.cs" />
     <Compile Include="ParseDocumentCommandFixture.cs" />
     <Compile Include="SiteFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="data\ordered-documents\Third Document From Metadata.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\ordered-documents\2. Second Document.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\documents\2011\11-05.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\documents\2013-12-17.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\ordered-documents\01. First Ordered Document.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="data\documents\draft.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

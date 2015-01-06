@@ -21,6 +21,7 @@ namespace TinySite.Models
             this.Draft = original.Draft;
             this.ExtensionsForRendering = new List<string>(original.ExtensionsForRendering);
             this.Metadata = new MetadataCollection(original.Metadata);
+            this.Order = original.Order;
             this.Paginate = original.Paginate; // TODO: probably should not be shallow copying this, right?
 
             this.SourceContent = original.SourceContent;
@@ -38,6 +39,8 @@ namespace TinySite.Models
         public IList<string> ExtensionsForRendering { get; set; }
 
         public MetadataCollection Metadata { get; set; }
+
+        public int Order { get; set; }
 
         public int Paginate { get; set; }
 
@@ -66,6 +69,7 @@ namespace TinySite.Models
             data.Author = this.Author;
             data.Modified = this.Modified;
             data.OutputPath = this.OutputPath;
+            data.Order = this.Order;
             data.RelativePath = this.RelativePath;
             data.SourcePath = this.SourcePath;
             data.SourceContent = this.SourceContent;
