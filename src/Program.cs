@@ -42,7 +42,7 @@ namespace TinySite
 
                 using (var capture = Statistics.Current.Start(StatisticTiming.Overall))
                 {
-                    program.Run(commandLine).Wait(); // technically Wait() is not the correct thing to use with async.
+                    AsyncPump.Run(async delegate { await program.Run(commandLine); });
                 }
 
                 Statistics.Current.Report();
