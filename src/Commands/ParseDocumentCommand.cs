@@ -115,8 +115,11 @@ namespace TinySite.Commands
 
                             case "tag":
                             case "tags":
-                                var tags = line.Substring(5).Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)
-                                    .Select(t => t.Trim()).Where(t => !String.IsNullOrEmpty(t)).ToArray();
+                                var tags = line.Substring(5)
+                                    .Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)
+                                    .Select(t => t.Trim())
+                                    .Where(t => !String.IsNullOrEmpty(t))
+                                    .ToArray();
 
                                 this.Metadata.Add("tags", tags);
                                 break;
