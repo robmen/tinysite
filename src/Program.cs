@@ -29,7 +29,7 @@ namespace TinySite
                     Console.WriteLine(error);
                 }
 
-                return -1;
+                return -2;
             }
 
             // Run the program.
