@@ -12,7 +12,14 @@ namespace TinySite.Commands
 
         public int CopiedFiles { get; private set; }
 
-        public async Task ExecuteAsync()
+        public int Execute()
+        {
+            return this.CopiedFiles = this.Files.AsParallel()
+                .Select(CopyStaticFile)
+                .Count();
+        }
+
+        public async Task<int> ExecuteAsync()
         {
             var streams = new List<Stream>(this.Files.Count() * 2);
 
@@ -50,6 +57,19 @@ namespace TinySite.Commands
                     stream.Dispose();
                 }
             }
+
+            return this.CopiedFiles;
+        }
+
+        private static StaticFile CopyStaticFile(StaticFile file)
+        {
+            var folder = Path.GetDirectoryName(file.OutputPath);
+
+            Directory.CreateDirectory(folder);
+
+            File.Copy(file.SourcePath, file.OutputPath, true);
+
+            return file;
         }
     }
 }

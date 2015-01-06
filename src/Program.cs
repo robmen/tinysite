@@ -75,7 +75,7 @@ namespace TinySite
             //
             // Render the documents.
             //
-            await this.Render(site, engines);
+            this.Render(site, engines);
         }
 
         private async Task<Site> Load(string sitePath, string outputPath, IEnumerable<string> renderedExtensions)
@@ -152,7 +152,7 @@ namespace TinySite
             }
         }
 
-        private async Task Render(Site site, IDictionary<string, RenderingEngine> engines)
+        private void Render(Site site, IDictionary<string, RenderingEngine> engines)
         {
             using (var rendering = Statistics.Current.Start(StatisticTiming.Rendered))
             {
@@ -167,7 +167,7 @@ namespace TinySite
                 using (var capture = Statistics.Current.Start(StatisticTiming.WriteDocuments))
                 {
                     var write = new WriteDocumentsCommand() { Documents = site.Documents };
-                    await write.ExecuteAsync();
+                    write.Execute();
 
                     Statistics.Current.WroteDocuments = write.WroteDocuments;
                 }
@@ -175,7 +175,7 @@ namespace TinySite
                 using (var capture = Statistics.Current.Start(StatisticTiming.CopyStaticFiles))
                 {
                     var copy = new CopyStaticFilesCommand() { Files = site.Files };
-                    await copy.ExecuteAsync();
+                    copy.Execute();
 
                     Statistics.Current.CopiedFiles = copy.CopiedFiles;
                 }

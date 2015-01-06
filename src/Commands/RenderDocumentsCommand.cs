@@ -16,7 +16,7 @@ namespace TinySite.Commands
 
         public int RenderedDocuments { get; private set; }
 
-        public void Execute()
+        public int Execute()
         {
             using (var tx = new RenderingTransaction(this.Engines, this.Site))
             {
@@ -37,7 +37,7 @@ namespace TinySite.Commands
                     document.Rendered = true;
                 }
 
-                this.RenderedDocuments = renderedDocuments.Count();
+                return this.RenderedDocuments = renderedDocuments.Count();
             }
         }
 
