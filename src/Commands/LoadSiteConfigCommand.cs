@@ -78,7 +78,7 @@ namespace TinySite.Commands
             config.LayoutsPath = Path.Combine(root, "layouts\\");
 
             config.OutputPath = config.OutputPath ?? Path.Combine(root, "build\\");
-            config.Url = config.Url ?? "/";
+            config.Url = config.Url.EnsureStartsWith("/");
             config.RootUrl = config.RootUrl ?? "http://localhost/";
 
             // If override output path was provided use that.

@@ -12,5 +12,10 @@ namespace TinySite.Extensions
         {
             return str.EndsWith(append) ? str : str + append;
         }
+
+        public static string EnsureStartsWith(this string str, string prepend)
+        {
+            return str != null && str.StartsWith(prepend) ? str : prepend + str;
+        }
     }
 }
