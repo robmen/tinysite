@@ -53,5 +53,29 @@ namespace RobMensching.TinySite.Test
             Assert.Empty(command.Metadata);
             Assert.Equal(expected, command.Content);
         }
+
+        [Fact]
+        public void CanParseTag()
+        {
+            var path = Path.GetFullPath(@"data\documents\hastag.txt");
+
+            var command = new ParseDocumentCommand();
+            command.DocumentPath = path;
+            command.ExecuteAsync().Wait();
+
+            Assert.Equal(new[] { "foo" }, command.Metadata.Get<string[]>("tags"));
+        }
+
+        [Fact]
+        public void CanParseTags()
+        {
+            var path = Path.GetFullPath(@"data\documents\hastags.txt");
+
+            var command = new ParseDocumentCommand();
+            command.DocumentPath = path;
+            command.ExecuteAsync().Wait();
+
+            Assert.Equal(new[] { "foo", "bar", "baz" }, command.Metadata.Get<string[]>("tags"));
+        }
     }
 }

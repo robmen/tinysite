@@ -1,0 +1,7 @@
+﻿---
+title: Document has a tag.
+tag:foo
+---
+
+This is text.
+   It has tag metadata.

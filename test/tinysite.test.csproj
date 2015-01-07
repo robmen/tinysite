@@ -52,6 +52,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="data\documents\hastag.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\documents\hastags.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="data\ordered-documents\Third Document From Metadata.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
