@@ -52,6 +52,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="data\test-documents\explicit-output\hasexplicitoutput.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="data\documents\hastag.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -9,6 +9,29 @@ namespace RobMensching.TinySite.Test
     public class LoadDocumentCommandFixture
     {
         [Fact]
+        public void CanSpecifyOutputPath()
+        {
+            var path = Path.GetFullPath(@"data\test-documents\explicit-output");
+            var outputPath = Path.GetFullPath("output");
+            var expectedOutput = Path.Combine(outputPath, @"put-that\over\here.txt");
+            var expectedUrl = "http://www.example.com/app/sub/put-that/over/here.txt";
+
+            var command = new LoadDocumentsCommand();
+            command.Author = new Author();
+            command.DocumentsPath = path;
+            command.OutputRootPath = outputPath;
+            command.RenderedExtensions = new[] { "md" };
+            command.RootUrl = "http://www.example.com/";
+            command.ApplicationUrl = "/app/sub";
+            command.ExecuteAsync().Wait();
+
+            var document = command.Documents.Single();
+
+            Assert.Equal(expectedOutput, document.OutputPath);
+            Assert.Equal(expectedUrl, document.Url);
+        }
+
+        [Fact]
         public void CanLoadOrderedDocuments()
         {
             var path = Path.GetFullPath(@"data\ordered-documents\");
