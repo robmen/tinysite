@@ -18,7 +18,7 @@ namespace TinySite.Commands
             var dupes = new List<DocumentFile>();
 
             // TODO: this needs to be replaced with a more general purpose query mechanism.
-            var pagedPosts = this.Documents.Where(d => d.RelativeSourcePath.StartsWith(@"documents\posts\", StringComparison.OrdinalIgnoreCase)).ToList();
+            var pagedPosts = this.Documents.Where(d => d.SourceRelativePath.StartsWith(@"documents\posts\", StringComparison.OrdinalIgnoreCase)).ToList();
             var count = pagedPosts.Count();
 
             foreach (var document in this.Documents.Where(d => d.Paginate > 0))

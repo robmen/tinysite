@@ -99,11 +99,11 @@ namespace TinySite
                 {
                     var load = new LoadDocumentsCommand();
                     load.Author = config.Author;
-                    load.OutputPath = config.OutputPath;
+                    load.OutputRootPath = config.OutputPath;
                     load.RenderedExtensions = renderedExtensions;
                     load.DocumentsPath = config.DocumentsPath;
                     load.RootUrl = config.RootUrl;
-                    load.Url = config.Url;
+                    load.ApplicationUrl = config.Url;
                     documents = await load.ExecuteAsync();
                 }
 

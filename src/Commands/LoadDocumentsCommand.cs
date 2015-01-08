@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TinySite.Extensions;
 using TinySite.Models;
 
 namespace TinySite.Commands
@@ -15,11 +16,11 @@ namespace TinySite.Commands
 
         public string DocumentsPath { private get; set; }
 
-        public string OutputPath { private get; set; }
-
-        public string Url { private get; set; }
+        public string OutputRootPath { private get; set; }
 
         public string RootUrl { private get; set; }
+
+        public string ApplicationUrl { private get; set; }
 
         public Author Author { private get; set; }
 
@@ -40,7 +41,7 @@ namespace TinySite.Commands
             {
                 foreach (var path in Directory.GetFiles(this.DocumentsPath, "*", SearchOption.AllDirectories))
                 {
-                    yield return this.LoadDocumentAsync(path, LoadDocumentFlags.DateFromFileName | LoadDocumentFlags.DateInPath | LoadDocumentFlags.OrderFromFileName | LoadDocumentFlags.CleanUrls, this.RenderedExtensions);
+                    yield return this.LoadDocumentAsync(path, LoadDocumentFlags.DateFromFileName | LoadDocumentFlags.InsertDateIntoPath | LoadDocumentFlags.OrderFromFileName | LoadDocumentFlags.SanitizePath | LoadDocumentFlags.CleanUrls, this.RenderedExtensions);
                 }
             }
         }
@@ -54,54 +55,34 @@ namespace TinySite.Commands
             parser.SummaryMarker = "\r\n\r\n===";
             await parser.ExecuteAsync();
 
-            var documentFile = new DocumentFile(file, this.DocumentsPath, this.OutputPath, this.Url, this.RootUrl, this.Author);
+            var metadataDate = parser.Date;
 
-            documentFile.SourceContent = parser.Content;
+            var order = 0;
 
-            if (parser.Date.HasValue)
-            {
-                documentFile.Date = parser.Date.Value;
-            }
+            var relativeDocumentPath = Path.GetFullPath(file).Substring(this.DocumentsPath.Length);
 
-            documentFile.Draft = (parser.Draft || documentFile.Date > DateTime.Now);
-
-            documentFile.Order = parser.Metadata.Get<int>("order", 0);
-
-            documentFile.Paginate = parser.Metadata.Get<int>("paginate", 0);
-            parser.Metadata.Remove("paginate");
-
-            string output;
-            if (parser.Metadata.TryGet<string>("output", out output))
-            {
-                this.SetOutputPaths(documentFile, output);
-                parser.Metadata.Remove("output");
-            }
-
-            documentFile.Metadata = parser.Metadata;
+            var outputRelativePath = parser.Metadata.Get<string>("output", relativeDocumentPath);
+            parser.Metadata.Remove("output");
 
             // The rest of this function is about calculating the correct
             // name for the file.
             //
-            var fileName = Path.GetFileName(documentFile.RelativePath);
+            var fileName = Path.GetFileName(outputRelativePath);
 
-            string updateFileName = null;
-
-            string updateInPath = String.Empty;
+            var outputRelativeFolder = Path.GetDirectoryName(outputRelativePath);
 
             // See if this file should be processed by any of the
             // rendering engines.
             //
-            documentFile.ExtensionsForRendering = new List<string>();
+            var extensionsForRendering = new List<string>();
 
             for (; ; )
             {
                 var extension = Path.GetExtension(fileName).TrimStart('.');
                 if (knownExtensions.Contains(extension))
                 {
-                    documentFile.ExtensionsForRendering.Add(extension);
+                    extensionsForRendering.Add(extension);
                     fileName = Path.GetFileNameWithoutExtension(fileName);
-
-                    updateFileName = fileName;
                 }
                 else
                 {
@@ -115,9 +96,9 @@ namespace TinySite.Commands
 
                 if (match.Success)
                 {
-                    // If the parser didn't override the date, use the date from the filename.
+                    // If the parser metadata didn't specify the date, use the date from the filename.
                     //
-                    if (!parser.Date.HasValue)
+                    if (!metadataDate.HasValue)
                     {
                         var year = Convert.ToInt32(match.Groups[1].Value, 10);
                         var month = Convert.ToInt32(match.Groups[2].Value, 10);
@@ -126,12 +107,10 @@ namespace TinySite.Commands
                         var minute = match.Groups[5].Success ? Convert.ToInt32(match.Groups[5].Value, 10) : 0;
                         var second = match.Groups[6].Success ? Convert.ToInt32(match.Groups[6].Value, 10) : 0;
 
-                        documentFile.Date = new DateTime(year, month, day, hour, minute, second);
+                        metadataDate = new DateTime(year, month, day, hour, minute, second);
                     }
 
                     fileName = fileName.Substring(match.Length);
-
-                    updateFileName = fileName;
                 }
             }
 
@@ -141,29 +120,20 @@ namespace TinySite.Commands
 
                 if (match.Success)
                 {
-                    var order = Convert.ToInt32(match.Groups[1].Value, 10);
-
-                    // If the parser didn't override the order, use the order from the filename.
-                    //
-                    if (documentFile.Order == 0)
-                    {
-                        documentFile.Order = order;
-                    }
+                    order = Convert.ToInt32(match.Groups[1].Value, 10);
 
                     fileName = fileName.Substring(match.Length);
-
-                    updateFileName = fileName;
                 }
             }
 
-            if (LoadDocumentFlags.DateInPath == (flags & LoadDocumentFlags.DateInPath) && documentFile.Date != DateTime.MinValue)
+            if (LoadDocumentFlags.InsertDateIntoPath == (flags & LoadDocumentFlags.InsertDateIntoPath) && metadataDate.HasValue)
             {
-                updateInPath = String.Join("\\", documentFile.Date.Year, documentFile.Date.Month, documentFile.Date.Day);
+                outputRelativeFolder = Path.Combine(outputRelativeFolder, metadataDate.Value.Year.ToString(), metadataDate.Value.Month.ToString(), metadataDate.Value.Day.ToString());
             }
 
-            if (!documentFile.Metadata.Contains("title"))
+            if (!parser.Metadata.Contains("title"))
             {
-                documentFile.Metadata.Add("title", Path.GetFileNameWithoutExtension(fileName));
+                parser.Metadata.Add("title", Path.GetFileNameWithoutExtension(fileName));
             }
 
             // Sanitize the filename into a good URL.
@@ -173,54 +143,83 @@ namespace TinySite.Commands
             if (!fileName.Equals(sanitized))
             {
                 fileName = sanitized;
+            }
 
-                updateFileName = fileName;
+            if (LoadDocumentFlags.SanitizePath == (flags & LoadDocumentFlags.SanitizePath))
+            {
+                outputRelativeFolder = SanitizePath(outputRelativeFolder);
             }
 
             if (LoadDocumentFlags.CleanUrls == (flags & LoadDocumentFlags.CleanUrls) && !"index.html".Equals(fileName, StringComparison.OrdinalIgnoreCase) && ".html".Equals(Path.GetExtension(fileName), StringComparison.OrdinalIgnoreCase))
             {
-                updateInPath = Path.Combine(updateInPath, Path.GetFileNameWithoutExtension(fileName));
+                outputRelativeFolder = Path.Combine(outputRelativeFolder, Path.GetFileNameWithoutExtension(fileName)) + "\\";
 
-                fileName = "index.html";
-
-                updateFileName = fileName;
+                fileName = null;
             }
 
-            // If the name or path was updated, update the appropriately parts of the document.
+            var id = String.IsNullOrEmpty(fileName) ? outputRelativeFolder : Path.Combine(outputRelativeFolder, Path.GetFileNameWithoutExtension(fileName));
+
+            var parentId = String.IsNullOrEmpty(id) ? null : Path.GetDirectoryName(id);
+
+            var output = Path.Combine(outputRelativeFolder, fileName ?? "index.html");
+
+            var relativeUrl = this.ApplicationUrl.EnsureEndsWith("/") + Path.Combine(outputRelativeFolder, fileName ?? String.Empty).Replace('\\', '/');
+
+            // Finally create the document.
             //
-            if (!String.IsNullOrEmpty(updateFileName) || !String.IsNullOrEmpty(updateInPath))
+            var documentFile = new DocumentFile(file, this.DocumentsPath, output, this.OutputRootPath, relativeUrl, this.RootUrl, this.Author);
+
+            if (metadataDate.HasValue)
             {
-                documentFile.UpdateOutputPaths(updateInPath, updateFileName);
+                documentFile.Date = metadataDate.Value;
             }
+
+            documentFile.Id = parser.Metadata.Get<string>("id", id);
+            parser.Metadata.Remove("id");
+
+            documentFile.ParentId = parser.Metadata.Get<string>("parent", String.IsNullOrEmpty(parentId) ? null : parentId);
+            parser.Metadata.Remove("parent");
+
+            documentFile.Draft = (parser.Draft || documentFile.Date > DateTime.Now);
+
+            documentFile.ExtensionsForRendering = extensionsForRendering;
+
+            documentFile.Order = parser.Metadata.Get<int>("order", order);
+            parser.Metadata.Remove("order");
+
+            documentFile.Paginate = parser.Metadata.Get<int>("paginate", 0);
+            parser.Metadata.Remove("paginate");
+
+            documentFile.SourceContent = parser.Content;
+
+            documentFile.Metadata = parser.Metadata;
 
             return documentFile;
-        }
-
-        private void SetOutputPaths(DocumentFile documentFile, string output)
-        {
-            var path = output.Replace('/', '\\');
-
-            var url = output.Replace('\\', '/');
-
-            documentFile.RelativePath = path;
-
-            documentFile.OutputPath = Path.Combine(documentFile.OutputRootPath, path);
-
-            documentFile.Url = String.Concat(documentFile.RootUrl, url);
         }
 
         private static string SanitizeEntryId(string id)
         {
             if (String.IsNullOrWhiteSpace(id))
             {
-                return null;
+                return String.Empty;
             }
 
             id = Regex.Replace(id, @"[^\w\s_\-\.]+", String.Empty); // first, allow only words, spaces, underscores, dashes and dots.
             id = Regex.Replace(id, @"\.{2,}", String.Empty); // strip out any dots stuck together (no pathing attempts).
             id = Regex.Replace(id, @"\s{2,}", " "); // convert multiple spaces into single space.
-            id = id.Trim(new[] { ' ', '.' }); // ensure the string does not start or end with a dot
+            id = id.Trim(' ', '.'); // ensure the string does not start or end with a dot
             return id.Replace(' ', '-').ToLowerInvariant(); // finally, replace all spaces with dashes and lowercase it.
+        }
+
+        private static string SanitizePath(string id)
+        {
+            if (String.IsNullOrWhiteSpace(id))
+            {
+                return String.Empty;
+            }
+
+            id = Regex.Replace(id, @"[^\w\-\\/]+", "-"); // first, allow only words, underscores, dashes, and path separators.
+            return id.Trim('-').ToLowerInvariant(); // ensure the string does not start or end with dashes and lowercase it.
         }
     }
 }

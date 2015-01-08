@@ -39,25 +39,29 @@ namespace RobMensching.TinySite.Test
             var command = new LoadDocumentsCommand();
             command.Author = new Author();
             command.DocumentsPath = path;
-            command.OutputPath = Path.GetFullPath("output");
+            command.OutputRootPath = Path.GetFullPath("output");
             command.RenderedExtensions = new[] { "md" };
             command.RootUrl = "http://www.example.com/";
-            command.Url = "foo";
+            command.ApplicationUrl = "/foo";
             command.ExecuteAsync().Wait();
 
             var documents = command.Documents.OrderBy(d => d.Order).ToList();
 
             Assert.Equal(1, documents[0].Order);
             Assert.Equal("First Ordered Document", documents[0].Metadata.Get<string>("title"));
-            Assert.Equal("first-ordered-document.txt", documents[0].RelativePath);
+            Assert.Equal("first-ordered-document.txt", documents[0].OutputRelativePath);
 
-            Assert.Equal(2, documents[1].Order);
-            Assert.Equal("Second Document", documents[1].Metadata.Get<string>("title"));
-            Assert.Equal("second-document.txt", documents[1].RelativePath);
+            Assert.Equal(1, documents[1].Order);
+            Assert.Equal("Sub-Second Document", documents[1].Metadata.Get<string>("title"));
+            Assert.Equal("second-document\\sub-second-document.txt", documents[1].OutputRelativePath);
 
-            Assert.Equal(3, documents[2].Order);
-            Assert.Equal("Third Document From Metadata", documents[2].Metadata.Get<string>("title"));
-            Assert.Equal("third-document-from-metadata.txt", documents[2].RelativePath);
+            Assert.Equal(2, documents[2].Order);
+            Assert.Equal("Second Document", documents[2].Metadata.Get<string>("title"));
+            Assert.Equal("second-document.txt", documents[2].OutputRelativePath);
+
+            Assert.Equal(3, documents[3].Order);
+            Assert.Equal("Third Document From Metadata", documents[3].Metadata.Get<string>("title"));
+            Assert.Equal("third-document-from-metadata.txt", documents[3].OutputRelativePath);
         }
     }
 }

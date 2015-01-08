@@ -6,40 +6,48 @@ namespace TinySite.Models
 {
     public abstract class OutputFile
     {
-        public OutputFile(string path, string rootPath, string outputRootPath, string relativeUrl, string rootUrl)
+        public OutputFile(string path, string rootPath, string outputPath, string outputRootPath, string rootUrl, string relativeUrl)
         {
             var actualRootPath = Path.GetDirectoryName(rootPath.TrimEnd('\\'));
 
             var info = new FileInfo(path);
 
+            this.Date = info.CreationTime;
+
             this.Modified = info.LastWriteTime;
 
             this.SourcePath = Path.GetFullPath(path);
 
-            this.RelativePath = this.SourcePath.Substring(rootPath.Length);
+            this.SourceRelativePath = this.SourcePath.Substring(actualRootPath.Length + 1);
 
-            this.RelativeSourcePath = this.SourcePath.Substring(actualRootPath.Length + 1);
+            this.OutputRelativePath = outputPath ?? this.SourcePath.Substring(rootPath.Length);
 
             this.OutputRootPath = outputRootPath;
 
-            this.OutputPath = Path.Combine(this.OutputRootPath, this.RelativePath);
+            this.OutputPath = Path.Combine(this.OutputRootPath, this.OutputRelativePath);
 
-            this.Url = relativeUrl.EnsureEndsWith("/") + this.RelativePath.Replace('\\', '/');
+            this.RelativeUrl = relativeUrl;
 
             this.RootUrl = rootUrl;
+
+            this.Url = this.RootUrl.EnsureEndsWith("/") + this.RelativeUrl.TrimStart('/');
         }
 
         protected OutputFile(OutputFile original)
         {
+            this.Date = original.Date;
             this.Modified = original.Modified;
             this.OutputPath = original.OutputPath;
             this.OutputRootPath = original.OutputRootPath;
-            this.RelativePath = original.RelativePath;
-            this.RelativeSourcePath = original.RelativeSourcePath;
+            this.OutputRelativePath = original.OutputRelativePath;
             this.SourcePath = original.SourcePath;
+            this.SourceRelativePath = original.SourceRelativePath;
             this.Url = original.Url;
             this.RootUrl = original.RootUrl;
+            this.RelativeUrl = original.RelativeUrl;
         }
+
+        public DateTime Date { get; set; }
 
         public DateTime Modified { get; set; }
 
@@ -47,14 +55,16 @@ namespace TinySite.Models
 
         public string OutputRootPath { get; set; }
 
-        public string RelativePath { get; set; }
-
-        public string RelativeSourcePath { get; set; }
+        public string OutputRelativePath { get; set; }
 
         public string SourcePath { get; set; }
+
+        public string SourceRelativePath { get; set; }
 
         public string Url { get; set; }
 
         public string RootUrl { get; set; }
+
+        public string RelativeUrl { get; set; }
     }
 }

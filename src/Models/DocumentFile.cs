@@ -7,8 +7,8 @@ namespace TinySite.Models
 {
     public class DocumentFile : OutputFile
     {
-        public DocumentFile(string path, string rootPath, string outputRootPath, string url, string rootUrl, Author author)
-            : base(path, rootPath, outputRootPath, url, rootUrl)
+        public DocumentFile(string path, string rootPath, string outputPath, string outputRootPath, string url, string rootUrl, Author author)
+            : base(path, rootPath, outputPath, outputRootPath, rootUrl, url)
         {
             this.Author = author;
         }
@@ -17,12 +17,13 @@ namespace TinySite.Models
             : base(original)
         {
             this.Author = original.Author;
-            this.Date = original.Date;
             this.Draft = original.Draft;
+            this.Id = original.Id;
             this.ExtensionsForRendering = new List<string>(original.ExtensionsForRendering);
             this.Metadata = new MetadataCollection(original.Metadata);
             this.Order = original.Order;
             this.Paginate = original.Paginate; // TODO: probably should not be shallow copying this, right?
+            this.ParentId = original.ParentId;
 
             this.SourceContent = original.SourceContent;
             this.Summary = original.Summary;
@@ -32,17 +33,19 @@ namespace TinySite.Models
 
         public string Content { get; set; }
 
-        public DateTime Date { get; set; }
-
         public bool Draft { get; set; }
 
         public IList<string> ExtensionsForRendering { get; set; }
+
+        public string Id { get; set; }
 
         public MetadataCollection Metadata { get; set; }
 
         public int Order { get; set; }
 
         public int Paginate { get; set; }
+
+        public string ParentId { get; set; }
 
         public bool Rendered { get; set; }
 
@@ -67,16 +70,17 @@ namespace TinySite.Models
             this.Metadata.Assign(data as IDictionary<string, object>);
 
             data.Author = this.Author;
+            data.Draft = this.Draft;
             data.Modified = this.Modified;
-            data.OutputPath = this.OutputPath;
+            data.Id = this.Id;
             data.Order = this.Order;
-            data.RelativePath = this.RelativePath;
+            data.OutputPath = this.OutputPath;
+            data.RelativePath = this.OutputRelativePath; // TODO: rename "OutputPath" to "RelativeOutputPath".
             data.SourcePath = this.SourcePath;
             data.SourceContent = this.SourceContent;
-            data.Url = this.Url;
+            data.Url = this.RelativeUrl; // TODO: make the dyanmic object "url" fields match the document fields.
             data.RootUrl = this.RootUrl;
-            data.FullUrl = this.RootUrl.EnsureEndsWith("/") + this.Url.TrimStart('/');
-            data.Draft = this.Draft;
+            data.FullUrl = this.Url;
             data.Date = this.Date;
             data.DateUtc = this.Date.ToUniversalTime();
             data.FriendlyDate = this.Date.ToString("D");
@@ -95,18 +99,18 @@ namespace TinySite.Models
         {
             if (String.IsNullOrEmpty(updateFileName))
             {
-                updateFileName = Path.GetFileName(this.RelativePath);
+                updateFileName = Path.GetFileName(this.OutputRelativePath);
             }
 
-            var updateInUrl = String.IsNullOrEmpty(appendPath) ? String.Empty : appendPath.Replace('\\', '/') + '/';
+            var appendUrl = String.IsNullOrEmpty(appendPath) ? String.Empty : appendPath.Replace('\\', '/').EnsureEndsWith("/");
 
-            this.RelativePath = Path.Combine(Path.GetDirectoryName(this.RelativePath), appendPath, updateFileName);
+            this.OutputRelativePath = Path.Combine(Path.GetDirectoryName(this.OutputRelativePath), appendPath, updateFileName);
 
             this.OutputPath = Path.Combine(Path.GetDirectoryName(this.OutputPath), appendPath, updateFileName);
 
-            var lastSlash = this.Url.LastIndexOf('/');
+            var lastSlash = this.RelativeUrl.LastIndexOf('/');
 
-            this.Url = String.Concat(this.Url.Substring(0, lastSlash + 1), updateInUrl, updateFileName.Equals("index.html", StringComparison.OrdinalIgnoreCase) ? String.Empty : updateFileName);
+            this.RelativeUrl = String.Concat(this.RelativeUrl.Substring(0, lastSlash + 1), appendUrl, updateFileName.Equals("index.html", StringComparison.OrdinalIgnoreCase) ? String.Empty : updateFileName);
         }
     }
 }
