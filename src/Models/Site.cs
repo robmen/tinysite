@@ -53,6 +53,8 @@ namespace TinySite.Models
 
         public MetadataCollection Metadata { get; set; }
 
+        public IEnumerable<Book> Books { get; set; }
+
         public dynamic GetAsDynamic()
         {
             dynamic data = new CaseInsenstiveExpando();

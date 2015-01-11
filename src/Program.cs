@@ -146,7 +146,7 @@ namespace TinySite
                 order.Documents = site.Documents;
                 order.Execute();
 
-                // TODO: get the books.
+                site.Books = order.Books;
             }
         }
 
