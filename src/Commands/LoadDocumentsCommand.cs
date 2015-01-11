@@ -126,6 +126,8 @@ namespace TinySite.Commands
                 }
             }
 
+            var parentId = String.IsNullOrEmpty(outputRelativeFolder) ? null : SanitizePath(outputRelativeFolder);
+
             if (LoadDocumentFlags.InsertDateIntoPath == (flags & LoadDocumentFlags.InsertDateIntoPath) && metadataDate.HasValue)
             {
                 outputRelativeFolder = Path.Combine(outputRelativeFolder, metadataDate.Value.Year.ToString(), metadataDate.Value.Month.ToString(), metadataDate.Value.Day.ToString());
@@ -159,7 +161,7 @@ namespace TinySite.Commands
 
             var id = String.IsNullOrEmpty(fileName) ? outputRelativeFolder : Path.Combine(outputRelativeFolder, Path.GetFileNameWithoutExtension(fileName));
 
-            var parentId = String.IsNullOrEmpty(id) ? null : Path.GetDirectoryName(id);
+            //var parentId = String.IsNullOrEmpty(id) ? null : Path.GetDirectoryName(id);
 
             var output = Path.Combine(outputRelativeFolder, fileName ?? "index.html");
 
@@ -177,7 +179,7 @@ namespace TinySite.Commands
             documentFile.Id = parser.Metadata.Get<string>("id", id);
             parser.Metadata.Remove("id");
 
-            documentFile.ParentId = parser.Metadata.Get<string>("parent", String.IsNullOrEmpty(parentId) ? null : parentId);
+            documentFile.ParentId = parser.Metadata.Get<string>("parent", parentId ?? String.Empty);
             parser.Metadata.Remove("parent");
 
             documentFile.Draft = (parser.Draft || documentFile.Date > DateTime.Now);

@@ -45,6 +45,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OrderCommandFixture.cs" />
     <Compile Include="LoadLayoutsCommandFixture.cs" />
     <Compile Include="LoadDocumentsCommandFixture.cs" />
     <Compile Include="ParseDocumentCommandFixture.cs" />
@@ -52,6 +53,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="data\dated-documents\2013-12-18.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\ordered-documents\Second Document\01. Sub-Second Document.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="data\test-documents\explicit-output\hasexplicitoutput.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -61,7 +68,7 @@
     <Content Include="data\documents\hastags.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="data\ordered-documents\Second Document\01. Sub-Second Document.txt">
+    <Content Include="data\ordered-documents\Second Document\02. Another Sub-Second Document.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="data\ordered-documents\Third Document From Metadata.txt">
@@ -70,10 +77,10 @@
     <Content Include="data\ordered-documents\2. Second Document.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="data\documents\2011\11-05.txt">
+    <Content Include="data\dated-documents\2011\11-05.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="data\documents\2013-12-17.txt">
+    <Content Include="data\dated-documents\2013-12-17.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="data\ordered-documents\01. First Ordered Document.txt">

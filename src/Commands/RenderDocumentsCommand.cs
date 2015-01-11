@@ -14,6 +14,8 @@ namespace TinySite.Commands
 
         public Site Site { private get; set; }
 
+        public IEnumerable<Book> Books { private get; set; }
+
         public int RenderedDocuments { get; private set; }
 
         public int Execute()
@@ -75,6 +77,7 @@ namespace TinySite.Commands
             data.Layout = layout == null ? null : layout.GetAsDynamic();
             data.Document = document.GetAsDynamic(documentContent);
             data.Paginator = paginator == null ? null : paginator.GetAsDynamic();
+            data.Books = this.Books == null ? null : this.Books.Select(b => b.GetAsDynamic(document));
 
             return engine.Render(content, data);
         }

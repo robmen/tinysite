@@ -8,6 +8,7 @@ namespace TinySite.Models
         Overall,
         LoadedConfiguration,
         LoadedSite,
+        Ordering,
         Pagination,
         RenderDocuments,
         WriteDocuments,
@@ -27,6 +28,8 @@ namespace TinySite.Models
         }
 
         public int SiteFiles { get; set; }
+
+        public int OrderedFiles { get; set; }
 
         public int PagedFiles { get; set; }
 
@@ -54,6 +57,7 @@ namespace TinySite.Models
         {
             this.ReportTiming("   Loaded configuration in {0} s", StatisticTiming.LoadedConfiguration);
             this.ReportTiming("   Loaded {1} site files in {0} s", StatisticTiming.LoadedSite, this.SiteFiles);
+            this.ReportTiming("   Ordered {1} the documents s", StatisticTiming.Pagination, this.OrderedFiles);
             this.ReportTiming("   Paginated the site into {1} documents {0} s", StatisticTiming.Pagination, this.PagedFiles);
             this.ReportTiming("      Rendered {1} documents in {0} s", StatisticTiming.RenderDocuments, this.RenderedDocuments);
             this.ReportTiming("      Wrote {1} documents to disk in {0} s", StatisticTiming.WriteDocuments, this.WroteDocuments);

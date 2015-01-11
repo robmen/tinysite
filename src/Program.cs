@@ -64,6 +64,10 @@ namespace TinySite
             //
             var site = await this.Load(commandLine.SitePath, commandLine.OutputPath, engines.Keys);
 
+            // Order the documents.
+            //
+            this.Order(site);
+
             // Paginate the documents.
             //
             this.Paginate(site);
@@ -132,6 +136,18 @@ namespace TinySite
             Statistics.Current.SiteFiles = site.Documents.Count + site.Files.Count + site.Layouts.Count;
 
             return site;
+        }
+
+        private void Order(Site site)
+        {
+            using (var capture = Statistics.Current.Start(StatisticTiming.Ordering))
+            {
+                var order = new OrderCommand();
+                order.Documents = site.Documents;
+                order.Execute();
+
+                // TODO: get the books.
+            }
         }
 
         private void Paginate(Site site)

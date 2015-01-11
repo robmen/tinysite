@@ -27,6 +27,10 @@ namespace TinySite.Models
 
             this.SourceContent = original.SourceContent;
             this.Summary = original.Summary;
+
+            this.NextDocument = original.NextDocument;
+            this.ParentDocument = original.ParentDocument;
+            this.PreviousDocument = original.PreviousDocument;
         }
 
         public Author Author { get; set; }
@@ -55,13 +59,19 @@ namespace TinySite.Models
 
         public string Summary { get; set; }
 
+        public DocumentFile NextDocument { get; set; }
+
+        public DocumentFile ParentDocument { get; set; }
+
+        public DocumentFile PreviousDocument { get; set; }
+
         public DocumentFile Clone()
         {
             var clone = new DocumentFile(this);
             return clone;
         }
 
-        public dynamic GetAsDynamic(string documentContent = null)
+        public dynamic GetAsDynamic(string documentContent = null, bool expandNextPrev = true)
         {
             var now = DateTime.Now;
 
@@ -91,6 +101,21 @@ namespace TinySite.Models
             data.NowStandardUtcDate = now.ToUniversalTime().ToString("yyyy-MM-ddThh:mm:ssZ");
             data.Content = String.IsNullOrEmpty(documentContent) ? this.Content : documentContent;
             data.Summary = this.Summary;
+
+            if (this.NextDocument != null && expandNextPrev)
+            {
+                data.NextDocument = this.NextDocument.GetAsDynamic(null, false);
+            }
+
+            if (this.ParentDocument != null && expandNextPrev)
+            {
+                data.ParentDocument = this.ParentDocument.GetAsDynamic(null, false);
+            }
+
+            if (this.PreviousDocument != null && expandNextPrev)
+            {
+                data.PreviousDocument = this.PreviousDocument.GetAsDynamic(null, false);
+            }
 
             return data;
         }

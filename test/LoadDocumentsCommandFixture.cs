@@ -59,9 +59,13 @@ namespace RobMensching.TinySite.Test
             Assert.Equal("Second Document", documents[2].Metadata.Get<string>("title"));
             Assert.Equal("second-document.txt", documents[2].OutputRelativePath);
 
-            Assert.Equal(3, documents[3].Order);
-            Assert.Equal("Third Document From Metadata", documents[3].Metadata.Get<string>("title"));
-            Assert.Equal("third-document-from-metadata.txt", documents[3].OutputRelativePath);
+            Assert.Equal(2, documents[3].Order);
+            Assert.Equal("Another Sub-Second Document", documents[3].Metadata.Get<string>("title"));
+            Assert.Equal("second-document\\another-sub-second-document.txt", documents[3].OutputRelativePath);
+
+            Assert.Equal(3, documents[4].Order);
+            Assert.Equal("Third Document From Metadata", documents[4].Metadata.Get<string>("title"));
+            Assert.Equal("third-document-from-metadata.txt", documents[4].OutputRelativePath);
         }
     }
 }
