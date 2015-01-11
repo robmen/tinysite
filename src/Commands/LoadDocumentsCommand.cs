@@ -176,7 +176,7 @@ namespace TinySite.Commands
                 documentFile.Date = metadataDate.Value;
             }
 
-            documentFile.Id = parser.Metadata.Get<string>("id", id);
+            documentFile.Id = parser.Metadata.Get<string>("id", id.Trim('\\'));
             parser.Metadata.Remove("id");
 
             documentFile.ParentId = parser.Metadata.Get<string>("parent", parentId ?? String.Empty);
