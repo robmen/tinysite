@@ -10,8 +10,9 @@ namespace TinySite.Models
         {
             dynamic data = new CaseInsenstiveExpando();
 
-            data.Document = this.Document.GetAsDynamic();
             data.Active = (this.Document == activeDocument);
+            data.Document = this.Document.GetAsDynamic();
+            data.Page = true;
 
             return data;
         }

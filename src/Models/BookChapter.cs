@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace TinySite.Models
 {
@@ -29,6 +29,9 @@ namespace TinySite.Models
 
             //data.Children = children;
             //data.ChildActive = childActive;
+
+            data.Chapter = true;
+            data.Page = false;
 
             var children = this.PagesOrSubChapters.Select(p => p.GetAsDynamic(activeDocument)).ToList();
 
