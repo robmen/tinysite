@@ -48,7 +48,7 @@
       <HintPath>..\packages\Nustache.1.13.8.22\lib\net20\Nustache.Core.dll</HintPath>
     </Reference>
     <Reference Include="RazorEngine">
-      <HintPath>..\packages\RazorEngine.3.4.1\lib\net45\RazorEngine.dll</HintPath>
+      <HintPath>..\packages\RazorEngine.3.5.0-beta3\lib\net45\RazorEngine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

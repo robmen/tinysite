@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using RazorEngine;
 using RazorEngine.Configuration;
@@ -11,52 +12,94 @@ namespace TinySite.Renderers
     [Render("cshtml")]
     public class RazorRenderer : IRenderer
     {
+        public RazorRenderer()
         {
-            string result = null;
+            this.TopLevelTemplates = new Dictionary<string, LoadedTemplateSource>();
 
-            var config = new TemplateServiceConfiguration() { Resolver = new TemplateResolver() };
+            var manager = new TemplateManager();
+            manager.TopLevelTemplates = this.TopLevelTemplates;
 
+            var config = new TemplateServiceConfiguration();
             config.Namespaces.Add("System.IO");
             config.Namespaces.Add("RazorEngine.Text");
+            config.TemplateManager = manager;
 
-            using (var service = new TemplateService(config))
+            var service = RazorEngineService.Create(config);
+            Engine.Razor = service;
+        }
+
+        private Dictionary<string, LoadedTemplateSource> TopLevelTemplates { get; set; }
+
+        public string Render(string path, string template, object data)
+        {
+            lock (Engine.Razor)
             {
-                Razor.SetTemplateService(service);
+                LoadedTemplateSource loadedTemplate;
 
-                var cacheName = template.GetHashCode().ToString();
+                if (!this.TopLevelTemplates.TryGetValue(path, out loadedTemplate))
+                {
+                    loadedTemplate = new LoadedTemplateSource(template, path);
+
+                    this.TopLevelTemplates.Add(path, loadedTemplate);
+                }
 
                 try
                 {
-                    result = Razor.Parse(template, data, cacheName);
+                    var result = Engine.Razor.RunCompile(loadedTemplate, path, null, data);
+
+                    return result;
                 }
                 catch (TemplateCompilationException e)
                 {
-                    foreach (var error in e.Errors)
+                    foreach (var error in e.CompilerErrors)
                     {
-                        Console.Error.WriteLine(error);
+                        Console.Error.WriteLine(error.ErrorText);
                     }
                 }
-            }
 
-            return result;
+                return null;
+            }
         }
 
-        private class TemplateResolver : ITemplateResolver
+        private class TemplateManager : ITemplateManager
         {
-            public string Resolve(string name)
+            public Dictionary<string, LoadedTemplateSource> TopLevelTemplates { get; set; }
+
+            public void AddDynamic(ITemplateKey key, ITemplateSource source)
             {
-                var id = Path.GetFileNameWithoutExtension(name);
+            }
 
-                var extension = Path.GetExtension(name).TrimStart('.');
+            public ITemplateKey GetKey(string name, ResolveType resolveType, ITemplateKey context)
+            {
+                return new NameOnlyTemplateKey(name, resolveType, context);
+            }
 
-                var layout = RenderingTransaction.Current.Layouts[id];
+            public ITemplateSource Resolve(ITemplateKey key)
+            {
+                var name = key.Name;
 
-                if (!layout.Extension.Equals(String.IsNullOrEmpty(extension) ? "cshtml" : extension, StringComparison.OrdinalIgnoreCase))
+                LoadedTemplateSource loadedTemplate;
+
+                if (!this.TopLevelTemplates.TryGetValue(name, out loadedTemplate))
                 {
-                    // TODO: throw new exception.
+                    var id = Path.GetFileNameWithoutExtension(name);
+
+                    var extension = Path.GetExtension(name).TrimStart('.');
+
+                    var layout = RenderingTransaction.Current.Layouts[id];
+
+                    if (!layout.Extension.Equals(String.IsNullOrEmpty(extension) ? "cshtml" : extension, StringComparison.OrdinalIgnoreCase))
+                    {
+                        // TODO: throw new exception.
+                    }
+
+                    loadedTemplate = new LoadedTemplateSource(layout.SourceContent, layout.SourcePath);
+
+                    // Do not need to add this loaded template to our list of cached top level templates
+                    // because RazorEngine will remember it for us and never ask again.
                 }
 
-                return layout.SourceContent;
+                return loadedTemplate;
             }
         }
     }
