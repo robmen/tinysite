@@ -10,7 +10,7 @@ layout: master
     <li class="chapter{{#childActive}} child-active{{/childActive}}{{#active}} active{{/active}}"><a href='{{document.url}}'>{{document.title}}</a></li>
 <ul>
 {{#children}}
-    <li class="{{#chapter}}chapter{{/chapter}}{{^chapter}}page{{/chapter}}{{#childActive}} child-active{{/childActive}}{{#active}} active{{/active}}"><a href='{{document.url}}'>{{document.title}}</a></li>
+    <li class="{{#if chapter}}chapter{{^}}page{{/if}}{{#childActive}} child-active{{/childActive}}{{#active}} active{{/active}}"><a href='{{document.url}}'>{{document.title}}</a></li>
 {{/children}}
 </ul>
 </li>

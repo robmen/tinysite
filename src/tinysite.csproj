@@ -41,6 +41,9 @@
     <Reference Include="MarkdownSharp">
       <HintPath>..\packages\MarkdownSharp.1.13.0.0\lib\35\MarkdownSharp.dll</HintPath>
     </Reference>
+    <Reference Include="FuManchu">
+      <HintPath>..\packages\FuManchu.1.3.0.0\lib\net45\FuManchu.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -82,6 +85,7 @@
     <Compile Include="Models\Pagination.cs" />
     <Compile Include="Models\Paginator.cs" />
     <Compile Include="Models\Statistics.cs" />
+    <Compile Include="Renderers\HandlebarsRenderer.cs" />
     <Compile Include="Renderers\RazorRenderer.cs" />
     <Compile Include="Renderers\MarkdownRenderer.cs" />
     <Compile Include="Renderers\MustacheRenderer.cs" />
