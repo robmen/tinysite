@@ -11,7 +11,6 @@ namespace TinySite.Renderers
     [Render("cshtml")]
     public class RazorRenderer : IRenderer
     {
-        public string Render(string template, object data)
         {
             string result = null;
 

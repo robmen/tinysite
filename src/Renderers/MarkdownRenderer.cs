@@ -14,7 +14,7 @@ namespace TinySite.Renderers
 
         private Markdown MarkdownEngine { get; set; }
 
-        public string Render(string template, object data)
+        public string Render(string path, string template, object data)
         {
             lock (this.MarkdownEngine)
             {

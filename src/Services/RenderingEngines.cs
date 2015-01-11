@@ -46,7 +46,7 @@ namespace TinySite.Services
             return engines;
         }
 
-        public string Render(string template, object data)
+        public string Render(string path, string template, object data)
         {
             if (this.Renderer == null)
             {
@@ -58,7 +58,7 @@ namespace TinySite.Services
                 }
             }
 
-            return this.Renderer.Render(template, data);
+            return this.Renderer.Render(path, template, data);
         }
     }
 }

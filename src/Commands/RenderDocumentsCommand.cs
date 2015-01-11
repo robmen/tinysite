@@ -20,21 +20,28 @@ namespace TinySite.Commands
         {
             using (var tx = new RenderingTransaction(this.Engines, this.Site))
             {
-                var renderedDocuments = this.Site.Documents
-                    .Where(d => !d.Draft)
-                    .AsParallel()
-                    .Select(this.RenderDocument)
-                    .ToList();
-
-                foreach (var document in renderedDocuments)
+                IEnumerable<DocumentFile> renderedDocuments;
+                using (var capture = Statistics.Current.Start(StatisticTiming.RenderDocumentContent))
                 {
-                    var layoutName = document.Metadata.Get<string>("layout", "default");
+                    renderedDocuments = this.Site.Documents
+                                        .Where(d => !d.Draft)
+                                        .AsParallel()
+                                        .Select(this.RenderDocument)
+                                        .ToList();
+                }
 
-                    var layout = this.Site.Layouts[layoutName];
+                using (var capture = Statistics.Current.Start(StatisticTiming.RenderLayouts))
+                {
+                    foreach (var document in renderedDocuments)
+                    {
+                        var layoutName = document.Metadata.Get<string>("layout", "default");
 
-                    document.RenderedContent = this.RenderDocumentContentUsingLayout(document, document.Content, layout);
+                        var layout = this.Site.Layouts[layoutName];
 
-                    document.Rendered = true;
+                        document.RenderedContent = this.RenderDocumentContentUsingLayout(document, document.Content, layout);
+
+                        document.Rendered = true;
+                    }
                 }
 
                 return this.RenderedDocuments = renderedDocuments.Count();
@@ -51,7 +58,7 @@ namespace TinySite.Commands
 
             foreach (var extension in document.ExtensionsForRendering)
             {
-                content = this.RenderContentForExtension(content, extension, document, content, layout);
+                content = this.RenderContentForExtension(document.SourcePath, content, extension, document, content, layout);
             }
 
             document.Content = content;
@@ -64,7 +71,7 @@ namespace TinySite.Commands
             return document;
         }
 
-        private string RenderContentForExtension(string content, string extension, DocumentFile document, string documentContent, LayoutFile layout)
+        private string RenderContentForExtension(string path, string content, string extension, DocumentFile document, string documentContent, LayoutFile layout)
         {
             var engine = this.Engines[extension];
 
@@ -77,12 +84,12 @@ namespace TinySite.Commands
             data.Paginator = paginator == null ? null : paginator.GetAsDynamic();
             data.Books = this.Site.Books == null ? null : this.Site.Books.Select(b => b.GetAsDynamic(document));
 
-            return engine.Render(content, data);
+            return engine.Render(path, content, data);
         }
 
         private string RenderDocumentContentUsingLayout(DocumentFile document, string documentContent, LayoutFile layout)
         {
-            var content = this.RenderContentForExtension(layout.SourceContent, layout.Extension, document, documentContent, layout);
+            var content = this.RenderContentForExtension(layout.SourcePath, layout.SourceContent, layout.Extension, document, documentContent, layout);
 
             string parentLayoutName;
 
