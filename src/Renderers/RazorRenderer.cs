@@ -20,6 +20,7 @@ namespace TinySite.Renderers
             manager.TopLevelTemplates = this.TopLevelTemplates;
 
             var config = new TemplateServiceConfiguration();
+            config.AllowMissingPropertiesOnDynamic = true;
             config.Namespaces.Add("System.IO");
             config.Namespaces.Add("RazorEngine.Text");
             config.TemplateManager = manager;
