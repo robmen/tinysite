@@ -1,24 +1,19 @@
 ---
 layout: master
 ---
-<div>
-<p>Table of Contents</p>
-{{#books}}
-<div class="book">
-<ul>
-{{#chapters}}
-    <li class="chapter{{#childActive}} child-active{{/childActive}}{{#active}} active{{/active}}"><a href='{{document.url}}'>{{document.title}}</a></li>
-<ul>
-{{#children}}
-    <li class="{{#if chapter}}chapter{{^}}page{{/if}}{{#childActive}} child-active{{/childActive}}{{#active}} active{{/active}}"><a href='{{document.url}}'>{{document.title}}</a></li>
-{{/children}}
-</ul>
-</li>
-{{/chapters}}
-</ul>
-</div>
-{{/books}}
-</div>
+{{#with book}}<div class="toc">
+  <p>Table of Contents</p>
+  <div class="book" style="float:left">
+    <ul>
+    {{#each chapters}}<li class="chapter{{#if childActive}} child-active{{/if}}{{#active}} active{{/active}}">{{#unless active}}<a href='{{document.url}}'>{{/unless}}{{document.title}}{{#unless active}}</a>{{/unless}}{{#if children}}
+      <ul>{{#children}}
+      <li class="{{#if chapter}}chapter{{^}}page{{/if}}{{#childActive}} child-active{{/childActive}}{{#active}} active{{/active}}">{{#unless active}}<a href='{{document.url}}'>{{/unless}}{{document.title}}{{#unless active}}</a>{{/unless}}</li>
+      {{/children}}</ul>
+      {{/if}}</li>{{/each}}
+    </ul>
+  </div>
+</div>{{/with}}
+
 <div class="content">
 {{{document.content}}}
 </div>

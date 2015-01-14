@@ -7,11 +7,7 @@
   <h1><a href="@Model.Site.Url">@Model.Site.Title</a></h1>
 
   <hr />
-
-  <div class="content">
-    @Raw(Model.Document.Content)
-  </div>
-
+@Raw(Model.Document.Content)
   <hr />
 
   @Include("footer.cshtml")
