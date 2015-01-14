@@ -35,17 +35,13 @@ namespace TinySite.Commands
 
                         dupe.UpdateOutputPaths(String.Format(format, i + 1), null);
 
-                        var paginator = this.CreatePaginator(i + 1, document.Paginate, pages, format, pagedPosts);
-
-                        dupe.Metadata.Add("paginator", paginator);
+                        dupe.Paginator = this.CreatePaginator(i + 1, document.Paginate, pages, format, pagedPosts);
 
                         dupes.Add(dupe);
                     }
                 }
 
-                var paging = this.CreatePaginator(1, document.Paginate, pages, format, pagedPosts);
-
-                document.Metadata.Add("paginator", paging);
+                document.Paginator = this.CreatePaginator(1, document.Paginate, pages, format, pagedPosts);
             }
 
             this.PagedDocuments = dupes;

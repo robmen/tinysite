@@ -140,15 +140,17 @@ namespace TinySite.Commands
 
                 foreach (var chapter in book.Chapters)
                 {
-                    previous = ProcessChapterOrder(chapter, null, previous);
+                    previous = ProcessBookAndChapterOrder(book, chapter, null, previous);
                 }
             }
 
             return books;
         }
 
-        private static DocumentFile ProcessChapterOrder(BookChapter chapter, BookChapter parent, DocumentFile previous)
+        private static DocumentFile ProcessBookAndChapterOrder(Book book, BookChapter chapter, BookChapter parent, DocumentFile previous)
         {
+            chapter.Document.Book = book;
+
             previous = SetNextPreviousAndParent(previous, chapter.Document, parent == null ? null : parent.Document);
 
             foreach (var page in chapter.PagesOrSubChapters)
@@ -159,7 +161,11 @@ namespace TinySite.Commands
 
                 if (subChapter != null)
                 {
-                    previous = ProcessChapterOrder(subChapter, chapter, previous);
+                    previous = ProcessBookAndChapterOrder(book, subChapter, chapter, previous);
+                }
+                else
+                {
+                    page.Document.Book = book;
                 }
             }
 

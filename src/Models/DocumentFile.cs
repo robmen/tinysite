@@ -33,6 +33,9 @@ namespace TinySite.Models
             this.NextDocument = original.NextDocument;
             this.ParentDocument = original.ParentDocument;
             this.PreviousDocument = original.PreviousDocument;
+
+            this.Book = original.Book;
+            this.Paginator = original.Paginator;
         }
 
         public Author Author { get; set; }
@@ -66,6 +69,10 @@ namespace TinySite.Models
         public DocumentFile ParentDocument { get; set; }
 
         public DocumentFile PreviousDocument { get; set; }
+
+        public Book Book { get; set; }
+
+        public Paginator Paginator { get; set; }
 
         public DocumentFile Clone()
         {
