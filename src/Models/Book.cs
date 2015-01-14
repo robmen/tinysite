@@ -1,9 +1,11 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using TinySite.Extensions;
 
 namespace TinySite.Models
 {
+    [DebuggerDisplay("Book: {Id}")]
     public class Book
     {
         public string Id { get; set; }

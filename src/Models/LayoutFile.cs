@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using TinySite.Extensions;
 
 namespace TinySite.Models
 {
+    [DebuggerDisplay("LayoutFile: {Id}, Source: {SourcePath}")]
     public class LayoutFile
     {
         public LayoutFile(string path, string rootPath, string sourceContent, MetadataCollection metadata)

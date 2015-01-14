@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using TinySite.Extensions;
 
 namespace TinySite.Models
 {
+    [DebuggerDisplay("DocumentFile: {Id}, Source: {SourceRelativePath}")]
     public class DocumentFile : OutputFile
     {
         public DocumentFile(string path, string rootPath, string outputPath, string outputRootPath, string url, string rootUrl, Author author)
