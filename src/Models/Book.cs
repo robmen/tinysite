@@ -14,10 +14,12 @@ namespace TinySite.Models
 
         public dynamic GetAsDynamic(DocumentFile activeDocument)
         {
-            dynamic data = new CaseInsenstiveExpando();
+            var data = new CaseInsensitiveExpando();
 
-            data.Id = this.Id;
-            data.Chapters = this.Chapters.Select(c => c.GetAsDynamic(activeDocument)).ToList();
+            var chapters = this.Chapters.Select(c => c.GetAsDynamic(activeDocument)).ToList();
+
+            data.Add("Id", this.Id);
+            data.Add("Chapters", chapters);
 
             return data;
         }

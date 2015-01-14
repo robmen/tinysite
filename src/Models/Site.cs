@@ -57,17 +57,17 @@ namespace TinySite.Models
 
         public dynamic GetAsDynamic()
         {
-            dynamic data = new CaseInsenstiveExpando();
+            var data = new CaseInsensitiveExpando();
 
-            this.Metadata.Assign(data as IDictionary<string, object>);
+            this.Metadata.Assign(data);
 
-            data.Author = this.Author;
-            data.Output = this.OutputPath;
-            data.Url = this.Url;
-            data.RootUrl = this.RootUrl;
-            data.FullUrl = this.RootUrl.EnsureEndsWith("/") + this.Url.TrimStart('/');
-            data.Parent = this.Parent;
-            data.TimeZoneInfo = this.TimeZone;
+            data.Add("Author", this.Author);
+            data.Add("Output", this.OutputPath);
+            data.Add("Url", this.Url);
+            data.Add("RootUrl", this.RootUrl);
+            data.Add("FullUrl", this.RootUrl.EnsureEndsWith("/") + this.Url.TrimStart('/'));
+            data.Add("Parent", this.Parent);
+            data.Add("TimeZoneInfo", this.TimeZone);
 
             return data;
         }

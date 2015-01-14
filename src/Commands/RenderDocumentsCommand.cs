@@ -77,12 +77,12 @@ namespace TinySite.Commands
 
             var paginator = document.Metadata.Get<Paginator>("paginator");
 
-            dynamic data = new CaseInsenstiveExpando();
-            data.Site = this.Site.GetAsDynamic();
-            data.Layout = layout == null ? null : layout.GetAsDynamic();
-            data.Document = document.GetAsDynamic(documentContent);
-            data.Paginator = paginator == null ? null : paginator.GetAsDynamic();
-            data.Books = this.Site.Books == null ? null : this.Site.Books.Select(b => b.GetAsDynamic(document));
+            var data = new CaseInsensitiveExpando();
+            data.Add("Site", this.Site.GetAsDynamic());
+            data.Add("Document", document.GetAsDynamic(documentContent));
+            data.Add("Layout", layout == null ? null : layout.GetAsDynamic());
+            data.Add("Paginator", paginator == null ? null : paginator.GetAsDynamic());
+            data.Add("Books", this.Site.Books == null ? null : this.Site.Books.Select(b => b.GetAsDynamic(document)));
 
             return engine.Render(path, content, data);
         }

@@ -77,46 +77,46 @@ namespace TinySite.Models
         {
             var now = DateTime.Now;
 
-            dynamic data = new CaseInsenstiveExpando();
+            var data = new CaseInsensitiveExpando();
 
-            this.Metadata.Assign(data as IDictionary<string, object>);
+            this.Metadata.Assign(data);
 
-            data.Author = this.Author;
-            data.Draft = this.Draft;
-            data.Modified = this.Modified;
-            data.Id = this.Id;
-            data.Order = this.Order;
-            data.OutputPath = this.OutputPath;
-            data.RelativePath = this.OutputRelativePath; // TODO: rename "OutputPath" to "RelativeOutputPath".
-            data.SourcePath = this.SourcePath;
-            data.SourceContent = this.SourceContent;
-            data.Url = this.RelativeUrl; // TODO: make the dyanmic object "url" fields match the document fields.
-            data.RootUrl = this.RootUrl;
-            data.FullUrl = this.Url;
-            data.Date = this.Date;
-            data.DateUtc = this.Date.ToUniversalTime();
-            data.FriendlyDate = this.Date.ToString("D");
-            data.StandardUtcDate = this.Date.ToUniversalTime().ToString("yyyy-MM-ddThh:mm:ssZ");
-            data.Now = now;
-            data.NowUtc = now.ToUniversalTime();
-            data.NowFriendlyDate = now.ToString("D");
-            data.NowStandardUtcDate = now.ToUniversalTime().ToString("yyyy-MM-ddThh:mm:ssZ");
-            data.Content = String.IsNullOrEmpty(documentContent) ? this.Content : documentContent;
-            data.Summary = this.Summary;
+            data.Add("Author", this.Author);
+            data.Add("Draft", this.Draft);
+            data.Add("Modified", this.Modified);
+            data.Add("Id", this.Id);
+            data.Add("Order", this.Order);
+            data.Add("OutputPath", this.OutputPath);
+            data.Add("RelativePath", this.OutputRelativePath); // TODO: rename "OutputPath" to "RelativeOutputPath".
+            data.Add("SourcePath", this.SourcePath);
+            data.Add("SourceContent", this.SourceContent);
+            data.Add("Url", this.RelativeUrl); // TODO: make the dyanmic object "url" fields match the document fields.
+            data.Add("RootUrl", this.RootUrl);
+            data.Add("FullUrl", this.Url);
+            data.Add("Date", this.Date);
+            data.Add("DateUtc", this.Date.ToUniversalTime());
+            data.Add("FriendlyDate", this.Date.ToString("D"));
+            data.Add("StandardUtcDate", this.Date.ToUniversalTime().ToString("yyyy-MM-ddThh:mm:ssZ"));
+            data.Add("Now", now);
+            data.Add("NowUtc", now.ToUniversalTime());
+            data.Add("NowFriendlyDate", now.ToString("D"));
+            data.Add("NowStandardUtcDate", now.ToUniversalTime().ToString("yyyy-MM-ddThh:mm:ssZ"));
+            data.Add("Content", String.IsNullOrEmpty(documentContent) ? this.Content : documentContent);
+            data.Add("Summary", this.Summary);
 
             if (this.NextDocument != null && expandNextPrev)
             {
-                data.NextDocument = this.NextDocument.GetAsDynamic(null, false);
+                data.Add("NextDocument", this.NextDocument.GetAsDynamic(null, false));
             }
 
             if (this.ParentDocument != null && expandNextPrev)
             {
-                data.ParentDocument = this.ParentDocument.GetAsDynamic(null, false);
+                data.Add("ParentDocument", this.ParentDocument.GetAsDynamic(null, false));
             }
 
             if (this.PreviousDocument != null && expandNextPrev)
             {
-                data.PreviousDocument = this.PreviousDocument.GetAsDynamic(null, false);
+                data.Add("PreviousDocument", this.PreviousDocument.GetAsDynamic(null, false));
             }
 
             return data;

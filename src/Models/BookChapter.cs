@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TinySite.Extensions;
 
 namespace TinySite.Models
 {
@@ -14,29 +15,16 @@ namespace TinySite.Models
 
         public override dynamic GetAsDynamic(DocumentFile activeDocument)
         {
-            var data = base.GetAsDynamic(activeDocument);
+            var data = base.GetAsDynamic(activeDocument) as CaseInsensitiveExpando;
 
-            //var children = new List<dynamic>();
-            //var childActive = false;
-
-            //foreach (var pageOrSubChapter in this.PagesOrSubChapters)
-            //{
-            //    var child = pageOrSubChapter.GetAsDynamic(activeDocument);
-
-            //    children.Add(child);
-            //    childActive |= child.Active;
-            //}
-
-            //data.Children = children;
-            //data.ChildActive = childActive;
-
-            data.Chapter = true;
-            data.Page = false;
+            data.Add("Chapter", true);
+            data["Page"] = false;
 
             var children = this.PagesOrSubChapters.Select(p => p.GetAsDynamic(activeDocument)).ToList();
+            var childActive = this.PagesOrSubChapters.Any(c => c.Document == activeDocument);
 
-            data.Children = children;
-            data.ChildActive = children.Any(c => c.Active);
+            data.Add("ChildActive", childActive);
+            data.Add("Children", children);
 
             return data;
         }

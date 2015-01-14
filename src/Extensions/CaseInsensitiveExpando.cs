@@ -5,7 +5,7 @@ using System.Dynamic;
 
 namespace TinySite.Extensions
 {
-    public class CaseInsenstiveExpando : DynamicObject, IDictionary<string, object>
+    public class CaseInsensitiveExpando : DynamicObject, IDictionary<string, object>
     {
         private IDictionary<string, object> _dictionary = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 

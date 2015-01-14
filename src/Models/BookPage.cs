@@ -8,11 +8,11 @@ namespace TinySite.Models
 
         public virtual dynamic GetAsDynamic(DocumentFile activeDocument)
         {
-            dynamic data = new CaseInsenstiveExpando();
+            var data = new CaseInsensitiveExpando();
 
-            data.Active = (this.Document == activeDocument);
-            data.Document = this.Document.GetAsDynamic();
-            data.Page = true;
+            data.Add("Active", (this.Document == activeDocument));
+            data.Add("Document", this.Document.GetAsDynamic());
+            data.Add("Page", true);
 
             return data;
         }

@@ -11,9 +11,10 @@ namespace TinySite.Models
 
         public dynamic GetAsDynamic()
         {
-            dynamic data = new CaseInsenstiveExpando();
-            data.Documents = this.Documents;
-            data.Pagination = Pagination;
+            var data = new CaseInsensitiveExpando();
+
+            data.Add("Documents", this.Documents);
+            data.Add("Pagination", this.Pagination);
 
             return data;
         }
