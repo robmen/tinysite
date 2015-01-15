@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using TinySite.Extensions;
@@ -46,11 +45,11 @@ namespace TinySite.Models
 
             this.Metadata.Assign(data);
 
-            data.Add("Id", this.Id);
-            data.Add("Modified", this.Modified);
-            data.Add("Path", this.SourcePath);
-            data.Add("Name", Path.GetFileName(this.SourcePath));
-            data.Add("SourceContent", this.SourceContent);
+            data["Id"] = this.Id;
+            data["Modified"] = this.Modified;
+            data["Path"] = this.SourcePath;
+            data["Name"] = Path.GetFileName(this.SourcePath);
+            data["SourceContent"] = this.SourceContent;
 
             return data;
         }

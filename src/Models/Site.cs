@@ -61,13 +61,13 @@ namespace TinySite.Models
 
             this.Metadata.Assign(data);
 
-            data.Add("Author", this.Author);
-            data.Add("Output", this.OutputPath);
-            data.Add("Url", this.Url);
-            data.Add("RootUrl", this.RootUrl);
-            data.Add("FullUrl", this.RootUrl.EnsureEndsWith("/") + this.Url.TrimStart('/'));
-            data.Add("Parent", this.Parent);
-            data.Add("TimeZoneInfo", this.TimeZone);
+            data["Author"] = this.Author;
+            data["Output"] = this.OutputPath;
+            data["Url"] = this.Url;
+            data["RootUrl"] = this.RootUrl;
+            data["FullUrl"] = this.RootUrl.EnsureEndsWith("/") + this.Url.TrimStart('/');
+            data["Parent"] = this.Parent;
+            data["TimeZoneInfo"] = this.TimeZone;
 
             return data;
         }

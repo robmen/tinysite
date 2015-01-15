@@ -2,19 +2,19 @@
 layout: master
 ---
 <div class="hfeed">
-{{#paginator.documents}}
+{{#document.paginator.documents}}
   <div class="hentry summarized">
     <h2 class="entry-title"><a href="{{url}}">{{title}}</a></h2>
     <div class="entry-meta"><p><a href="{{fullUrl}}" rel="bookmark" title="permalink to '{{title}}'">#</a> by <span class="vcard author"><a class="url fn" href="{{author.url}}">{{author.name}}</a></span> on <abbr class="published" title="{{date.year}}-{{date.month}}-{{date.day}}">{{friendlyDate}}</abbr></p></div>
     <div class="entry-summary">{{{summary}}}</div>
     <div class="entry-readmore"><a href="{{url}}">Read more...</a></div>
   </div>
-{{/paginator.documents}}
+{{/document.paginator.documents}}
 </div>
 
 <hr />
 
-{{#paginator.pagination}}
+{{#document.paginator.pagination}}
 <div class="pagination">
   <ul>
     <li class="previous{{^previousPageUrl}} disabled{{/previousPageUrl}}"><a href="{{previousPageUrl}}">&larr; Newer</a></li>
@@ -24,4 +24,4 @@ layout: master
     <li class="next{{^nextPageUrl}} disabled{{/nextPageUrl}}"><a href="{{nextPageUrl}}">Older &rarr;</a></li>
   </ul>
 </div>
-{{/paginator.pagination}}
+{{/document.paginator.pagination}}

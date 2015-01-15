@@ -151,6 +151,8 @@ namespace TinySite.Commands
         {
             chapter.Document.Book = book;
 
+            chapter.Document.Chapter = chapter;
+
             previous = SetNextPreviousAndParent(previous, chapter.Document, parent == null ? null : parent.Document);
 
             foreach (var page in chapter.PagesOrSubChapters)

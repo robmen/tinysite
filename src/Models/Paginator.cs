@@ -13,8 +13,8 @@ namespace TinySite.Models
         {
             var data = new CaseInsensitiveExpando();
 
-            data.Add("Documents", this.Documents);
-            data.Add("Pagination", this.Pagination);
+            data["Documents"] = this.Documents;
+            data["Pagination"] = this.Pagination;
 
             return data;
         }

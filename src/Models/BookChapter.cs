@@ -17,14 +17,14 @@ namespace TinySite.Models
         {
             var data = base.GetAsDynamic(activeDocument) as CaseInsensitiveExpando;
 
-            data.Add("Chapter", true);
+            data["Chapter"] = true;
             data["Page"] = false;
 
-            var children = this.PagesOrSubChapters.Select(p => p.GetAsDynamic(activeDocument)).ToList();
             var childActive = this.PagesOrSubChapters.Any(c => c.Document == activeDocument);
+            var children = this.PagesOrSubChapters.Select(p => p.GetAsDynamic(activeDocument)).ToList();
 
-            data.Add("ChildActive", childActive);
-            data.Add("Children", children);
+            data["ChildActive"] = childActive;
+            data["Children"] = children;
 
             return data;
         }

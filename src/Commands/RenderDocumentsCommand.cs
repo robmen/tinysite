@@ -73,19 +73,14 @@ namespace TinySite.Commands
 
         private string RenderContentForExtension(string path, string content, string extension, DocumentFile document, string documentContent, LayoutFile layout)
         {
-            var engine = this.Engines[extension];
-
-            var book = document.Book;
-
-            var paginator = document.Paginator;
-
             var data = new CaseInsensitiveExpando();
-            data.Add("Site", this.Site.GetAsDynamic());
-            data.Add("Document", document.GetAsDynamic(documentContent));
-            data.Add("Layout", layout == null ? null : layout.GetAsDynamic());
-            data.Add("Book", book == null ? null : book.GetAsDynamic(document));
-            data.Add("Paginator", paginator == null ? null : paginator.GetAsDynamic());
-            data.Add("Books", this.Site.Books == null ? null : this.Site.Books.Select(b => b.GetAsDynamic(document)));
+
+            data["Site"] = this.Site.GetAsDynamic();
+            data["Document"] = document.GetAsDynamic(documentContent);
+            data["Layout"] = layout == null ? null : layout.GetAsDynamic();
+            data["Books"] = this.Site.Books == null ? null : this.Site.Books.Select(b => b.GetAsDynamic(document));
+
+            var engine = this.Engines[extension];
 
             return engine.Render(path, content, data);
         }

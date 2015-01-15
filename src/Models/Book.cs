@@ -18,8 +18,8 @@ namespace TinySite.Models
 
             var chapters = this.Chapters.Select(c => c.GetAsDynamic(activeDocument)).ToList();
 
-            data.Add("Id", this.Id);
-            data.Add("Chapters", chapters);
+            data["Id"] = this.Id;
+            data["Chapters"] = chapters;
 
             return data;
         }

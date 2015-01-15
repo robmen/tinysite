@@ -1,9 +1,9 @@
 ---
 layout: master
 ---
-{{#with book}}<div class="toc">
+{{#with document.book}}<div class="toc">
   <p>Table of Contents</p>
-  <div class="book" style="float:left">
+  <div class="book">
     <ul>
     {{#each chapters}}<li class="chapter{{#if childActive}} child-active{{/if}}{{#active}} active{{/active}}">{{#unless active}}<a href='{{document.url}}'>{{/unless}}{{document.title}}{{#unless active}}</a>{{/unless}}{{#if children}}
       <ul>{{#children}}
