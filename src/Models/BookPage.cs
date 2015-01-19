@@ -12,7 +12,12 @@ namespace TinySite.Models
 
             data["Active"] = (this.Document == activeDocument);
             data["Document"] = this.Document.GetAsDynamic();
+
+            data["Chapter"] = false;
             data["Page"] = true;
+
+            data["ChildActive"] = false;
+            data["Children"] = null;
 
             return data;
         }

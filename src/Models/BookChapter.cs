@@ -20,11 +20,11 @@ namespace TinySite.Models
             data["Chapter"] = true;
             data["Page"] = false;
 
-            var childActive = this.PagesOrSubChapters.Any(c => c.Document == activeDocument);
             var children = this.PagesOrSubChapters.Select(p => p.GetAsDynamic(activeDocument)).ToList();
+            var childActive = children.Any(c => c.Active || c.ChildActive);
 
-            data["ChildActive"] = childActive;
             data["Children"] = children;
+            data["ChildActive"] = childActive;
 
             return data;
         }

@@ -78,7 +78,7 @@ namespace TinySite.Commands
             data["Site"] = this.Site.GetAsDynamic();
             data["Document"] = document.GetAsDynamic(documentContent);
             data["Layout"] = layout == null ? null : layout.GetAsDynamic();
-            data["Books"] = this.Site.Books == null ? null : this.Site.Books.Select(b => b.GetAsDynamic(document));
+            data["Books"] = this.Site.Books == null ? null : this.Site.Books.Select(b => b.GetAsDynamic(document)).ToList();
 
             var engine = this.Engines[extension];
 
