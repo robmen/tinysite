@@ -25,9 +25,9 @@ namespace TinySite.Commands
             {
                 var pages = (count + document.Paginate - 1) / document.Paginate;
 
-                var format = document.Metadata.Get<string>("paginateFormat");
+                string format;
 
-                if (!String.IsNullOrEmpty(format))
+                if (document.TryGet<string>("paginateFormat", out format))
                 {
                     for (int i = 1; i < pages; ++i)
                     {
@@ -53,7 +53,7 @@ namespace TinySite.Commands
 
             // It is important that this query is not executed here (aka: do not add ToList() or ToArray()). This
             // query should be executed by the rendering engine so the returned documents are rendered first.
-            paginator.Documents = documents.OrderByDescending(d => d.Date).Skip((page - 1) * perPage).Take(perPage).Select(d => d.GetAsDynamic());
+            paginator.Documents = documents.OrderByDescending(d => d.Date).Skip((page - 1) * perPage).Take(perPage);
 
             if (pages > 1 && !String.IsNullOrEmpty(format))
             {

@@ -4,7 +4,7 @@ using TinySite.Extensions;
 
 namespace TinySite.Models
 {
-    public abstract class OutputFile
+    public abstract class OutputFile : CaseInsensitiveExpando
     {
         public OutputFile(string path, string rootPath, string outputPath, string outputRootPath, string rootUrl, string relativeUrl)
         {
@@ -33,38 +33,37 @@ namespace TinySite.Models
             this.Url = this.RootUrl.EnsureEndsWith("/") + this.RelativeUrl.TrimStart('/');
         }
 
-        protected OutputFile(OutputFile original)
+        protected OutputFile(OutputFile original) :
+            base(original)
         {
-            this.Date = original.Date;
-            this.Modified = original.Modified;
-            this.OutputPath = original.OutputPath;
-            this.OutputRootPath = original.OutputRootPath;
-            this.OutputRelativePath = original.OutputRelativePath;
-            this.SourcePath = original.SourcePath;
-            this.SourceRelativePath = original.SourceRelativePath;
-            this.Url = original.Url;
-            this.RootUrl = original.RootUrl;
-            this.RelativeUrl = original.RelativeUrl;
         }
 
-        public DateTime Date { get; set; }
+        public DateTime Date { get { return this.Get<DateTime>(); } set { this.SetTimes(null, value); } }
 
-        public DateTime Modified { get; set; }
+        public DateTime Modified { get { return this.Get<DateTime>(); } set { this.Set<DateTime>(value); } }
 
-        public string OutputPath { get; set; }
+        public string OutputPath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
-        public string OutputRootPath { get; set; }
+        public string OutputRootPath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
-        public string OutputRelativePath { get; set; }
+        public string OutputRelativePath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
-        public string SourcePath { get; set; }
+        public string SourcePath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
-        public string SourceRelativePath { get; set; }
+        public string SourceRelativePath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
-        public string Url { get; set; }
+        public string Url { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
-        public string RootUrl { get; set; }
+        public string RootUrl { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
-        public string RelativeUrl { get; set; }
+        public string RelativeUrl { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+
+        protected void SetTimes(string prefix, DateTime time)
+        {
+            this.Set<DateTime>(time, prefix ?? "Date");
+            this.Set<DateTime>(time.ToUniversalTime(), prefix ?? "Date" + "Utc");
+            this.Set<string>(time.ToString("D"), prefix + "FriendlyDate");
+            this.Set<string>(time.ToUniversalTime().ToString("yyyy-MM-ddThh:mm:ssZ"), prefix + "StandardUtcDate");
+        }
     }
 }

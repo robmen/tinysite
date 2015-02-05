@@ -3,20 +3,10 @@ using TinySite.Extensions;
 
 namespace TinySite.Models
 {
-    public class Paginator
+    public class Paginator : CaseInsensitiveExpando
     {
-        public IEnumerable<dynamic> Documents { get; set; }
+        public IEnumerable<DocumentFile> Documents { get { return this.Get<IEnumerable<DocumentFile>>(); } set { this.Set<IEnumerable<DocumentFile>>(value); } }
 
-        public Pagination Pagination { get; set; }
-
-        public dynamic GetAsDynamic()
-        {
-            var data = new CaseInsensitiveExpando();
-
-            data["Documents"] = this.Documents;
-            data["Pagination"] = this.Pagination;
-
-            return data;
-        }
+        public Pagination Pagination { get { return this.Get<Pagination>(); } set { this.Set<Pagination>(value); } }
     }
 }

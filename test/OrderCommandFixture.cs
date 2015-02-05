@@ -30,7 +30,7 @@ namespace RobMensching.TinySite.Test
 
             var doc = command.Documents.Skip(3).Take(1).Single();
 
-            var data = order.Books.First().GetAsDynamic(doc);
+            var data = order.Books.First().GetBookWithActiveDocument(doc);
         }
 
         [Fact]

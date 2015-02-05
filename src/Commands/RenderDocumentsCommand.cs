@@ -34,7 +34,7 @@ namespace TinySite.Commands
                 {
                     foreach (var document in renderedDocuments)
                     {
-                        var layoutName = document.Metadata.Get<string>("layout", "default");
+                        var layoutName = document.GetOrDefault<string>("layout", "default");
 
                         var layout = this.Site.Layouts[layoutName];
 
@@ -52,7 +52,7 @@ namespace TinySite.Commands
         {
             var content = document.SourceContent;
 
-            var layoutName = document.Metadata.Get<string>("layout", "default");
+            var layoutName = document.GetOrDefault<string>("layout", "default");
 
             var layout = this.Site.Layouts[layoutName];
 
@@ -75,14 +75,22 @@ namespace TinySite.Commands
         {
             var data = new CaseInsensitiveExpando();
 
-            data["Site"] = this.Site.GetAsDynamic();
-            data["Document"] = document.GetAsDynamic(documentContent);
-            data["Layout"] = layout == null ? null : layout.GetAsDynamic();
-            data["Books"] = this.Site.Books == null ? null : this.Site.Books.Select(b => b.GetAsDynamic(document)).ToList();
+            var backupContent = document.Content;
+
+            document.Content = documentContent;
+
+            data["Site"] = this.Site;
+            data["Document"] = document;
+            data["Layout"] = layout;
+            data["Books"] = this.Site.Books == null ? null : this.Site.Books.Select(b => b.GetBookWithActiveDocument(document)).ToList();
 
             var engine = this.Engines[extension];
 
-            return engine.Render(path, content, data);
+            var result = engine.Render(path, content, data);
+
+            document.Content = backupContent;
+
+            return result;
         }
 
         private string RenderDocumentContentUsingLayout(DocumentFile document, string documentContent, LayoutFile layout)
@@ -91,7 +99,7 @@ namespace TinySite.Commands
 
             string parentLayoutName;
 
-            if (layout.Metadata.TryGet<string>("layout", out parentLayoutName))
+            if (layout.TryGet<string>("layout", out parentLayoutName))
             {
                 var parentLayout = this.Site.Layouts[parentLayoutName];
 

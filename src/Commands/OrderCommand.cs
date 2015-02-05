@@ -52,7 +52,7 @@ namespace TinySite.Commands
 
             var orderedGroupedByParent = ordered.GroupBy(d => d.ParentId);
 
-            var documentsToChapter = new Dictionary<DocumentFile, BookChapter>();
+            var documentsToChapter = new Dictionary<DocumentFile, BookPage>();
 
             var books = new List<Book>();
 
@@ -62,13 +62,12 @@ namespace TinySite.Commands
 
                 if (documentsById.TryGetValue(groupedDocuments.Key, out parentDocument))
                 {
-                    BookChapter chapter;
+                    BookPage chapter;
 
-                    // If the parent document has not been processed yet, make it a book chapter now.
+                    // If the parent document has not been processed yet, make it a chapter page now.
                     if (!documentsToChapter.TryGetValue(parentDocument, out chapter))
                     {
-                        chapter = new BookChapter();
-                        chapter.Document = parentDocument;
+                        chapter = new BookPage(parentDocument, true);
 
                         documentsToChapter.Add(parentDocument, chapter);
                     }
@@ -78,19 +77,17 @@ namespace TinySite.Commands
                         // page for the document into a sub-chapter.
                         if (chapter.Document != parentDocument)
                         {
-                            for (var i = 0; i < chapter.PagesOrSubChapters.Count; ++i)
+                            for (var i = 0; i < chapter.SubPages.Count; ++i)
                             {
-                                var page = chapter.PagesOrSubChapters[i];
+                                var page = chapter.SubPages[i];
 
                                 if (page.Document == parentDocument)
                                 {
-                                    Debug.Assert(!(page is BookChapter));
+                                    Debug.Assert(!page.Chapter);
 
-                                    var subChapter = new BookChapter();
-                                    subChapter.Document = parentDocument;
-                                    //chapter.ParentChapter = parentChapter;
+                                    var subChapter = new BookPage(parentDocument, true);
 
-                                    chapter.PagesOrSubChapters[i] = subChapter;
+                                    chapter.SubPages[i] = subChapter;
                                     documentsToChapter[parentDocument] = chapter;
 
                                     chapter = subChapter;
@@ -102,22 +99,22 @@ namespace TinySite.Commands
 
                     foreach (var document in groupedDocuments)
                     {
-                        chapter.PagesOrSubChapters.Add(new BookPage() { /*ParentChapter = parentChapter,*/ Document = document });
+                        chapter.SubPages.Add(new BookPage(document));
+
                         documentsToChapter.Add(document, chapter);
                     }
                 }
                 else // no parent, documents must be a set of chapters in a new book.
                 {
-                    var chapters = new List<BookChapter>();
+                    var chapters = new List<BookPage>();
 
                     foreach (var document in groupedDocuments)
                     {
-                        BookChapter chapter;
+                        BookPage chapter;
 
                         if (!documentsToChapter.TryGetValue(document, out chapter))
                         {
-                            chapter = new BookChapter();
-                            chapter.Document = document;
+                            chapter = new BookPage(document, true);
                         }
 
                         Debug.Assert(chapter.Document == document);
@@ -147,27 +144,27 @@ namespace TinySite.Commands
             return books;
         }
 
-        private static DocumentFile ProcessBookAndChapterOrder(Book book, BookChapter chapter, BookChapter parent, DocumentFile previous)
+        private static DocumentFile ProcessBookAndChapterOrder(Book book, BookPage chapter, BookPage parent, DocumentFile previous)
         {
-            chapter.Document.Book = book;
+            var bookWithActiveDocument = book.GetBookWithActiveDocument(chapter.Document);
 
-            chapter.Document.Chapter = chapter;
+            chapter.Document.Book = bookWithActiveDocument;
+
+            chapter.Document.Chapter = bookWithActiveDocument.Chapters.Where(c => c.Document == chapter.Document).Single();
 
             previous = SetNextPreviousAndParent(previous, chapter.Document, parent == null ? null : parent.Document);
 
-            foreach (var page in chapter.PagesOrSubChapters)
+            foreach (var page in chapter.SubPages)
             {
                 previous = SetNextPreviousAndParent(previous, page.Document, chapter.Document);
 
-                var subChapter = page as BookChapter;
-
-                if (subChapter != null)
+                if (page.SubPages != null && page.SubPages.Any())
                 {
-                    previous = ProcessBookAndChapterOrder(book, subChapter, chapter, previous);
+                    previous = ProcessBookAndChapterOrder(book, page, chapter, previous);
                 }
                 else
                 {
-                    page.Document.Book = book;
+                    page.Document.Book = book.GetBookWithActiveDocument(page.Document);
                 }
             }
 

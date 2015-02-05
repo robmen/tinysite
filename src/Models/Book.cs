@@ -6,22 +6,26 @@ using TinySite.Extensions;
 namespace TinySite.Models
 {
     [DebuggerDisplay("Book: {Id}")]
-    public class Book
+    public class Book : CaseInsensitiveExpando
     {
-        public string Id { get; set; }
+        public string Id { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
-        public IEnumerable<BookChapter> Chapters { get; set; }
+        public IEnumerable<BookPage> Chapters { get { return this.Get<IEnumerable<BookPage>>(); } set { this.Set<IEnumerable<BookPage>>(value); } }
 
-        public dynamic GetAsDynamic(DocumentFile activeDocument)
+        public Book GetBookWithActiveDocument(DocumentFile activeDocument)
         {
-            var data = new CaseInsensitiveExpando();
+            var book = this;
 
-            var chapters = this.Chapters.Select(c => c.GetAsDynamic(activeDocument)).ToList();
+            var chapters = this.Chapters.Select(c => c.GetWithActiveDocument(activeDocument)).ToList();
 
-            data["Id"] = this.Id;
-            data["Chapters"] = chapters;
+            if (chapters.Any(c => c.Active || c.SubPageActive))
+            {
+                book = new Book() { Id = this.Id };
 
-            return data;
+                book.Chapters = chapters;
+            }
+
+            return book;
         }
     }
 }

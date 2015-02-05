@@ -169,7 +169,7 @@ namespace TinySite.Commands
 
             // Finally create the document.
             //
-            var documentFile = new DocumentFile(file, this.DocumentsPath, output, this.OutputRootPath, relativeUrl, this.RootUrl, this.Author);
+            var documentFile = new DocumentFile(file, this.DocumentsPath, output, this.OutputRootPath, relativeUrl, this.RootUrl, this.Author, parser.Metadata);
 
             if (metadataDate.HasValue)
             {
@@ -193,8 +193,6 @@ namespace TinySite.Commands
             parser.Metadata.Remove("paginate");
 
             documentFile.SourceContent = parser.Content;
-
-            documentFile.Metadata = parser.Metadata;
 
             return documentFile;
         }

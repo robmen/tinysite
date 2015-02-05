@@ -48,45 +48,22 @@ namespace RobMensching.TinySite.Test
             var config = command.ExecuteAsync().Result;
             var site = new Site(config, Enumerable.Empty<DocumentFile>(), Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
 
-            var data = site.GetAsDynamic();
+            dynamic data = site; //site.GetAsDynamic();
 
-            Assert.Equal("/blog/", data.Url);
+            Assert.Equal("/blog/", data.urL);
         }
 
-        //[Fact]
-        //public void CanGetDynamicFunctionFromData()
-        //{
-        //    var config = SiteConfig.Load("data\\site.config");
-        //    var data = config.GetAsData();
+        [Fact]
+        public void CanGetFullUrlFromData()
+        {
+            var command = new LoadSiteConfigCommand() { ConfigPath = "data\\site.config" };
+            var config = command.ExecuteAsync().Result;
+            var site = new Site(config, Enumerable.Empty<DocumentFile>(), Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
 
-        //    Type t = data.Get2.GetType();
-        //    Type d = data.GetType();
-        //    MemberInfo[] ms = d.GetMember("Get2", MemberTypes.Method, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            dynamic data = site; //site.GetAsDynamic();
 
-        //    IDictionary<string, object> dic = (IDictionary<string, object>)data;
-        //    var m = dic["Get2"];
-
-        //    //var x = data.Get(config);
-        //    var x = data.Get;
-        //    Assert.Equal("/", x);
-
-        //    config.Test = new string[] { "a", "b", "c" };
-
-        //    var y = data.Get2();
-        //    foreach (string s in y)
-        //    {
-        //        Assert.Equal(1, s.Length);
-        //    }
-
-        //    config.Test = new string[] { "aa", "bb", "cc" };
-        //    y = data.Get2();
-        //    foreach (string s in y)
-        //    {
-        //        Assert.Equal(2, s.Length);
-        //    }
-        //    //var y = x.Count;
-        //    //Assert.Equal(3, y);
-        //}
+            Assert.Equal("http://www.example.com/blog/", data.fullurl);
+        }
 
         [Fact]
         public void CanGetTitle()
@@ -96,9 +73,9 @@ namespace RobMensching.TinySite.Test
 
             var site = new Site(config, Enumerable.Empty<DocumentFile>(), Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
 
-            var data = site.GetAsDynamic();
+            dynamic data = site; //.GetAsDynamic();
 
-            Assert.Equal("Test Blog.", (string)data.Title);
+            Assert.Equal("Test Blog.", (string)data.tiTle);
         }
     }
 }

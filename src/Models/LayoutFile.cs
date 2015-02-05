@@ -6,11 +6,15 @@ using TinySite.Extensions;
 namespace TinySite.Models
 {
     [DebuggerDisplay("LayoutFile: {Id}, Source: {SourcePath}")]
-    public class LayoutFile
+    public class LayoutFile : CaseInsensitiveExpando
     {
         public LayoutFile(string path, string rootPath, string sourceContent, MetadataCollection metadata)
         {
+            metadata.Assign(this);
+
             this.SourcePath = Path.GetFullPath(path);
+
+            this.Name = Path.GetFileName(path);
 
             var relativePath = this.SourcePath.Substring(rootPath.Length);
 
@@ -23,35 +27,18 @@ namespace TinySite.Models
             this.Modified = info.LastWriteTime < info.CreationTime ? info.CreationTime : info.LastWriteTime;
 
             this.SourceContent = sourceContent;
-
-            this.Metadata = metadata;
         }
 
-        public string Id { get; private set; }
+        public string Id { get { return this.Get<string>(); } private set { this.Set<string>(value); } }
 
-        public string Extension { get; private set; }
+        public string Extension { get { return this.Get<string>(); } private set { this.Set<string>(value); } }
 
-        public DateTime Modified { get; private set; }
+        public DateTime Modified { get { return this.Get<DateTime>(); } private set { this.Set<DateTime>(value); } }
 
-        public string SourcePath { get; private set; }
+        public string Name { get { return this.Get<string>(); } private set { this.Set<string>(value); } }
 
-        public string SourceContent { get; private set; }
+        public string SourcePath { get { return this.Get<string>(); } private set { this.Set<string>(value); } }
 
-        public MetadataCollection Metadata { get; private set; }
-
-        public dynamic GetAsDynamic()
-        {
-            var data = new CaseInsensitiveExpando();
-
-            this.Metadata.Assign(data);
-
-            data["Id"] = this.Id;
-            data["Modified"] = this.Modified;
-            data["Path"] = this.SourcePath;
-            data["Name"] = Path.GetFileName(this.SourcePath);
-            data["SourceContent"] = this.SourceContent;
-
-            return data;
-        }
+        public string SourceContent { get { return this.Get<string>(); } private set { this.Set<string>(value); } }
     }
 }

@@ -2,12 +2,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Runtime.CompilerServices;
 
 namespace TinySite.Extensions
 {
     public class CaseInsensitiveExpando : DynamicObject, IDictionary<string, object>
     {
-        private IDictionary<string, object> _dictionary = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+        private IDictionary<string, object> _dictionary;
+
+        public CaseInsensitiveExpando()
+        {
+            _dictionary = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        protected CaseInsensitiveExpando(CaseInsensitiveExpando original)
+        {
+            _dictionary = new Dictionary<string, object>(original, StringComparer.OrdinalIgnoreCase);
+        }
 
         public void Add(KeyValuePair<string, object> item)
         {
@@ -116,6 +127,38 @@ namespace TinySite.Extensions
         public ICollection<object> Values
         {
             get { return _dictionary.Values; }
+        }
+
+        public T GetOrDefault<T>(string key, T defaultValue = default(T))
+        {
+            object result;
+            return _dictionary.TryGetValue(key, out result) ? (T)Convert.ChangeType(result, typeof(T)) : defaultValue;
+        }
+
+        public bool TryGet<T>(string key, out T value)
+        {
+            object valueObject;
+            if (_dictionary.TryGetValue(key, out valueObject))
+            {
+                value = (T)valueObject;
+                return true;
+            }
+            else
+            {
+                value = default(T);
+                return false;
+            }
+        }
+
+        protected T Get<T>([CallerMemberName] string key = null)
+        {
+            object value;
+            return _dictionary.TryGetValue(key, out value) ? (T)value : default(T);
+        }
+
+        protected void Set<T>(T value, [CallerMemberName] string key = null)
+        {
+            _dictionary[key] = value;
         }
     }
 }

@@ -5,10 +5,12 @@ using TinySite.Extensions;
 
 namespace TinySite.Models
 {
-    public class Site
+    public class Site : CaseInsensitiveExpando
     {
         public Site(SiteConfig config, IEnumerable<DocumentFile> documents, IEnumerable<StaticFile> files, IEnumerable<LayoutFile> layouts, Site parent = null)
         {
+            config.Metadata.Assign(this);
+
             this.Author = config.Author;
             this.DocumentsPath = config.DocumentsPath;
             this.FilesPath = config.FilesPath;
@@ -18,7 +20,6 @@ namespace TinySite.Models
             this.TimeZone = config.TimeZone;
             this.Url = config.Url.EnsureEndsWith("/");
             this.RootUrl = config.RootUrl.EnsureEndsWith("/");
-            this.Metadata = new MetadataCollection(config.Metadata);
 
             this.Documents = documents.ToList();
 
@@ -27,49 +28,43 @@ namespace TinySite.Models
             this.Layouts = new LayoutFileCollection(layouts);
         }
 
-        public Author Author { get; set; }
+        public Author Author { get { return this.Get<Author>(); } set { this.Set<Author>(value); } }
 
-        public string DocumentsPath { get; set; }
+        public string DocumentsPath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
-        public string FilesPath { get; set; }
+        public string FilesPath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
-        public string LayoutsPath { get; set; }
+        public string LayoutsPath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
-        public string OutputPath { get; set; }
+        public string OutputPath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
-        public Site Parent { get; set; }
+        public Site Parent { get { return this.Get<Site>(); } set { this.Set<Site>(value); } }
 
-        public TimeZoneInfo TimeZone { get; set; }
+        public TimeZoneInfo TimeZone { get { return this.Get<TimeZoneInfo>(); } set { this.Set<TimeZoneInfo>(value); } }
 
-        public string Url { get; set; }
+        public string Url { get { return this.Get<string>(); } set { this.Set<string>(value); this.UpdateFullUrl(); } }
 
-        public string RootUrl { get; set; }
+        public string RootUrl { get { return this.Get<string>(); } set { this.Set<string>(value); this.UpdateFullUrl(); } }
 
-        public IList<DocumentFile> Documents { get; set; }
+        public string FullUrl { get { return this.Get<string>(); } }
 
-        public IList<StaticFile> Files { get; set; }
+        public IList<DocumentFile> Documents { get { return this.Get<IList<DocumentFile>>(); } set { this.Set<IList<DocumentFile>>(value); } }
 
-        public LayoutFileCollection Layouts { get; set; }
+        public IList<StaticFile> Files { get { return this.Get<IList<StaticFile>>(); } set { this.Set<IList<StaticFile>>(value); } }
 
-        public MetadataCollection Metadata { get; set; }
+        public LayoutFileCollection Layouts { get { return this.Get<LayoutFileCollection>(); } set { this.Set<LayoutFileCollection>(value); } }
 
-        public IEnumerable<Book> Books { get; set; }
+        public IEnumerable<Book> Books { get { return this.Get<IEnumerable<Book>>(); } set { this.Set<IEnumerable<Book>>(value); } }
 
-        public dynamic GetAsDynamic()
+        private void UpdateFullUrl()
         {
-            var data = new CaseInsensitiveExpando();
+            var rootUrl = (this.RootUrl == null) ? null : this.RootUrl.EnsureEndsWith("/");
 
-            this.Metadata.Assign(data);
+            var relativeUrl = (this.Url == null) ? null : this.Url.TrimStart('/');
 
-            data["Author"] = this.Author;
-            data["Output"] = this.OutputPath;
-            data["Url"] = this.Url;
-            data["RootUrl"] = this.RootUrl;
-            data["FullUrl"] = this.RootUrl.EnsureEndsWith("/") + this.Url.TrimStart('/');
-            data["Parent"] = this.Parent;
-            data["TimeZoneInfo"] = this.TimeZone;
+            var fullUrl = String.Concat(rootUrl, relativeUrl);
 
-            return data;
+            this.Set<string>(fullUrl, "FullUrl");
         }
     }
 }

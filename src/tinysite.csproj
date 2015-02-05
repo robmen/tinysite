@@ -76,7 +76,6 @@
     <Compile Include="Extensions\CaseInsensitiveExpando.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Book.cs" />
-    <Compile Include="Models\BookChapter.cs" />
     <Compile Include="Models\BookPage.cs" />
     <Compile Include="Models\CommandLine.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
