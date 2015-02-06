@@ -150,7 +150,7 @@ namespace TinySite.Commands
 
             chapter.Document.Book = bookWithActiveDocument;
 
-            chapter.Document.Chapter = bookWithActiveDocument.Chapters.Where(c => c.Document == chapter.Document).Single();
+            chapter.Document.Chapter = AllChapters(bookWithActiveDocument).Where(c => c.Document == chapter.Document).Single();
 
             previous = SetNextPreviousAndParent(previous, chapter.Document, parent == null ? null : parent.Document);
 
@@ -169,6 +169,26 @@ namespace TinySite.Commands
             }
 
             return previous;
+        }
+
+        private static IEnumerable<BookPage> AllChapters(Book book)
+        {
+            var queue = new Queue<BookPage>(book.Chapters);
+
+            while (queue.Count > 0)
+            {
+                var page = queue.Dequeue();
+
+                if (page.Chapter)
+                {
+                    foreach (var subPage in page.SubPages)
+                    {
+                        queue.Enqueue(subPage);
+                    }
+
+                    yield return page;
+                }
+            }
         }
 
         private static DocumentFile SetNextPreviousAndParent(DocumentFile previous, DocumentFile document, DocumentFile parent)
