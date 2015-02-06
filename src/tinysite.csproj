@@ -87,6 +87,7 @@
     <Compile Include="Models\Pagination.cs" />
     <Compile Include="Models\Paginator.cs" />
     <Compile Include="Models\Statistics.cs" />
+    <Compile Include="Renderers\JsonRenderer.cs" />
     <Compile Include="Renderers\LessRenderer.cs" />
     <Compile Include="Renderers\HandlebarsRenderer.cs" />
     <Compile Include="Renderers\RazorRenderer.cs" />
