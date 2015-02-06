@@ -35,6 +35,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="dotless.ClientOnly">
+      <HintPath>..\packages\DotlessClientOnly.1.4.1.0\lib\dotless.ClientOnly.dll</HintPath>
+    </Reference>
     <Reference Include="MarkdownDeep">
       <HintPath>..\packages\MarkdownDeep.NET.1.5\lib\.NetFramework 3.5\MarkdownDeep.dll</HintPath>
     </Reference>
@@ -84,6 +87,7 @@
     <Compile Include="Models\Pagination.cs" />
     <Compile Include="Models\Paginator.cs" />
     <Compile Include="Models\Statistics.cs" />
+    <Compile Include="Renderers\LessRenderer.cs" />
     <Compile Include="Renderers\HandlebarsRenderer.cs" />
     <Compile Include="Renderers\RazorRenderer.cs" />
     <Compile Include="Renderers\MarkdownRenderer.cs" />

@@ -26,7 +26,7 @@ namespace TinySite.Commands
                     renderedDocuments = this.Site.Documents
                                         .Where(d => !d.Draft)
                                         .AsParallel()
-                                        .Select(this.RenderDocument)
+                                        .Select(this.RenderDocumentContent)
                                         .ToList();
                 }
 
@@ -36,9 +36,16 @@ namespace TinySite.Commands
                     {
                         var layoutName = document.GetOrDefault<string>("layout", "default");
 
-                        var layout = this.Site.Layouts[layoutName];
+                        if (String.IsNullOrEmpty(layoutName))
+                        {
+                            document.RenderedContent = document.Content;
+                        }
+                        else
+                        {
+                            var layout = this.Site.Layouts[layoutName];
 
-                        document.RenderedContent = this.RenderDocumentContentUsingLayout(document, document.Content, layout);
+                            document.RenderedContent = this.RenderDocumentContentUsingLayout(document, document.Content, layout);
+                        }
 
                         document.Rendered = true;
                     }
@@ -48,13 +55,13 @@ namespace TinySite.Commands
             }
         }
 
-        private DocumentFile RenderDocument(DocumentFile document)
+        private DocumentFile RenderDocumentContent(DocumentFile document)
         {
             var content = document.SourceContent;
 
             var layoutName = document.GetOrDefault<string>("layout", "default");
 
-            var layout = this.Site.Layouts[layoutName];
+            var layout = String.IsNullOrEmpty(layoutName) ? null : this.Site.Layouts[layoutName];
 
             foreach (var extension in document.ExtensionsForRendering)
             {
