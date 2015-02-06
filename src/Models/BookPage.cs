@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using TinySite.Extensions;
 
 namespace TinySite.Models
 {
+    [DebuggerDisplay("BookPage: {Document.Id}, Source: {Document.SourceRelativePath}")]
     public class BookPage : CaseInsensitiveExpando
     {
         public BookPage(DocumentFile document, bool chapterPage = false)
