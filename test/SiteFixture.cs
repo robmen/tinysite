@@ -77,5 +77,16 @@ namespace RobMensching.TinySite.Test
 
             Assert.Equal("Test Blog.", (string)data.tiTle);
         }
+
+        [Fact]
+        public void CanGetDefaultLayout()
+        {
+            var command = new LoadSiteConfigCommand() { ConfigPath = "data\\site.config" };
+            var config = command.ExecuteAsync().Result;
+
+            var site = new Site(config, Enumerable.Empty<DocumentFile>(), Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
+
+            Assert.Equal("test", site.DefaultLayoutForExtension["html"]);
+        }
     }
 }

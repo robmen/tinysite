@@ -67,6 +67,10 @@ namespace TinySite.Commands
                         subsites = value.Values<string>().ToArray();
                         break;
 
+                    case "defaultlayoutforextension":
+                        this.AssignDefaultLayouts(config, value);
+                        break;
+
                     default:
                         config.Metadata.Add(key, value);
                         break;
@@ -99,6 +103,23 @@ namespace TinySite.Commands
             config.SubsiteConfigs = await Task.WhenAll(subsiteLoadTasks);
 
             return this.SiteConfig = config;
+        }
+
+        private void AssignDefaultLayouts(SiteConfig config, JToken token)
+        {
+            var layoutDefaults = token as JObject;
+
+            if (layoutDefaults == null)
+            {
+                config.DefaultLayoutForExtension.Add("*", (string)token);
+            }
+            else
+            {
+                foreach (var layoutDefault in layoutDefaults)
+                {
+                    config.DefaultLayoutForExtension.Add(layoutDefault.Key, (string)layoutDefault.Value);
+                }
+            }
         }
 
         private class JsonTimeZoneConverter : JsonConverter

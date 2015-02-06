@@ -34,16 +34,14 @@ namespace TinySite.Commands
                 {
                     foreach (var document in renderedDocuments)
                     {
-                        var layoutName = document.GetOrDefault<string>("layout", "default");
+                        var layout = this.GetLayoutForDocument(document);
 
-                        if (String.IsNullOrEmpty(layoutName))
+                        if (layout == null)
                         {
                             document.RenderedContent = document.Content;
                         }
                         else
                         {
-                            var layout = this.Site.Layouts[layoutName];
-
                             document.RenderedContent = this.RenderDocumentContentUsingLayout(document, document.Content, layout);
                         }
 
@@ -59,9 +57,7 @@ namespace TinySite.Commands
         {
             var content = document.SourceContent;
 
-            var layoutName = document.GetOrDefault<string>("layout", "default");
-
-            var layout = String.IsNullOrEmpty(layoutName) ? null : this.Site.Layouts[layoutName];
+            var layout = this.GetLayoutForDocument(document);
 
             foreach (var extension in document.ExtensionsForRendering)
             {
@@ -114,6 +110,20 @@ namespace TinySite.Commands
             }
 
             return content;
+        }
+
+        private LayoutFile GetLayoutForDocument(DocumentFile document)
+        {
+            var defaultLayout = String.Empty;
+
+            if (!this.Site.DefaultLayoutForExtension.TryGetValue(document.TargetExtension, out defaultLayout))
+            {
+                this.Site.DefaultLayoutForExtension.TryGetValue("*", out defaultLayout);
+            }
+
+            var layoutName = document.GetOrDefault<string>("layout", defaultLayout);
+
+            return String.IsNullOrEmpty(layoutName) ? null : this.Site.Layouts[layoutName];
         }
 
         private static string Summarize(string content)

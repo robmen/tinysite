@@ -26,6 +26,8 @@ namespace TinySite.Models
 
             this.OutputPath = Path.Combine(this.OutputRootPath, this.OutputRelativePath);
 
+            this.TargetExtension = Path.GetExtension(this.OutputRelativePath).TrimStart('.');
+
             this.RelativeUrl = relativeUrl;
 
             this.RootUrl = rootUrl;
@@ -57,6 +59,8 @@ namespace TinySite.Models
         public string RootUrl { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
         public string RelativeUrl { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+
+        public string TargetExtension { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
         protected void SetTimes(string prefix, DateTime time)
         {

@@ -1,5 +1,4 @@
 ---
-layout: master
 title: Example Homepage
 ---
 

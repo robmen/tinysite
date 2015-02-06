@@ -11,6 +11,8 @@ namespace TinySite.Models
         {
             config.Metadata.Assign(this);
 
+            this.DefaultLayoutForExtension = new Dictionary<string, string>(config.DefaultLayoutForExtension);
+
             this.Author = config.Author;
             this.DocumentsPath = config.DocumentsPath;
             this.FilesPath = config.FilesPath;
@@ -27,6 +29,8 @@ namespace TinySite.Models
 
             this.Layouts = new LayoutFileCollection(layouts);
         }
+
+        public IDictionary<string, string> DefaultLayoutForExtension { get; private set; }
 
         public Author Author { get { return this.Get<Author>(); } set { this.Set<Author>(value); } }
 

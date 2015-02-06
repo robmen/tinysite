@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace TinySite.Models
 {
@@ -6,6 +7,8 @@ namespace TinySite.Models
     {
         public SiteConfig()
         {
+            this.DefaultLayoutForExtension = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
             this.Metadata = new MetadataCollection();
         }
 
@@ -28,6 +31,8 @@ namespace TinySite.Models
         public SiteConfig Parent { get; set; }
 
         public TimeZoneInfo TimeZone { get; set; }
+
+        public IDictionary<string, string> DefaultLayoutForExtension { get; set; }
 
         public MetadataCollection Metadata { get; set; }
     }
