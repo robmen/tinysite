@@ -8,9 +8,16 @@ namespace TinySite.Models
     [DebuggerDisplay("Book: {Id}")]
     public class Book : CaseInsensitiveExpando
     {
-        public string Id { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public Book(string id, List<BookPage> chapters)
+        {
+            this.Id = id;
 
-        public IEnumerable<BookPage> Chapters { get { return this.Get<IEnumerable<BookPage>>(); } set { this.Set<IEnumerable<BookPage>>(value); } }
+            this.Chapters = chapters;
+        }
+
+        public string Id { get { return this.Get<string>(); } private set { this.Set<string>(value); } }
+
+        public IEnumerable<BookPage> Chapters { get { return this.Get<IEnumerable<BookPage>>(); } private set { this.Set<IEnumerable<BookPage>>(value); } }
 
         public Book GetBookWithActiveDocument(DocumentFile activeDocument)
         {
@@ -20,9 +27,7 @@ namespace TinySite.Models
 
             if (chapters.Any(c => c.Active || c.SubPageActive))
             {
-                book = new Book() { Id = this.Id };
-
-                book.Chapters = chapters;
+                book = new Book(this.Id, chapters);
             }
 
             return book;

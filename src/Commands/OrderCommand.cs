@@ -123,9 +123,7 @@ namespace TinySite.Commands
                         documentsToChapter.Add(document, chapter);
                     }
 
-                    var book = new Book();
-                    book.Id = groupedDocuments.Key;
-                    book.Chapters = chapters;
+                    var book = new Book(groupedDocuments.Key, chapters);
 
                     books.Add(book);
                 }
