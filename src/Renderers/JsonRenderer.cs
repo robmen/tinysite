@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using TinySite.Rendering;
 
@@ -23,6 +23,11 @@ namespace TinySite.Renderers
                     if (token.Key.Equals("Content", StringComparison.OrdinalIgnoreCase))
                     {
                         content = (string)token.Value;
+                    }
+                    else if (token.Value.Type == JTokenType.Array)
+                    {
+                        var array = (JArray)token.Value;
+                        document[token.Key] = array.Values().Select(t => (string)t).ToArray();
                     }
                     else
                     {
