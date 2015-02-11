@@ -57,6 +57,10 @@ namespace TinySite.Renderers
                         Console.Error.WriteLine(error.ErrorText);
                     }
                 }
+                catch (Exception e)
+                {
+                    Console.Error.WriteLine("Failure while processing: {0}, error: {1}", path, e.Message);
+                }
 
                 return null;
             }
