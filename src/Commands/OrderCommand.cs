@@ -13,7 +13,7 @@ namespace TinySite.Commands
 
         public void Execute()
         {
-            var documentsById = this.Documents.ToDictionary(d => d.Id);
+            var documentsById = this.Documents.ToLookup(d => d.Id);
 
             this.ProcessImplicitOrder(documentsById);
 
@@ -22,7 +22,7 @@ namespace TinySite.Commands
             this.Books = books;
         }
 
-        private void ProcessImplicitOrder(IDictionary<string, DocumentFile> documentsById)
+        private void ProcessImplicitOrder(ILookup<string, DocumentFile> documentsById)
         {
             var unordered = this.Documents.Where(d => d.Order < 1)
                 .OrderBy(d => d.Date)
@@ -32,8 +32,7 @@ namespace TinySite.Commands
 
             foreach (var groupedDocuments in unorderedGroupedByParent)
             {
-                DocumentFile parent = null;
-                documentsById.TryGetValue(groupedDocuments.Key, out parent);
+                DocumentFile parent = documentsById[groupedDocuments.Key].FirstOrDefault();
 
                 DocumentFile previous = null;
 
@@ -44,7 +43,7 @@ namespace TinySite.Commands
             }
         }
 
-        private IEnumerable<Book> ProcessExplicitOrder(IDictionary<string, DocumentFile> documentsById)
+        private IEnumerable<Book> ProcessExplicitOrder(ILookup<string, DocumentFile> documentsById)
         {
             var ordered = this.Documents.Where(d => d.Order > 0)
                 .OrderBy(d => d.Order)
@@ -58,9 +57,9 @@ namespace TinySite.Commands
 
             foreach (var groupedDocuments in orderedGroupedByParent)
             {
-                DocumentFile parentDocument;
+                DocumentFile parentDocument = documentsById[groupedDocuments.Key].FirstOrDefault();
 
-                if (documentsById.TryGetValue(groupedDocuments.Key, out parentDocument))
+                if (parentDocument != null)
                 {
                     BookPage chapter;
 

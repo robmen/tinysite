@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,17 @@ namespace TinySite.Commands
 
         public int Execute()
         {
+#if DEBUG
+            var duplicates = this.Documents.ToLookup(d => d.OutputPath, StringComparer.OrdinalIgnoreCase);
+
+            foreach (var dupe in duplicates.Where(d => d.Count() > 1))
+            {
+                foreach (var d in dupe)
+                {
+                    Console.WriteLine("Duplicate, output: {0}, source: {1}", d.OutputPath, d.SourcePath);
+                }
+            }
+#endif
             return this.WroteDocuments = this.Documents.Where(d => d.Rendered)
                 .AsParallel()
                 .Select(WriteDocument)
