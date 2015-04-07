@@ -8,6 +8,8 @@ namespace TinySite.Services
 {
     public class RenderingEngine
     {
+        private object sync = new object();
+
         private RenderingEngine(Type type)
         {
             this.Type = type;
@@ -50,7 +52,13 @@ namespace TinySite.Services
         {
             if (this.Renderer == null)
             {
-                this.Renderer = Activator.CreateInstance(this.Type) as IRenderer;
+                lock (sync)
+                {
+                    if (this.Renderer == null)
+                    {
+                        this.Renderer = Activator.CreateInstance(this.Type) as IRenderer;
+                    }
+                }
 
                 if (this.Renderer == null)
                 {
