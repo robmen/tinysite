@@ -1,4 +1,5 @@
-﻿using FuManchu;
+﻿using System;
+using FuManchu;
 using TinySite.Rendering;
 
 namespace TinySite.Renderers
@@ -14,9 +15,18 @@ namespace TinySite.Renderers
         {
             lock (sync)
             {
-                var result = Handlebars.CompileAndRun(path, template, data);
+                try
+                {
+                    var result = Handlebars.CompileAndRun(path, template, data);
 
-                return result;
+                    return result;
+                }
+                catch (Exception e)
+                {
+                    Console.Error.WriteLine("Handelbars failure while processing: {0}, error: {1}", path, e.Message);
+                }
+
+                return null;
             }
         }
     }

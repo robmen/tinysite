@@ -59,7 +59,7 @@ namespace TinySite.Renderers
                 }
                 catch (Exception e)
                 {
-                    Console.Error.WriteLine("Failure while processing: {0}, error: {1}", path, e.Message);
+                    Console.Error.WriteLine("Razor failure while processing: {0}, error: {1}", path, e.Message);
                 }
 
                 return null;

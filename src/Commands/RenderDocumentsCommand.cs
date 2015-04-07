@@ -123,6 +123,13 @@ namespace TinySite.Commands
 
             var layoutName = document.GetOrDefault<string>("layout", defaultLayout);
 
+            if (!String.IsNullOrEmpty(layoutName) && !this.Site.Layouts.Contains(layoutName))
+            {
+                Console.Error.WriteLine("Cannot find layout: '{0}' while processing file: {1}", layoutName, document.SourcePath);
+
+                layoutName = null;
+            }
+
             return String.IsNullOrEmpty(layoutName) ? null : this.Site.Layouts[layoutName];
         }
 
