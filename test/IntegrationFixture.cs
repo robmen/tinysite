@@ -55,7 +55,7 @@ namespace RobMensching.TinySite.Test
             process.StartInfo.WorkingDirectory = workingFolder;
             process.Start();
 
-            var waited = process.WaitForExit(10 * 1000);
+            var waited = process.WaitForExit(3 * 60 * 1000);
             Assert.True(waited);
             Assert.Equal(0, process.ExitCode);
         }
