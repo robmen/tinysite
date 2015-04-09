@@ -14,6 +14,8 @@ namespace TinySite.Models
 
         public Author Author { get; set; }
 
+        public string SitePath { get; set; }
+
         public string DocumentsPath { get; set; }
 
         public string FilesPath { get; set; }

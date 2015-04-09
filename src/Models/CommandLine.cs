@@ -3,9 +3,16 @@ using System.Collections.Generic;
 
 namespace TinySite.Models
 {
+    public enum ProcessingCommand
+    {
+        Unknown,
+        Render,
+        Serve,
+    }
+
     public class CommandLine
     {
-        public string Command { get; private set; }
+        public ProcessingCommand Command { get; private set; }
 
         public IEnumerable<string> Errors { get; private set; }
 
@@ -25,31 +32,40 @@ namespace TinySite.Models
             }
             else
             {
-                commandLine.Command = args[0];
+                var command = ProcessingCommand.Unknown;
 
-                commandLine.SitePath = ".";
-
-                for (int i = 1; i < args.Length; ++i)
+                if (!Enum.TryParse<ProcessingCommand>(args[0], true, out command))
                 {
-                    var arg = args[i];
-                    if (arg.StartsWith("-") || arg.StartsWith("/"))
-                    {
-                        var param = arg.Substring(1);
-                        switch (param.ToLowerInvariant())
-                        {
-                            case "o":
-                            case "out":
-                                commandLine.OutputPath = args[++i];
-                                break;
+                    errors.Add(String.Format("Unknown processing command: {0}. Supported commands are: render or serve", args[0]));
+                }
+                else
+                {
+                    commandLine.Command = command;
 
-                            default:
-                                errors.Add(String.Format("Unknown command-line paramter: {0}", arg));
-                                break;
-                        }
-                    }
-                    else
+                    commandLine.SitePath = ".";
+
+                    for (int i = 1; i < args.Length; ++i)
                     {
-                        commandLine.SitePath = arg;
+                        var arg = args[i];
+                        if (arg.StartsWith("-") || arg.StartsWith("/"))
+                        {
+                            var param = arg.Substring(1);
+                            switch (param.ToLowerInvariant())
+                            {
+                                case "o":
+                                case "out":
+                                    commandLine.OutputPath = args[++i];
+                                    break;
+
+                                default:
+                                    errors.Add(String.Format("Unknown command-line paramter: {0}", arg));
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            commandLine.SitePath = arg;
+                        }
                     }
                 }
             }

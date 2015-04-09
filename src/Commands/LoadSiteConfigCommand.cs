@@ -77,6 +77,7 @@ namespace TinySite.Commands
                 }
             }
 
+            config.SitePath = root;
             config.DocumentsPath = Path.Combine(root, "documents\\");
             config.FilesPath = Path.Combine(root, "files\\");
             config.LayoutsPath = Path.Combine(root, "layouts\\");

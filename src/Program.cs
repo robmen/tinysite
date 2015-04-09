@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,8 +45,6 @@ namespace TinySite
                 {
                     AsyncPump.Run(async delegate { await program.Run(commandLine); });
                 }
-
-                Statistics.Current.Report();
             }
             catch (Exception e)
             {
@@ -58,11 +57,43 @@ namespace TinySite
 
         public async Task Run(CommandLine commandLine)
         {
+            var config = await this.LoadConfig(commandLine.SitePath, commandLine.OutputPath);
+
+            switch (commandLine.Command)
+            {
+                case ProcessingCommand.Render:
+                    await this.RunRenderCommand(config);
+
+                    Statistics.Current.Report();
+                    break;
+
+                case ProcessingCommand.Serve:
+                    this.RunServeCommand(config);
+                    break;
+
+                default:
+                    throw new InvalidOperationException(String.Format("Unknown ProcessingCommand: {0}", commandLine.Command));
+            }
+        }
+
+        private async Task<SiteConfig> LoadConfig(string sitePath, string outputPath)
+        {
+            using (var capture = Statistics.Current.Start(StatisticTiming.LoadedConfiguration))
+            {
+                var command = new LoadSiteConfigCommand();
+                command.ConfigPath = Path.Combine(sitePath, "site.config");
+                command.OutputPath = outputPath;
+                return await command.ExecuteAsync();
+            }
+        }
+
+        private async Task RunRenderCommand(SiteConfig config)
+        {
             var engines = RenderingEngine.Load();
 
             // Load the site documents.
             //
-            var site = await this.Load(commandLine.SitePath, commandLine.OutputPath, engines.Keys);
+            var site = await this.LoadSite(config, engines.Keys);
 
             // Order the documents.
             //
@@ -74,27 +105,44 @@ namespace TinySite
 
             // TODO: do any other sweeping updates to the documents here.
 
-            // TODO: get the right command to process the commandLine.Command request.
-            //       For now it's always render.
-            //
             // Render the documents.
             //
             this.Render(site, engines);
         }
 
-        private async Task<Site> Load(string sitePath, string outputPath, IEnumerable<string> renderedExtensions)
+        private void RunServeCommand(SiteConfig config)
+        {
+            var iise = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"IIS Express\iisexpress.exe");
+            var args = String.Format("/path:\"{0}\" /systray:false", config.OutputPath.TrimEnd('\\'));
+
+            if (!File.Exists(iise))
+            {
+                Console.WriteLine();
+                Console.Error.WriteLine("Could not find IIS Express at path: {0}. You will need to install IIS Express to use the 'serve' command. Download: http://www.microsoft.com/en-us/download/details.aspx?id=34679", iise);
+                return;
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Press 'q' to quit.");
+            Console.WriteLine();
+
+            using (var process = new Process())
+            {
+                process.StartInfo.FileName = iise;
+                process.StartInfo.Arguments = args;
+                process.StartInfo.RedirectStandardInput = true;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.WorkingDirectory = config.SitePath;
+                process.Start();
+                process.WaitForExit();
+            }
+
+            Console.WriteLine("IIS Express exited.");
+        }
+
+        private async Task<Site> LoadSite(SiteConfig config, IEnumerable<string> renderedExtensions)
         {
             Site site;
-
-            SiteConfig config;
-
-            using (var capture = Statistics.Current.Start(StatisticTiming.LoadedConfiguration))
-            {
-                var command = new LoadSiteConfigCommand();
-                command.ConfigPath = Path.Combine(sitePath, "site.config");
-                command.OutputPath = outputPath;
-                config = await command.ExecuteAsync();
-            }
 
             using (var capture = Statistics.Current.Start(StatisticTiming.LoadedSite))
             {
