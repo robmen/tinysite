@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Example Blog - </title>
+  <author>
+    <name>Foo Example</name>
+    <email>foo@example.com</email>
+    <uri>http://example.com/foo</uri>
+  </author>
+  <id></id>
+  <link rel="alternate" type="type/html" href="http://example.com/blog/" />
+  <link rel="self" type="application/atom+xml" href="" />
+  <updated>normalized</updated>
+  <entry>
+    <id></id>
+    <author>
+      <name>Foo Example</name>
+      <email>foo@example.com</email>
+      <uri>http://example.com/foo</uri>
+    </author>
+    <title>Header if you Prefer</title>
+    <summary type="html">&lt;p&gt;You don't usually have to, but you can use the YAML document markers
+&lt;code&gt;---&lt;/code&gt; (three dashs) to set apart the header of the document from the
+rest of the document. It is important to use the explicit markers if you
+want to have blank lines between items in the header.&lt;/p&gt;</summary>
+    <category term="" />
+    <link rel="alternate" type="text/html" href="" />
+    <content type="html">&lt;p&gt;You don't usually have to, but you can use the YAML document markers
+&lt;code&gt;---&lt;/code&gt; (three dashs) to set apart the header of the document from the
+rest of the document. It is important to use the explicit markers if you
+want to have blank lines between items in the header.&lt;/p&gt;&lt;a href=''&gt;Read more...&lt;/a&gt;&lt;/p&gt;</content>
+    <updated>2014-04-06T07:00:00Z</updated>
+  </entry>
+  <entry>
+    <id></id>
+    <author>
+      <name>Foo Example</name>
+      <email>foo@example.com</email>
+      <uri>http://example.com/foo</uri>
+    </author>
+    <title>Date Override</title>
+    <summary type="html">&lt;p&gt;By default blog posts are organized by the date in their filename. For
+example, this blog post filename started with &lt;code&gt;2014-04-04&lt;/code&gt;. However,
+just like with &lt;a href=&quot;/blog/posts/2014/4/3/title-override/&quot;&gt;title&lt;/a&gt;, you can use the &lt;code&gt;date&lt;/code&gt; metadata to override
+the date.&lt;/p&gt;</summary>
+    <link rel="alternate" type="text/html" href="" />
+    <content type="html">&lt;p&gt;By default blog posts are organized by the date in their filename. For
+example, this blog post filename started with &lt;code&gt;2014-04-04&lt;/code&gt;. However,
+just like with &lt;a href=&quot;/blog/posts/2014/4/3/title-override/&quot;&gt;title&lt;/a&gt;, you can use the &lt;code&gt;date&lt;/code&gt; metadata to override
+the date.&lt;/p&gt;&lt;a href=''&gt;Read more...&lt;/a&gt;&lt;/p&gt;</content>
+    <updated>2014-04-05T07:00:00Z</updated>
+  </entry>
+  <entry>
+    <id></id>
+    <author>
+      <name>Foo Example</name>
+      <email>foo@example.com</email>
+      <uri>http://example.com/foo</uri>
+    </author>
+    <title>This Title is &gt; &quot;Title Override&quot;</title>
+    <summary type="html">&lt;p&gt;The title for this blog entry is &lt;code&gt;This Title is &amp;gt; &amp;quot;Title Override&amp;quot;&lt;/code&gt;.
+By default the title comes from the filename. However, you can override
+the title by adding the &lt;code&gt;title&lt;/code&gt; metadata to the header of your blog
+entry to use a different title.&lt;/p&gt;</summary>
+    <category term="" />
+    <link rel="alternate" type="text/html" href="" />
+    <content type="html">&lt;p&gt;The title for this blog entry is &lt;code&gt;This Title is &amp;gt; &amp;quot;Title Override&amp;quot;&lt;/code&gt;.
+By default the title comes from the filename. However, you can override
+the title by adding the &lt;code&gt;title&lt;/code&gt; metadata to the header of your blog
+entry to use a different title.&lt;/p&gt;&lt;a href=''&gt;Read more...&lt;/a&gt;&lt;/p&gt;</content>
+    <updated>2014-04-03T07:00:00Z</updated>
+  </entry>
+  <entry>
+    <id></id>
+    <author>
+      <name>Foo Example</name>
+      <email>foo@example.com</email>
+      <uri>http://example.com/foo</uri>
+    </author>
+    <title>Second Blog</title>
+    <summary type="html">&lt;p&gt;This is our second blog entry. This is still rendered by tinySite.&lt;/p&gt;</summary>
+    <category term="" />
+    <link rel="alternate" type="text/html" href="" />
+    <content type="html">&lt;p&gt;This is our second blog entry. This is still rendered by tinySite.&lt;/p&gt;&lt;a href=''&gt;Read more...&lt;/a&gt;&lt;/p&gt;</content>
+    <updated>2014-04-02T07:00:00Z</updated>
+  </entry>
+  <entry>
+    <id></id>
+    <author>
+      <name>Foo Example</name>
+      <email>foo@example.com</email>
+      <uri>http://example.com/foo</uri>
+    </author>
+    <title>First Blog Entry</title>
+    <summary type="html">&lt;p&gt;This is our first blog entry. This is rendered by tinySite.&lt;/p&gt;</summary>
+    <category term="" />
+    <link rel="alternate" type="text/html" href="" />
+    <content type="html">&lt;p&gt;This is our first blog entry. This is rendered by tinySite.&lt;/p&gt;&lt;a href=''&gt;Read more...&lt;/a&gt;&lt;/p&gt;</content>
+    <updated>2014-04-01T07:00:00Z</updated>
+  </entry>
+</feed>
