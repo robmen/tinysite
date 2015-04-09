@@ -19,7 +19,7 @@ namespace RobMensching.TinySite.Test
             Assert.Null(command.Date);
             Assert.False(command.Draft);
             Assert.Empty(command.Metadata);
-            Assert.Equal(expected, command.Content);
+            Assert.Equal(expected.Replace("\r\n", "\n"), command.Content.Replace("\r\n", "\n"));
         }
 
         [Fact]
@@ -35,7 +35,7 @@ namespace RobMensching.TinySite.Test
             Assert.Null(command.Date);
             Assert.NotEmpty(command.Metadata);
             Assert.Equal("Title from the metadata.", command.Metadata.Get<string>("title"));
-            Assert.Equal(expected, command.Content);
+            Assert.Equal(expected.Replace("\r\n", "\n"), command.Content.Replace("\r\n", "\n"));
         }
 
         [Fact]
@@ -51,7 +51,7 @@ namespace RobMensching.TinySite.Test
             Assert.Null(command.Date);
             Assert.True(command.Draft);
             Assert.Empty(command.Metadata);
-            Assert.Equal(expected, command.Content);
+            Assert.Equal(expected.Replace("\r\n", "\n"), command.Content.Replace("\r\n", "\n"));
         }
 
         [Fact]

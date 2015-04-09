@@ -74,8 +74,8 @@ namespace RobMensching.TinySite.Test
                 var expectedFile = Path.Combine(verifyPath, relativeFile);
                 Assert.True(expectedSet.Remove(expectedFile), String.Format("Missing {0} file", relativeFile));
 
-                var expectedContents = File.ReadAllText(expectedFile);
-                var actualContents = File.ReadAllText(actualFile);
+                var expectedContents = File.ReadAllText(expectedFile).Replace("\r\n", "\n");
+                var actualContents = File.ReadAllText(actualFile).Replace("\r\n", "\n");
 
                 if (Path.GetExtension(relativeFile).Equals(".feed", StringComparison.OrdinalIgnoreCase))
                 {
@@ -91,9 +91,17 @@ namespace RobMensching.TinySite.Test
         private static string NormalizeFeed(string text)
         {
             var startUpdated = text.IndexOf("<updated>");
-            var endUpdated = text.IndexOf("</updated>", startUpdated);
 
-            return text.Substring(0, startUpdated + 9) + "normalized" + text.Substring(endUpdated);
+            while (startUpdated > -1)
+            {
+                var endUpdated = text.IndexOf("</updated>", startUpdated);
+
+                text = text.Substring(0, startUpdated + 9) + "normalized" + text.Substring(endUpdated);
+
+                startUpdated = text.IndexOf("<updated>", endUpdated + 10);
+            }
+
+            return text;
         }
     }
 }

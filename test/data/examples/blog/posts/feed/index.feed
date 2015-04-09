@@ -28,7 +28,7 @@ want to have blank lines between items in the header.&lt;/p&gt;</summary>
 &lt;code&gt;---&lt;/code&gt; (three dashs) to set apart the header of the document from the
 rest of the document. It is important to use the explicit markers if you
 want to have blank lines between items in the header.&lt;/p&gt;&lt;a href=''&gt;Read more...&lt;/a&gt;&lt;/p&gt;</content>
-    <updated>2014-04-06T07:00:00Z</updated>
+    <updated>normalized</updated>
   </entry>
   <entry>
     <id></id>
@@ -47,7 +47,7 @@ the date.&lt;/p&gt;</summary>
 example, this blog post filename started with &lt;code&gt;2014-04-04&lt;/code&gt;. However,
 just like with &lt;a href=&quot;/blog/posts/2014/4/3/title-override/&quot;&gt;title&lt;/a&gt;, you can use the &lt;code&gt;date&lt;/code&gt; metadata to override
 the date.&lt;/p&gt;&lt;a href=''&gt;Read more...&lt;/a&gt;&lt;/p&gt;</content>
-    <updated>2014-04-05T07:00:00Z</updated>
+    <updated>normalized</updated>
   </entry>
   <entry>
     <id></id>
@@ -67,7 +67,7 @@ entry to use a different title.&lt;/p&gt;</summary>
 By default the title comes from the filename. However, you can override
 the title by adding the &lt;code&gt;title&lt;/code&gt; metadata to the header of your blog
 entry to use a different title.&lt;/p&gt;&lt;a href=''&gt;Read more...&lt;/a&gt;&lt;/p&gt;</content>
-    <updated>2014-04-03T07:00:00Z</updated>
+    <updated>normalized</updated>
   </entry>
   <entry>
     <id></id>
@@ -81,7 +81,7 @@ entry to use a different title.&lt;/p&gt;&lt;a href=''&gt;Read more...&lt;/a&gt;
     <category term="" />
     <link rel="alternate" type="text/html" href="" />
     <content type="html">&lt;p&gt;This is our second blog entry. This is still rendered by tinySite.&lt;/p&gt;&lt;a href=''&gt;Read more...&lt;/a&gt;&lt;/p&gt;</content>
-    <updated>2014-04-02T07:00:00Z</updated>
+    <updated>normalized</updated>
   </entry>
   <entry>
     <id></id>
@@ -95,6 +95,6 @@ entry to use a different title.&lt;/p&gt;&lt;a href=''&gt;Read more...&lt;/a&gt;
     <category term="" />
     <link rel="alternate" type="text/html" href="" />
     <content type="html">&lt;p&gt;This is our first blog entry. This is rendered by tinySite.&lt;/p&gt;&lt;a href=''&gt;Read more...&lt;/a&gt;&lt;/p&gt;</content>
-    <updated>2014-04-01T07:00:00Z</updated>
+    <updated>normalized</updated>
   </entry>
 </feed>
