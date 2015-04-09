@@ -23,7 +23,11 @@ namespace TinySite.Models
             this.Url = config.Url.EnsureEndsWith("/");
             this.RootUrl = config.RootUrl.EnsureEndsWith("/");
 
-            this.Documents = documents.ToList();
+            var allDocuments = documents.ToList();
+
+            this.Partials = allDocuments.Where(d => d.Partial).ToList();
+
+            this.Documents = allDocuments.Where(d => !d.Partial).ToList();
 
             this.Files = files.ToList();
 
@@ -51,6 +55,8 @@ namespace TinySite.Models
         public string RootUrl { get { return this.Get<string>(); } set { this.Set<string>(value); this.UpdateFullUrl(); } }
 
         public string FullUrl { get { return this.Get<string>(); } }
+
+        public IList<DocumentFile> Partials { get { return this.Get<IList<DocumentFile>>(); } set { this.Set<IList<DocumentFile>>(value); } }
 
         public IList<DocumentFile> Documents { get { return this.Get<IList<DocumentFile>>(); } set { this.Set<IList<DocumentFile>>(value); } }
 

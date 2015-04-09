@@ -25,9 +25,13 @@ namespace TinySite.Models
             : base(original)
         {
             this.ExtensionsForRendering = new List<string>(original.ExtensionsForRendering);
+
+            this.Partial = Partial;
         }
 
         internal IList<string> ExtensionsForRendering { get; set; }
+
+        internal bool Partial { get; set; }
 
         internal bool Rendered { get; set; }
 

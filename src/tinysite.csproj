@@ -75,6 +75,7 @@
     <Compile Include="Commands\OrderCommand.cs" />
     <Compile Include="Commands\PaginateCommand.cs" />
     <Compile Include="Commands\CopyStaticFilesCommand.cs" />
+    <Compile Include="Commands\RenderPartialsCommand.cs" />
     <Compile Include="Commands\WriteDocumentsCommand.cs" />
     <Compile Include="Extensions\CaseInsensitiveExpando.cs" />
     <Compile Include="Models\Author.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Commands\RenderDocumentsCommand.cs" />
     <Compile Include="Commands\ParseDocumentCommand.cs" />
     <Compile Include="Rendering\RenderAttribute.cs" />
+    <Compile Include="Services\ContentRendering.cs" />
     <Compile Include="Services\RenderingEngines.cs" />
     <Compile Include="Services\RenderingTransaction.cs" />
     <Compile Include="Models\SiteConfig.cs" />

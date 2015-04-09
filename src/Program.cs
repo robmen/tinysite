@@ -172,6 +172,14 @@ namespace TinySite
         {
             using (var rendering = Statistics.Current.Start(StatisticTiming.Rendered))
             {
+                using (var capture = Statistics.Current.Start(StatisticTiming.RenderPartials))
+                {
+                    var render = new RenderPartialsCommand() { Engines = engines, Site = site };
+                    render.Execute();
+
+                    Statistics.Current.RenderedPartials = render.RenderedPartials;
+                }
+
                 using (var capture = Statistics.Current.Start(StatisticTiming.RenderDocuments))
                 {
                     var render = new RenderDocumentsCommand() { Engines = engines, Site = site };

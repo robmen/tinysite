@@ -57,6 +57,8 @@ namespace TinySite.Commands
 
             var metadataDate = parser.Date;
 
+            var partial = false;
+
             var order = 0;
 
             var relativeDocumentPath = Path.GetFullPath(file).Substring(this.DocumentsPath.Length);
@@ -79,7 +81,12 @@ namespace TinySite.Commands
             for (; ; )
             {
                 var extension = Path.GetExtension(fileName).TrimStart('.');
-                if (knownExtensions.Contains(extension))
+                if (extension.Equals("partial", StringComparison.OrdinalIgnoreCase))
+                {
+                    partial = true;
+                    fileName = Path.GetFileNameWithoutExtension(fileName);
+                }
+                else if (knownExtensions.Contains(extension))
                 {
                     extensionsForRendering.Add(extension);
                     fileName = Path.GetFileNameWithoutExtension(fileName);
@@ -170,6 +177,8 @@ namespace TinySite.Commands
             // Finally create the document.
             //
             var documentFile = new DocumentFile(file, this.DocumentsPath, output, this.OutputRootPath, relativeUrl, this.RootUrl, this.Author, parser.Metadata);
+
+            documentFile.Partial = partial;
 
             if (metadataDate.HasValue)
             {

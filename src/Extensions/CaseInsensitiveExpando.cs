@@ -15,6 +15,11 @@ namespace TinySite.Extensions
             _dictionary = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
         }
 
+        public CaseInsensitiveExpando(IDictionary<string, object> existing)
+        {
+            _dictionary = new Dictionary<string, object>(existing, StringComparer.OrdinalIgnoreCase);
+        }
+
         protected CaseInsensitiveExpando(CaseInsensitiveExpando original)
         {
             _dictionary = new Dictionary<string, object>(original, StringComparer.OrdinalIgnoreCase);
