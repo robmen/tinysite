@@ -8,6 +8,7 @@ namespace TinySite.Models
         Unknown,
         Render,
         Serve,
+        Watch,
     }
 
     public class CommandLine
@@ -28,7 +29,7 @@ namespace TinySite.Models
 
             if (args.Length == 0)
             {
-                errors.Add("Must specify a command: render or watch");
+                errors.Add("Must specify a command: render, serve or watch");
             }
             else
             {
@@ -36,7 +37,7 @@ namespace TinySite.Models
 
                 if (!Enum.TryParse<ProcessingCommand>(args[0], true, out command))
                 {
-                    errors.Add(String.Format("Unknown processing command: {0}. Supported commands are: render or serve", args[0]));
+                    errors.Add(String.Format("Unknown processing command: {0}. Supported commands are: render, serve or watch", args[0]));
                 }
                 else
                 {

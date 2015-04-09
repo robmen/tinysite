@@ -76,6 +76,9 @@
     <Compile Include="Commands\PaginateCommand.cs" />
     <Compile Include="Commands\CopyStaticFilesCommand.cs" />
     <Compile Include="Commands\RenderPartialsCommand.cs" />
+    <Compile Include="Commands\RunRenderCommand.cs" />
+    <Compile Include="Commands\RunServeCommand.cs" />
+    <Compile Include="Commands\RunWatchCommand.cs" />
     <Compile Include="Commands\WriteDocumentsCommand.cs" />
     <Compile Include="Extensions\CaseInsensitiveExpando.cs" />
     <Compile Include="Models\Author.cs" />

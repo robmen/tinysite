@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using TinySite.Models;
 
@@ -28,11 +29,33 @@ namespace TinySite.Commands
         {
             this.Metadata = new MetadataCollection();
 
-            string content;
-            using (var reader = new StreamReader(this.DocumentPath))
+            var content = String.Empty;
+            var retry = 0;
+
+            do
             {
-                content = await reader.ReadToEndAsync();
-            }
+                try
+                {
+                    using (var reader = new StreamReader(this.DocumentPath))
+                    {
+                        content = await reader.ReadToEndAsync();
+                    }
+
+                    retry = 0;
+                }
+                catch (IOException)
+                {
+                    if (retry < 3)
+                    {
+                        Thread.Sleep(500);
+                        ++retry;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            } while (retry > 0);
 
             content = ParseMetadataHeaderFromContent(content);
 
