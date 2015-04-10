@@ -13,5 +13,7 @@
   "html" : "post"
   },
 
-"title" : "Example Blog",
+"ignoreFiles" : [ "*.*~" ],
+
+"title" : "Example Blog"
 }

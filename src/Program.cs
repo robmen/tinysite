@@ -93,8 +93,14 @@ namespace TinySite
         {
             using (var capture = Statistics.Current.Start(StatisticTiming.LoadedConfiguration))
             {
+                var configPath = Path.Combine(sitePath, "site.json");
+                if (!File.Exists(configPath))
+                {
+                    configPath = Path.Combine(sitePath, "site.config");
+                }
+
                 var command = new LoadSiteConfigCommand();
-                command.ConfigPath = Path.Combine(sitePath, "site.config");
+                command.ConfigPath = configPath;
                 command.OutputPath = outputPath;
                 return await command.ExecuteAsync();
             }
