@@ -14,6 +14,8 @@ namespace TinySite.Commands
         private static readonly Regex DateFromFileName = new Regex(@"^\s*(?<year>\d{4})-(?<month>\d{1,2})-(?<day>\d{1,2})([Tt@](?<hour>\d{1,2})\.(?<minute>\d{1,2})(\.(?<second>\d{1,2}))?)?[-\s]\s*", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
         private static readonly Regex OrderFromFileName = new Regex(@"^\s*(?<order>\d+)\.[-\s]\s*", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
+        public IEnumerable<Regex> IgnoreFiles { private get; set; }
+
         public string DocumentsPath { private get; set; }
 
         public string OutputRootPath { private get; set; }
@@ -41,6 +43,11 @@ namespace TinySite.Commands
             {
                 foreach (var path in Directory.GetFiles(this.DocumentsPath, "*", SearchOption.AllDirectories))
                 {
+                    if (this.IgnoreFiles != null && this.IgnoreFile(path))
+                    {
+                        continue;
+                    }
+
                     yield return this.LoadDocumentAsync(path, LoadDocumentFlags.DateFromFileName | LoadDocumentFlags.InsertDateIntoPath | LoadDocumentFlags.OrderFromFileName | LoadDocumentFlags.SanitizePath | LoadDocumentFlags.CleanUrls, this.RenderedExtensions);
                 }
             }
@@ -204,6 +211,21 @@ namespace TinySite.Commands
             documentFile.SourceContent = parser.Content;
 
             return documentFile;
+        }
+
+        private bool IgnoreFile(string path)
+        {
+            var filename = Path.GetFileName(path);
+
+            foreach (var ignoreFile in this.IgnoreFiles)
+            {
+                if (ignoreFile.IsMatch(filename))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static string SanitizeEntryId(string id)

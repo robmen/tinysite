@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using TinySite.Extensions;
 
 namespace TinySite.Models
@@ -12,6 +13,7 @@ namespace TinySite.Models
             config.Metadata.Assign(this);
 
             this.DefaultLayoutForExtension = new Dictionary<string, string>(config.DefaultLayoutForExtension);
+            this.IgnoreFiles = config.IgnoreFiles ?? new Regex[0];
 
             this.Author = config.Author;
             this.DocumentsPath = config.DocumentsPath;
@@ -35,6 +37,8 @@ namespace TinySite.Models
         }
 
         public IDictionary<string, string> DefaultLayoutForExtension { get; private set; }
+
+        public Regex[] IgnoreFiles { get; set; }
 
         public Author Author { get { return this.Get<Author>(); } set { this.Set<Author>(value); } }
 

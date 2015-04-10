@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -36,6 +37,7 @@ namespace TinySite.Commands
             var config = new SiteConfig();
             config.Parent = this.Parent;
 
+            var ignoreFiles = new string[0];
             var subsites = new string[0];
 
             //var config = JsonConvert.DeserializeObject<SiteConfig>(json, settings);
@@ -69,6 +71,10 @@ namespace TinySite.Commands
 
                     case "defaultlayoutforextension":
                         this.AssignDefaultLayouts(config, value);
+                        break;
+
+                    case "ignorefiles":
+                        config.IgnoreFiles = this.ParseIgnoreFiles(value.Values<string>()).ToArray();
                         break;
 
                     default:
@@ -120,6 +126,16 @@ namespace TinySite.Commands
                 {
                     config.DefaultLayoutForExtension.Add(layoutDefault.Key, (string)layoutDefault.Value);
                 }
+            }
+        }
+
+        private IEnumerable<Regex> ParseIgnoreFiles(IEnumerable<string> ignoreFilePatterns)
+        {
+            foreach (var pattern in ignoreFilePatterns)
+            {
+                var regex = "^" + pattern.Replace(".", @"\.").Replace("?", ".").Replace("*", ".*?") + "$";
+
+                yield return new Regex(regex, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase | RegexOptions.Singleline);
             }
         }
 

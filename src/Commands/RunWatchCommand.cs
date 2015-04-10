@@ -65,6 +65,11 @@ namespace TinySite.Commands
 
         private async Task ChangeHappend(string path)
         {
+            if (this.IgnoreFile(path))
+            {
+                return;
+            }
+
             lock (sync)
             {
                 ++this.ChangeCount;
@@ -94,6 +99,21 @@ namespace TinySite.Commands
                     }
                 }
             }
+        }
+
+        private bool IgnoreFile(string path)
+        {
+            var filename = Path.GetFileName(path);
+
+            foreach (var ignoreFile in this.Config.IgnoreFiles)
+            {
+                if (ignoreFile.IsMatch(filename))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

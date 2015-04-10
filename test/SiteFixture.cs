@@ -88,5 +88,27 @@ namespace RobMensching.TinySite.Test
 
             Assert.Equal("test", site.DefaultLayoutForExtension["html"]);
         }
+
+        [Fact]
+        public void CanGetFilesToIgnore()
+        {
+            //TimeZoneInfo tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+            var dataFolder = Path.GetFullPath(@"data\");
+
+            var command = new LoadSiteConfigCommand() { ConfigPath = dataFolder + "site.config" };
+            var config = command.ExecuteAsync().Result;
+
+            Assert.Equal(2, config.IgnoreFiles.Count());
+
+            var match = config.IgnoreFiles.First();
+            Assert.True(match.IsMatch("foo.abc~"));
+            Assert.True(match.IsMatch("a.b~"));
+            Assert.False(match.IsMatch("foo.abc"));
+            Assert.False(match.IsMatch("a.b"));
+
+            match = config.IgnoreFiles.Skip(1).Single();
+            Assert.True(match.IsMatch("bar.tmp"));
+            Assert.True(match.IsMatch("foo.TMP"));
+        }
     }
 }

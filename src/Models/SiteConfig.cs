@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace TinySite.Models
 {
@@ -23,6 +24,8 @@ namespace TinySite.Models
         public string LayoutsPath { get; set; }
 
         public string OutputPath { get; set; }
+
+        public Regex[] IgnoreFiles { get; set; }
 
         public SiteConfig[] SubsiteConfigs { get; set; }
 
