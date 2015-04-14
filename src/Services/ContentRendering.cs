@@ -77,7 +77,7 @@ namespace TinySite.Services
         {
             var data = new CaseInsensitiveExpando();
 
-            var partialsContent = this.Transaction.Site.Partials.Where(d => d.Rendered).ToDictionary(d => d.Id.Replace('-', '_'), d => (object)d.RenderedContent);
+            var partialsContent = this.Transaction.Site.Partials.Where(d => d.Rendered).ToDictionary(d => d.Id.Replace('-', '_').Replace('\\', '_').Replace('/', '_'), d => (object)d.RenderedContent);
 
             var backupContent = document.Content;
 
