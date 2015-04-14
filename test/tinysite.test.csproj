@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IntegrationFixture.cs" />
+    <Compile Include="QueryProcessorFixture.cs" />
     <Compile Include="OrderCommandFixture.cs" />
     <Compile Include="LoadLayoutsCommandFixture.cs" />
     <Compile Include="LoadDocumentsCommandFixture.cs" />

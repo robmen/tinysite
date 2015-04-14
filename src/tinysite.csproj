@@ -90,6 +90,11 @@
     <Compile Include="Models\Page.cs" />
     <Compile Include="Models\Pagination.cs" />
     <Compile Include="Models\Paginator.cs" />
+    <Compile Include="Models\QueryResult.cs" />
+    <Compile Include="Models\Query\OrderClause.cs" />
+    <Compile Include="Models\Query\OrderOperator.cs" />
+    <Compile Include="Models\Query\WhereClause.cs" />
+    <Compile Include="Models\Query\WhereOperator.cs" />
     <Compile Include="Models\Statistics.cs" />
     <Compile Include="Renderers\JsonRenderer.cs" />
     <Compile Include="Renderers\LessRenderer.cs" />
@@ -110,6 +115,7 @@
     <Compile Include="Commands\ParseDocumentCommand.cs" />
     <Compile Include="Rendering\RenderAttribute.cs" />
     <Compile Include="Services\ContentRendering.cs" />
+    <Compile Include="Services\QueryProcessor.cs" />
     <Compile Include="Services\RenderingEngines.cs" />
     <Compile Include="Services\RenderingTransaction.cs" />
     <Compile Include="Models\SiteConfig.cs" />

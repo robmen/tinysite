@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TinySite.Models;
+using TinySite.Services;
 
 namespace TinySite.Commands
 {
@@ -9,7 +10,7 @@ namespace TinySite.Commands
     {
         public string RootUrl { private get; set; }
 
-        public IEnumerable<DocumentFile> Documents { private get; set; }
+        public Site Site { private get; set; }
 
         public IEnumerable<DocumentFile> PagedDocuments { get; private set; }
 
@@ -17,17 +18,19 @@ namespace TinySite.Commands
         {
             var dupes = new List<DocumentFile>();
 
-            // TODO: this needs to be replaced with a more general purpose query mechanism.
-            var pagedPosts = this.Documents.Where(d => d.SourceRelativePath.StartsWith(@"documents\posts\", StringComparison.OrdinalIgnoreCase)).ToList();
-            var count = pagedPosts.Count();
-
-            foreach (var document in this.Documents.Where(d => d.Paginate > 0))
+            foreach (var document in this.Site.Documents.Where(d => !String.IsNullOrEmpty(d.PaginateQuery)))
             {
-                var pages = (count + document.Paginate - 1) / document.Paginate;
+                var query = QueryProcessor.Parse(this.Site, document.PaginateQuery);
 
-                string format;
+                var pagedPosts = query.Results.Cast<DocumentFile>().ToList();
 
-                if (document.TryGet<string>("paginateFormat", out format))
+                var count = pagedPosts.Count();
+
+                var pages = (count + query.PageEvery - 1) / query.PageEvery;
+
+                var format = query.FormatUrl;
+
+                if (!String.IsNullOrEmpty(format))
                 {
                     for (int i = 1; i < pages; ++i)
                     {
@@ -35,13 +38,13 @@ namespace TinySite.Commands
 
                         dupe.UpdateOutputPaths(String.Format(format, i + 1), null);
 
-                        dupe.Paginator = this.CreatePaginator(i + 1, document.Paginate, pages, format, pagedPosts);
+                        dupe.Paginator = this.CreatePaginator(i + 1, query.PageEvery, pages, format, pagedPosts);
 
                         dupes.Add(dupe);
                     }
                 }
 
-                document.Paginator = this.CreatePaginator(1, document.Paginate, pages, format, pagedPosts);
+                document.Paginator = this.CreatePaginator(1, query.PageEvery, pages, format, pagedPosts);
             }
 
             this.PagedDocuments = dupes;
@@ -53,7 +56,7 @@ namespace TinySite.Commands
 
             // It is important that this query is not executed here (aka: do not add ToList() or ToArray()). This
             // query should be executed by the rendering engine so the returned documents are rendered first.
-            paginator.Documents = documents.OrderByDescending(d => d.Date).Skip((page - 1) * perPage).Take(perPage);
+            paginator.Documents = documents.Skip((page - 1) * perPage).Take(perPage);
 
             if (pages > 1 && !String.IsNullOrEmpty(format))
             {

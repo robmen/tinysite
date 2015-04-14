@@ -205,7 +205,7 @@ namespace TinySite.Commands
             documentFile.Order = parser.Metadata.Get<int>("order", order);
             parser.Metadata.Remove("order");
 
-            documentFile.Paginate = parser.Metadata.Get<int>("paginate", 0);
+            documentFile.PaginateQuery = parser.Metadata.Get<string>("paginate", null);
             parser.Metadata.Remove("paginate");
 
             documentFile.SourceContent = parser.Content;

@@ -1,5 +1,6 @@
 ---
 layout: feed
 output: posts/feed/index.feed
-paginate: 10
+paginate: query documents every 10 where sourceRelativePath startsWith "documents\posts\" descending date
+items:? query documents take 10 where sourceRelativePath startsWith "documents\posts\" descending date
 ---

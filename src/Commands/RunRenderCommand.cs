@@ -97,7 +97,7 @@ namespace TinySite.Commands
             {
                 var paginate = new PaginateCommand();
                 paginate.RootUrl = site.Url;
-                paginate.Documents = site.Documents;
+                paginate.Site = site;
                 paginate.Execute();
 
                 foreach (var doc in paginate.PagedDocuments)

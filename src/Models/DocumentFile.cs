@@ -47,7 +47,7 @@ namespace TinySite.Models
 
         public int Order { get { return this.Get<int>(); } set { this.Set<int>(value); } }
 
-        public int Paginate { get { return this.Get<int>(); } set { this.Set<int>(value); } }
+        public string PaginateQuery { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
         public string ParentId { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
