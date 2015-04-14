@@ -75,7 +75,7 @@ namespace TinySite.Services
                 }
             }
 
-            if (result.Take > -1)
+            if (result.Take > 0)
             {
                 q = q.Take(result.Take);
             }
