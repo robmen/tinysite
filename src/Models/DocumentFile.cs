@@ -74,23 +74,5 @@ namespace TinySite.Models
             var clone = new DocumentFile(this);
             return clone;
         }
-
-        public void UpdateOutputPaths(string appendPath, string updateFileName)
-        {
-            if (String.IsNullOrEmpty(updateFileName))
-            {
-                updateFileName = Path.GetFileName(this.OutputRelativePath);
-            }
-
-            var appendUrl = String.IsNullOrEmpty(appendPath) ? String.Empty : appendPath.Replace('\\', '/').EnsureEndsWith("/");
-
-            this.OutputRelativePath = Path.Combine(Path.GetDirectoryName(this.OutputRelativePath), appendPath, updateFileName);
-
-            this.OutputPath = Path.Combine(Path.GetDirectoryName(this.OutputPath), appendPath, updateFileName);
-
-            var lastSlash = this.RelativeUrl.LastIndexOf('/');
-
-            this.RelativeUrl = String.Concat(this.RelativeUrl.Substring(0, lastSlash + 1), appendUrl, updateFileName.Equals("index.html", StringComparison.OrdinalIgnoreCase) ? String.Empty : updateFileName);
-        }
     }
 }
