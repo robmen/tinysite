@@ -1,0 +1,34 @@
+layout: master
+
+<div class="hfeed">
+  @if (Is.Defined(Model.Document.Paginator.Documents)) {
+    foreach (var document in Model.Document.Paginator.Documents) {
+  <div class="hentry summarized">
+    <h2 class="entry-title"><a href="@document.RelativeUrl">@document.Title</a></h2>
+    <div class="entry-meta"><p><a href="@document.Url" rel="bookmark" title="permalink to '@document.Title'">#</a> by <span class="vcard author"><a class="url fn" href="@document.Author.Url">@document.Author.Name</a></span> on <abbr class="published" title="@document.Date.Year-@document.Date.Month-@document.Date.Day">@document.FriendlyDate</abbr></p></div>
+    <div class="entry-summary">@Raw(document.Summary)</div>
+    <div class="entry-readmore"><a href="@document.RelativeUrl">Read more...</a></div>
+  </div>
+    }
+  }
+</div>
+
+<hr />
+
+@if (Is.Defined(Model.Document.Paginator.Pagination)) {
+  var pagination = Model.Document.Paginator.Pagination;
+  var previousPageUrl = pagination.PreviousPageUrl ?? String.Empty;
+  var previousPageClass = String.IsNullOrEmpty(previousPageUrl) ? "disabled" : null;
+  var nextPageUrl = pagination.NextPageUrl ?? String.Empty;
+  var nextPageClass = String.IsNullOrEmpty(nextPageUrl) ? "disabled" : null;
+<div class="pagination">
+  <ul>
+    <li class="previous @previousPageClass"><a href="@previousPageUrl">&larr; Newer</a></li>
+    @foreach (var page in pagination.Pages) { 
+      var pageClass = page.Active ? "active" : null;
+    <li class="@pageClass"><a href="@page.Url">@page.Number</a></li>
+    }
+    <li class="next @nextPageClass"><a href="@nextPageUrl">Older &rarr;</a></li>
+  </ul>
+</div>
+}

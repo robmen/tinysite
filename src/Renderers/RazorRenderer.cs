@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.CSharp.RuntimeBinder;
 using RazorEngine;
 using RazorEngine.Configuration;
 using RazorEngine.Templating;
@@ -21,8 +22,10 @@ namespace TinySite.Renderers
 
             var config = new TemplateServiceConfiguration();
             config.AllowMissingPropertiesOnDynamic = true;
+            config.BaseTemplateType = typeof(RazorRendererTemplateBase<>);
             config.Namespaces.Add("System.IO");
             config.Namespaces.Add("RazorEngine.Text");
+            config.Namespaces.Add("TinySite.Renderers");
             config.TemplateManager = manager;
 
             var service = RazorEngineService.Create(config);
@@ -107,5 +110,36 @@ namespace TinySite.Renderers
                 return loadedTemplate;
             }
         }
+    }
+
+    public class RazorRendererHelper
+    {
+        public bool Defined(object value)
+        {
+            try
+            {
+                var exists = value.ToString();
+                return !String.IsNullOrEmpty(exists);
+            }
+            catch (RuntimeBinderException)
+            {
+                return false;
+            }
+        }
+
+        public bool Undefined(object value)
+        {
+            return !this.Defined(value);
+        }
+    }
+
+    public abstract class RazorRendererTemplateBase<T> : TemplateBase<T>
+    {
+        public RazorRendererTemplateBase()
+        {
+            Is = new RazorRendererHelper();
+        }
+
+        public RazorRendererHelper Is { get; set; }
     }
 }
