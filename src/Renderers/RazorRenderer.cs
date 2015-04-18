@@ -13,30 +13,18 @@ namespace TinySite.Renderers
     [Render("cshtml")]
     public class RazorRenderer : IRenderer
     {
+        private object sync = new object();
+
         public RazorRenderer()
         {
-            this.TopLevelTemplates = new Dictionary<string, LoadedTemplateSource>();
-
-            var manager = new TemplateManager();
-            manager.TopLevelTemplates = this.TopLevelTemplates;
-
-            var config = new TemplateServiceConfiguration();
-            config.AllowMissingPropertiesOnDynamic = true;
-            config.BaseTemplateType = typeof(RazorRendererTemplateBase<>);
-            config.Namespaces.Add("System.IO");
-            config.Namespaces.Add("RazorEngine.Text");
-            config.Namespaces.Add("TinySite.Renderers");
-            config.TemplateManager = manager;
-
-            var service = RazorEngineService.Create(config);
-            Engine.Razor = service;
+            this.InitializeRazorEngine();
         }
 
         private Dictionary<string, LoadedTemplateSource> TopLevelTemplates { get; set; }
 
         public string Render(string path, string template, object data)
         {
-            lock (Engine.Razor)
+            lock (sync)
             {
                 LoadedTemplateSource loadedTemplate;
 
@@ -67,6 +55,33 @@ namespace TinySite.Renderers
 
                 return null;
             }
+        }
+
+        public void Unload(IEnumerable<string> paths)
+        {
+            lock (sync)
+            {
+                this.InitializeRazorEngine();
+            }
+        }
+
+        private void InitializeRazorEngine()
+        {
+            this.TopLevelTemplates = new Dictionary<string, LoadedTemplateSource>();
+
+            var manager = new TemplateManager();
+            manager.TopLevelTemplates = this.TopLevelTemplates;
+
+            var config = new TemplateServiceConfiguration();
+            config.AllowMissingPropertiesOnDynamic = true;
+            config.BaseTemplateType = typeof(RazorRendererTemplateBase<>);
+            config.Namespaces.Add("System.IO");
+            config.Namespaces.Add("RazorEngine.Text");
+            config.Namespaces.Add("TinySite.Renderers");
+            config.TemplateManager = manager;
+
+            var service = RazorEngineService.Create(config);
+            Engine.Razor = service;
         }
 
         private class TemplateManager : ITemplateManager

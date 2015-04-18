@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TinySite.Commands;
 using TinySite.Models;
+using TinySite.Services;
 
 namespace TinySite
 {
@@ -60,8 +61,10 @@ namespace TinySite
             {
                 case ProcessingCommand.Render:
                     {
+                        var engines = RenderingEngine.Load();
                         var command = new RunRenderCommand();
                         command.Config = config;
+                        command.Engines = engines;
                         await command.ExecuteAsync();
                     }
 
@@ -78,9 +81,11 @@ namespace TinySite
 
                 case ProcessingCommand.Watch:
                     {
+                        var engines = RenderingEngine.Load();
                         var command = new RunWatchCommand();
                         command.Config = config;
-                        await command.ExecuteAsync();
+                        command.Engines = engines;
+                        command.Execute();
                     }
                     break;
 

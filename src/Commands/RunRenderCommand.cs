@@ -9,13 +9,13 @@ namespace TinySite.Commands
     {
         public SiteConfig Config { private get; set; }
 
+        public IDictionary<string, RenderingEngine> Engines { get; set; }
+
         public async Task ExecuteAsync()
         {
-            var engines = RenderingEngine.Load();
-
             // Load the site documents.
             //
-            var site = await this.LoadSite(this.Config, engines.Keys);
+            var site = await this.LoadSite(this.Config, this.Engines.Keys);
 
             // Order the documents.
             //
@@ -29,7 +29,7 @@ namespace TinySite.Commands
 
             // Render the documents.
             //
-            this.Render(site, engines);
+            this.Render(site, this.Engines);
         }
 
         private async Task<Site> LoadSite(SiteConfig config, IEnumerable<string> renderedExtensions)

@@ -1,4 +1,5 @@
-﻿
+﻿using System.Collections.Generic;
+
 namespace TinySite.Rendering
 {
     /// <summary>
@@ -14,5 +15,11 @@ namespace TinySite.Rendering
         /// <param name="data">Data provided to template.</param>
         /// <returns>Rendered template content.</returns>
         string Render(string path, string template, object data);
+
+        /// <summary>
+        /// Unloads the specified template.
+        /// </summary>
+        /// <param name="paths">Paths of templates to unload.</param>
+        void Unload(IEnumerable<string> paths);
     }
 }

@@ -1,4 +1,5 @@
-﻿using MarkdownDeep;
+﻿using System.Collections.Generic;
+using MarkdownDeep;
 using TinySite.Rendering;
 
 namespace TinySite.Renderers
@@ -24,6 +25,10 @@ namespace TinySite.Renderers
 
                 return result;
             }
+        }
+
+        public void Unload(IEnumerable<string> paths)
+        {
         }
     }
 }

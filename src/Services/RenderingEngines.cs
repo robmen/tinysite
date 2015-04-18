@@ -68,5 +68,10 @@ namespace TinySite.Services
 
             return this.Renderer.Render(path, template, data);
         }
+
+        internal void Unload(IEnumerable<string> paths)
+        {
+            this.Renderer.Unload(paths);
+        }
     }
 }

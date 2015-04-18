@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using TinySite.Rendering;
@@ -37,6 +38,10 @@ namespace TinySite.Renderers
             }
 
             return content;
+        }
+
+        public void Unload(IEnumerable<string> paths)
+        {
         }
     }
 }

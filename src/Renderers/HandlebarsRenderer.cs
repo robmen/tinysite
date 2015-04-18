@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FuManchu;
 using TinySite.Rendering;
 
@@ -11,13 +12,24 @@ namespace TinySite.Renderers
     {
         private object sync = new object();
 
+        private Dictionary<string, Func<object, string>> compiledTemplates = new Dictionary<string, Func<object, string>>();
+
         public string Render(string path, string template, object data)
         {
             lock (sync)
             {
                 try
                 {
-                    var result = Handlebars.CompileAndRun(path, template, data);
+                    Func<object, string> compiledTemplate;
+
+                    if (!this.compiledTemplates.TryGetValue(path, out compiledTemplate))
+                    {
+                        compiledTemplate = Handlebars.Compile(path, template);
+
+                        this.compiledTemplates.Add(path, compiledTemplate);
+                    }
+
+                    var result = compiledTemplate(data);
 
                     return result;
                 }
@@ -27,6 +39,17 @@ namespace TinySite.Renderers
                 }
 
                 return null;
+            }
+        }
+
+        public void Unload(IEnumerable<string> paths)
+        {
+            lock (sync)
+            {
+                foreach (var path in paths)
+                {
+                    this.compiledTemplates.Remove(path);
+                }
             }
         }
     }

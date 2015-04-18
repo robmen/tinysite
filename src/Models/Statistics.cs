@@ -75,7 +75,7 @@ namespace TinySite.Models
             this.ReportTiming("      Wrote {1} documents to disk in {0} s", StatisticTiming.WriteDocuments, this.WroteDocuments);
             this.ReportTiming("      Copied {1} static files in {0} s", StatisticTiming.CopyStaticFiles, this.CopiedFiles);
             this.ReportTiming("   Rendered the site in {0} s", StatisticTiming.Rendered);
-            this.ReportTiming("Processing complete in {0} s", StatisticTiming.Overall, this.SiteFiles);
+            this.ReportTiming("Processed {1} files in {0} s", StatisticTiming.Overall, this.SiteFiles);
         }
 
         private void ReportTiming(string format, StatisticTiming timing, params object[] other)
