@@ -23,6 +23,8 @@ namespace TinySite.Models
 
         public string LayoutsPath { get; set; }
 
+        public string LiveReloadScript { get; set; }
+
         public string OutputPath { get; set; }
 
         public Regex[] IgnoreFiles { get; set; }

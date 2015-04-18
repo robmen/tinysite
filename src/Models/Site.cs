@@ -16,6 +16,7 @@ namespace TinySite.Models
             this.IgnoreFiles = config.IgnoreFiles ?? new Regex[0];
 
             this.Author = config.Author;
+            this.LiveReloadScript = config.LiveReloadScript;
             this.DocumentsPath = config.DocumentsPath;
             this.FilesPath = config.FilesPath;
             this.LayoutsPath = config.LayoutsPath;
@@ -41,6 +42,8 @@ namespace TinySite.Models
         public Regex[] IgnoreFiles { get; set; }
 
         public Author Author { get { return this.Get<Author>(); } set { this.Set<Author>(value); } }
+
+        public string LiveReloadScript { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
         public string DocumentsPath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 

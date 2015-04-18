@@ -34,6 +34,8 @@ namespace TinySite.Commands
 
         public void Execute()
         {
+            this.Config.LiveReloadScript = "<script type=\"text/javascript\" src=\"http://livejs.com/live.js\"></script>";
+
             var thread = new Thread(RenderThread);
 
             try
