@@ -152,6 +152,19 @@ namespace TinySite.Renderers
         {
             return !this.Defined(value);
         }
+
+        public RawString Raw(object value)
+        {
+            try
+            {
+                var str = value.ToString();
+                return new RawString(str);
+            }
+            catch (RuntimeBinderException)
+            {
+                return new RawString(null);
+            }
+        }
     }
 
     public abstract class RazorRendererTemplateBase<T> : TemplateBase<T>
