@@ -41,11 +41,15 @@ namespace TinySite.Renderers
 
                     return result;
                 }
+                catch (TemplateParsingException e)
+                {
+                    Console.Error.WriteLine("{0}{1}", path, e.Message);
+                }
                 catch (TemplateCompilationException e)
                 {
                     foreach (var error in e.CompilerErrors)
                     {
-                        Console.Error.WriteLine(error.ErrorText);
+                        Console.Error.WriteLine("{0}({1},{2}): {3} {4}: {5}", error.FileName, error.Line, error.Column, error.IsWarning ? "warning" : "error", error.ErrorNumber, error.ErrorText);
                     }
                 }
                 catch (Exception e)
@@ -75,6 +79,7 @@ namespace TinySite.Renderers
             var config = new TemplateServiceConfiguration();
             config.AllowMissingPropertiesOnDynamic = true;
             config.BaseTemplateType = typeof(RazorRendererTemplateBase<>);
+            config.CachingProvider = new DefaultCachingProvider(t => { });
             config.Namespaces.Add("System.IO");
             config.Namespaces.Add("RazorEngine.Text");
             config.Namespaces.Add("TinySite.Renderers");
