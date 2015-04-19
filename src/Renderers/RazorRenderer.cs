@@ -137,15 +137,19 @@ namespace TinySite.Renderers
     {
         public bool Defined(object value)
         {
-            try
+            if (value != null)
             {
-                var exists = value.ToString();
-                return !String.IsNullOrEmpty(exists);
+                try
+                {
+                    var exists = value.ToString();
+                    return !String.IsNullOrEmpty(exists);
+                }
+                catch (RuntimeBinderException)
+                {
+                }
             }
-            catch (RuntimeBinderException)
-            {
-                return false;
-            }
+
+            return false;
         }
 
         public bool Undefined(object value)
@@ -155,15 +159,19 @@ namespace TinySite.Renderers
 
         public RawString Raw(object value)
         {
-            try
+            if (value != null)
             {
-                var str = value.ToString();
-                return new RawString(str);
+                try
+                {
+                    var str = value.ToString();
+                    return new RawString(str);
+                }
+                catch (RuntimeBinderException)
+                {
+                }
             }
-            catch (RuntimeBinderException)
-            {
-                return new RawString(null);
-            }
+
+            return new RawString(null);
         }
     }
 
