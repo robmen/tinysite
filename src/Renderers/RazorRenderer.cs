@@ -5,6 +5,7 @@ using Microsoft.CSharp.RuntimeBinder;
 using RazorEngine;
 using RazorEngine.Configuration;
 using RazorEngine.Templating;
+using RazorEngine.Text;
 using TinySite.Rendering;
 using TinySite.Services;
 
@@ -132,7 +133,7 @@ namespace TinySite.Renderers
         }
     }
 
-    public class RazorRendererHelper
+    public class DynamicHelper
     {
         public bool Defined(object value)
         {
@@ -157,9 +158,15 @@ namespace TinySite.Renderers
     {
         public RazorRendererTemplateBase()
         {
-            Is = new RazorRendererHelper();
+            Dynamic = new DynamicHelper();
         }
 
-        public RazorRendererHelper Is { get; set; }
+        public DynamicHelper Dynamic { get; set; }
+
+        public override string ResolveUrl(string path)
+        {
+            // TODO: consider using this to replace the "~" with Site.RootUrl.
+            return base.ResolveUrl(path);
+        }
     }
 }

@@ -1,7 +1,7 @@
 layout: master
 
 <div class="hfeed">
-  @if (Is.Defined(Model.Document.Paginator.Documents)) {
+  @if (Dynamic.Defined(Model.Document.Paginator.Documents)) {
     foreach (var document in Model.Document.Paginator.Documents) {
   <div class="hentry summarized">
     <h2 class="entry-title"><a href="@document.RelativeUrl">@document.Title</a></h2>
@@ -15,7 +15,7 @@ layout: master
 
 <hr />
 
-@if (Is.Defined(Model.Document.Paginator.Pagination)) {
+@if (Dynamic.Defined(Model.Document.Paginator.Pagination)) {
   var pagination = Model.Document.Paginator.Pagination;
   var previousPageUrl = pagination.PreviousPageUrl ?? String.Empty;
   var previousPageClass = String.IsNullOrEmpty(previousPageUrl) ? "disabled" : null;
