@@ -21,6 +21,8 @@ namespace TinySite.Models
 
         public string SitePath { get; private set; }
 
+        public bool ReportStatistics { get; private set; }
+
         public static CommandLine Parse(string[] args)
         {
             var commandLine = new CommandLine();
@@ -44,6 +46,8 @@ namespace TinySite.Models
                     commandLine.Command = command;
 
                     commandLine.SitePath = ".";
+
+                    commandLine.ReportStatistics = command == ProcessingCommand.Render;
 
                     for (int i = 1; i < args.Length; ++i)
                     {

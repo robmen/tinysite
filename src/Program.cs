@@ -43,6 +43,11 @@ namespace TinySite
                 {
                     AsyncPump.Run(async delegate { await program.Run(commandLine); });
                 }
+
+                if (commandLine.ReportStatistics)
+                {
+                    Statistics.Current.Report();
+                }
             }
             catch (Exception e)
             {
@@ -67,8 +72,6 @@ namespace TinySite
                         command.Engines = engines;
                         await command.ExecuteAsync();
                     }
-
-                    Statistics.Current.Report();
                     break;
 
                 case ProcessingCommand.Serve:
