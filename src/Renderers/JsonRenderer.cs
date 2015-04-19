@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TinySite.Rendering;
 
@@ -19,21 +20,29 @@ namespace TinySite.Renderers
 
             lock (sync)
             {
-                foreach (var token in JObject.Parse(template))
+                try
                 {
-                    if (token.Key.Equals("Content", StringComparison.OrdinalIgnoreCase))
+                    foreach (var token in JObject.Parse(template))
                     {
-                        content = (string)token.Value;
+                        if (token.Key.Equals("Content", StringComparison.OrdinalIgnoreCase))
+                        {
+                            content = (string)token.Value;
+                        }
+                        else if (token.Value.Type == JTokenType.Array)
+                        {
+                            var array = (JArray)token.Value;
+                            document[token.Key] = array.Values().Select(t => (string)t).ToArray();
+                        }
+                        else
+                        {
+                            document[token.Key] = (string)token.Value;
+                        }
                     }
-                    else if (token.Value.Type == JTokenType.Array)
-                    {
-                        var array = (JArray)token.Value;
-                        document[token.Key] = array.Values().Select(t => (string)t).ToArray();
-                    }
-                    else
-                    {
-                        document[token.Key] = (string)token.Value;
-                    }
+                }
+                catch (JsonReaderException e)
+                {
+                    Console.Error.WriteLine("{0}({1},{2}): error JSON1 : {3}", path, e.LineNumber, e.LinePosition, e.Message);
+                    return null;
                 }
             }
 
