@@ -44,7 +44,7 @@ namespace TinySite.Commands
                             document.RenderedContent = documentRendering.RenderDocumentContentUsingLayout(document, document.Content, layout);
                         }
 
-                        document.Rendered = true;
+                        document.Rendered = document.RenderedContent != null;
                     }
                 }
 
