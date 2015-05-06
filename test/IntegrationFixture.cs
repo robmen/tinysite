@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using TinySite;
 using Xunit;
 
 namespace RobMensching.TinySite.Test
@@ -11,9 +12,9 @@ namespace RobMensching.TinySite.Test
         [Fact]
         public void BlogRendersCorrectly()
         {
-            var blogPath = Path.GetFullPath(@"..\..\..\examples\blog");
+            var blogPath = Path.GetFullPath(@"data\examples\blog");
             var outputPath = Path.GetTempPath() + @"tinysite_test\blog_build";
-            var verifyPath = Path.GetFullPath(@"data\examples\blog");
+            var verifyPath = Path.GetFullPath(@"data\examples_output\blog");
 
             RunTinySite(blogPath, outputPath);
 
@@ -23,9 +24,9 @@ namespace RobMensching.TinySite.Test
         [Fact]
         public void BookRendersCorrectly()
         {
-            var bookPath = Path.GetFullPath(@"..\..\..\examples\book");
+            var bookPath = Path.GetFullPath(@"data\examples\book");
             var outputPath = Path.GetTempPath() + @"tinysite_test\book_build";
-            var verifyPath = Path.GetFullPath(@"data\examples\book");
+            var verifyPath = Path.GetFullPath(@"data\examples_output\book");
 
             RunTinySite(bookPath, outputPath);
 
@@ -35,9 +36,9 @@ namespace RobMensching.TinySite.Test
         [Fact]
         public void HomepageRendersCorrectly()
         {
-            var homepagePath = Path.GetFullPath(@"..\..\..\examples\homepage");
+            var homepagePath = Path.GetFullPath(@"data\examples\homepage");
             var outputPath = Path.GetTempPath() + @"tinysite_test\homepage_build";
-            var verifyPath = Path.GetFullPath(@"data\examples\homepage");
+            var verifyPath = Path.GetFullPath(@"data\examples_output\homepage");
 
             RunTinySite(homepagePath, outputPath);
 
@@ -46,18 +47,35 @@ namespace RobMensching.TinySite.Test
 
         private static void RunTinySite(string workingFolder, string outputFolder)
         {
-            var process = new Process();
-            process.StartInfo = new ProcessStartInfo();
-            process.StartInfo.FileName = "tinysite.exe";
-            process.StartInfo.Arguments = "render -out " + outputFolder;
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.WorkingDirectory = workingFolder;
-            process.Start();
+            var result = 0;
+            var arguments = "render -out " + outputFolder;
 
-            var waited = process.WaitForExit(3 * 60 * 1000);
-            Assert.True(waited);
-            Assert.Equal(0, process.ExitCode);
+            var path = Path.GetFullPath("tinysite.exe");
+            if (File.Exists(path))
+            {
+                var process = new Process();
+                process.StartInfo = new ProcessStartInfo();
+                process.StartInfo.FileName = path;
+                process.StartInfo.Arguments = arguments;
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.WorkingDirectory = workingFolder;
+                process.Start();
+
+                var waited = process.WaitForExit(3 * 60 * 1000);
+                Assert.True(waited);
+                result = process.ExitCode;
+            }
+            else
+            {
+                var folder= Environment.CurrentDirectory;
+                Environment.CurrentDirectory = workingFolder;
+
+                result = Program.Main(arguments.Split(' '));
+
+                Environment.CurrentDirectory = folder;
+            }
+            Assert.Equal(0, result);
         }
 
         private static void AssertFoldersSame(string outputPath, string verifyPath)
