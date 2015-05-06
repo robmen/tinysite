@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using TinySite.Models;
 
 namespace TinySite.Commands
@@ -19,6 +18,7 @@ namespace TinySite.Commands
                 .Count();
         }
 
+#if false
         public async Task<int> ExecuteAsync()
         {
             var streams = new List<Stream>(this.Files.Count() * 2);
@@ -60,6 +60,7 @@ namespace TinySite.Commands
 
             return this.CopiedFiles;
         }
+#endif
 
         private static StaticFile CopyStaticFile(StaticFile file)
         {
