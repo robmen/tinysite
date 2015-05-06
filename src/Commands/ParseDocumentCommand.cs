@@ -80,7 +80,7 @@ namespace TinySite.Commands
 
                 // Eat any blank lines or comments at the top of the document or in the header.
                 //
-                if (String.IsNullOrEmpty(line) || line.StartsWith("#") || line.StartsWith(";") || line.StartsWith("//"))
+                if (String.IsNullOrEmpty(line) || line.StartsWith(";") || line.StartsWith("//"))
                 {
                     startOfLine = endOfLine + 1;
 
