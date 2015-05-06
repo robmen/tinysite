@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using TinySite.Models;
 
 namespace TinySite.Commands
@@ -16,23 +15,29 @@ namespace TinySite.Commands
 
         public int Execute()
         {
-#if DEBUG
             var duplicates = this.Documents.ToLookup(d => d.OutputPath, StringComparer.OrdinalIgnoreCase);
 
             foreach (var dupe in duplicates.Where(d => d.Count() > 1))
             {
                 foreach (var d in dupe)
                 {
-                    Console.WriteLine("Duplicate, output: {0}, source: {1}", d.OutputPath, d.SourcePath);
+                    Console.Error.WriteLine("Duplicate, output: {0}, source: {1}", d.OutputPath, d.SourcePath);
+
+                    // Do not render duplicates so it is clear there is something wrong. Also, given documents
+                    // are written in parallel there is a reasonable chance the duplicates will be written at
+                    // the same time throwing an access denied exception.
+                    //
+                    d.Rendered = false;
                 }
             }
-#endif
+
             return this.WroteDocuments = this.Documents.Where(d => d.Rendered)
                 .AsParallel()
                 .Select(WriteDocument)
                 .Count();
         }
 
+#if false
         public async Task<int> ExecuteAsync()
         {
             var streams = new List<Stream>();
@@ -72,6 +77,7 @@ namespace TinySite.Commands
 
             return this.WroteDocuments;
         }
+#endif
 
         private static DocumentFile WriteDocument(DocumentFile document)
         {
