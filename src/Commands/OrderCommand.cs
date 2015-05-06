@@ -59,7 +59,33 @@ namespace TinySite.Commands
             {
                 DocumentFile parentDocument = documentsById[groupedDocuments.Key].FirstOrDefault();
 
-                if (parentDocument != null)
+                // If there is no parent document or the parent document is not an ordered
+                // document then this set of grouped documents must be a set of chapters in
+                // a new book.
+                if (parentDocument == null || parentDocument.Order == 0)
+                {
+                    var chapters = new List<BookPage>();
+
+                    foreach (var document in groupedDocuments)
+                    {
+                        BookPage chapter;
+
+                        if (!documentsToChapter.TryGetValue(document, out chapter))
+                        {
+                            chapter = new BookPage(document, true);
+                        }
+
+                        Debug.Assert(chapter.Document == document);
+
+                        chapters.Add(chapter);
+                        documentsToChapter.Add(document, chapter);
+                    }
+
+                    var book = new Book(groupedDocuments.Key, chapters, parentDocument);
+
+                    books.Add(book);
+                }
+                else
                 {
                     BookPage chapter;
 
@@ -103,29 +129,6 @@ namespace TinySite.Commands
                         documentsToChapter.Add(document, chapter);
                     }
                 }
-                else // no parent, documents must be a set of chapters in a new book.
-                {
-                    var chapters = new List<BookPage>();
-
-                    foreach (var document in groupedDocuments)
-                    {
-                        BookPage chapter;
-
-                        if (!documentsToChapter.TryGetValue(document, out chapter))
-                        {
-                            chapter = new BookPage(document, true);
-                        }
-
-                        Debug.Assert(chapter.Document == document);
-
-                        chapters.Add(chapter);
-                        documentsToChapter.Add(document, chapter);
-                    }
-
-                    var book = new Book(groupedDocuments.Key, chapters);
-
-                    books.Add(book);
-                }
             }
 
             foreach (var book in books)
@@ -134,14 +137,14 @@ namespace TinySite.Commands
 
                 foreach (var chapter in book.Chapters)
                 {
-                    previous = ProcessBookAndChapterOrder(book, chapter, null, previous);
+                    previous = ProcessBookAndChapterOrder(book, chapter, book.ParentDocument, previous);
                 }
             }
 
             return books;
         }
 
-        private static DocumentFile ProcessBookAndChapterOrder(Book book, BookPage chapter, BookPage parent, DocumentFile previous)
+        private static DocumentFile ProcessBookAndChapterOrder(Book book, BookPage chapter, DocumentFile parent, DocumentFile previous)
         {
             var bookWithActiveDocument = book.GetBookWithActiveDocument(chapter.Document);
 
@@ -149,7 +152,7 @@ namespace TinySite.Commands
 
             chapter.Document.Chapter = AllChapters(bookWithActiveDocument).Where(c => c.Document == chapter.Document).Single();
 
-            previous = SetNextPreviousAndParent(previous, chapter.Document, parent == null ? null : parent.Document);
+            previous = SetNextPreviousAndParent(previous, chapter.Document, parent);
 
             foreach (var page in chapter.SubPages)
             {
@@ -157,7 +160,7 @@ namespace TinySite.Commands
 
                 if (page.SubPages != null && page.SubPages.Any())
                 {
-                    previous = ProcessBookAndChapterOrder(book, page, chapter, previous);
+                    previous = ProcessBookAndChapterOrder(book, page, chapter.Document, previous);
                 }
                 else
                 {

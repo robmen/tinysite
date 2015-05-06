@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using TinySite.Commands;
 using TinySite.Models;
@@ -28,9 +29,37 @@ namespace RobMensching.TinySite.Test
 
             Assert.Equal(1, order.Books.Count());
 
-            var doc = command.Documents.Skip(3).Take(1).Single();
+            var documents = command.Documents.OrderBy(d => d.Order).ToList();
 
-            var data = order.Books.First().GetBookWithActiveDocument(doc);
+            Assert.Equal(0, documents[0].Order);
+            Assert.Equal("parent.txt", documents[0].OutputRelativePath);
+            Assert.Equal(String.Empty, documents[0].ParentId);
+            Assert.Null(documents[0].ParentDocument);
+
+            Assert.Equal(1, documents[1].Order);
+            Assert.Equal("parent\\first-ordered-document.txt", documents[1].OutputRelativePath);
+            Assert.Equal("parent", documents[1].ParentId);
+            Assert.Equal(documents[0], documents[1].ParentDocument);
+
+            Assert.Equal(1, documents[2].Order);
+            Assert.Equal("parent\\second-document\\sub-second-document.txt", documents[2].OutputRelativePath);
+            Assert.Equal("parent\\second-document", documents[2].ParentId);
+            Assert.Equal(documents[3], documents[2].ParentDocument);
+
+            Assert.Equal(2, documents[3].Order);
+            Assert.Equal("parent\\second-document.txt", documents[3].OutputRelativePath);
+            Assert.Equal("parent", documents[3].ParentId);
+            Assert.Equal(documents[0], documents[3].ParentDocument);
+
+            Assert.Equal(2, documents[4].Order);
+            Assert.Equal("parent\\second-document\\another-sub-second-document.txt", documents[4].OutputRelativePath);
+            Assert.Equal("parent\\second-document", documents[4].ParentId);
+            Assert.Equal(documents[3], documents[4].ParentDocument);
+
+            Assert.Equal(3, documents[5].Order);
+            Assert.Equal("parent\\third-document-from-metadata.txt", documents[5].OutputRelativePath);
+            Assert.Equal("parent", documents[5].ParentId);
+            Assert.Equal(documents[0], documents[5].ParentDocument);
         }
 
         [Fact]
