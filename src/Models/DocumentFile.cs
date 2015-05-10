@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using TinySite.Extensions;
 
 namespace TinySite.Models
 {
@@ -38,6 +36,8 @@ namespace TinySite.Models
         internal string RenderedContent { get; set; }
 
         public Author Author { get { return this.Get<Author>(); } set { this.Set<Author>(value); } }
+
+        public string Layout { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
         public string Content { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 

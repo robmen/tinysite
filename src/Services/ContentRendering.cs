@@ -17,14 +17,17 @@ namespace TinySite.Services
 
         public LayoutFile GetLayoutForDocument(DocumentFile document)
         {
-            var defaultLayout = String.Empty;
+            var layoutName = document.Layout;
 
-            if (!this.Transaction.Site.DefaultLayoutForExtension.TryGetValue(document.TargetExtension, out defaultLayout))
+            if (String.IsNullOrEmpty(layoutName))
             {
-                this.Transaction.Site.DefaultLayoutForExtension.TryGetValue("*", out defaultLayout);
-            }
+                if (!this.Transaction.Site.DefaultLayoutForExtension.TryGetValue(document.TargetExtension, out layoutName))
+                {
+                    this.Transaction.Site.DefaultLayoutForExtension.TryGetValue("*", out layoutName);
+                }
 
-            var layoutName = document.GetOrDefault<string>("layout", defaultLayout);
+                document.Layout = layoutName;
+            }
 
             if (!String.IsNullOrEmpty(layoutName) && !this.Transaction.Site.Layouts.Contains(layoutName))
             {
