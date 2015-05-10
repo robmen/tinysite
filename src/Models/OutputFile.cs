@@ -16,6 +16,10 @@ namespace TinySite.Models
 
             this.Modified = info.LastWriteTime;
 
+            this.Name = Path.GetFileName(path);
+
+            this.Extension = Path.GetExtension(path);
+
             this.SourcePath = Path.GetFullPath(path);
 
             this.SourceRelativePath = this.SourcePath.Substring(actualRootPath.Length + 1);
@@ -43,6 +47,10 @@ namespace TinySite.Models
         public DateTime Date { get { return this.Get<DateTime>(); } set { this.SetTimes(null, value); } }
 
         public DateTime Modified { get { return this.Get<DateTime>(); } set { this.Set<DateTime>(value); } }
+
+        public string Name { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+
+        public string Extension { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
         public string OutputPath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
