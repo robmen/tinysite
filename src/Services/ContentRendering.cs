@@ -57,6 +57,11 @@ namespace TinySite.Services
                 document.Summary = Summarize(document.Content);
             }
 
+            if (layout != null)
+            {
+                this.AssignLayoutMetadataToDocument(document, layout);
+            }
+
             return document;
         }
 
@@ -112,6 +117,24 @@ namespace TinySite.Services
             }
 
             return summary;
+        }
+
+        private void AssignLayoutMetadataToDocument(DocumentFile document, LayoutFile layout)
+        {
+            foreach (var metadataKeyValue in layout)
+            {
+                if (!metadataKeyValue.Key.Equals("Id", StringComparison.OrdinalIgnoreCase) &&
+                    !metadataKeyValue.Key.Equals("Extension", StringComparison.OrdinalIgnoreCase) &&
+                    !metadataKeyValue.Key.Equals("Layout", StringComparison.OrdinalIgnoreCase) &&
+                    !metadataKeyValue.Key.Equals("Modified", StringComparison.OrdinalIgnoreCase) &&
+                    !metadataKeyValue.Key.Equals("Name", StringComparison.OrdinalIgnoreCase) &&
+                    !metadataKeyValue.Key.Equals("SourcePath", StringComparison.OrdinalIgnoreCase) &&
+                    !metadataKeyValue.Key.Equals("SourceContent", StringComparison.OrdinalIgnoreCase) &&
+                    !document.ContainsKey(metadataKeyValue.Key))
+                {
+                    document.Add(metadataKeyValue);
+                }
+            }
         }
     }
 }

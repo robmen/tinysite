@@ -273,6 +273,12 @@
     <Content Include="data\ordered-documents\parent\Second Document\02. Another Sub-Second Document.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="data\layout-update-metadata\documents\a.txt.md" />
+    <None Include="data\layout-update-metadata\layouts\add_data.hb" />
+    <None Include="data\layout-update-metadata\layouts\master.hb" />
+    <None Include="data\layout-update-metadata\site.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="data\ordered-documents\parent\Third Document From Metadata.txt.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -292,6 +298,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="data\layout-update-metadata\files\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
