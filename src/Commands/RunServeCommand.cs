@@ -21,6 +21,11 @@ namespace TinySite.Commands
                 return;
             }
 
+            if (!Directory.Exists(this.Config.OutputPath))
+            {
+                Directory.CreateDirectory(this.Config.OutputPath);
+            }
+
             Console.WriteLine();
             Console.WriteLine("Press 'q' to quit.");
             Console.WriteLine();
