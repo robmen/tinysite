@@ -16,6 +16,8 @@ namespace RobMensching.TinySite.Test
             var outputPath = Path.GetTempPath() + @"tinysite_test\blog_build";
             var verifyPath = Path.GetFullPath(@"data\examples_output\blog");
 
+            Directory.Delete(outputPath, true);
+
             RunTinySite(blogPath, outputPath);
 
             AssertFoldersSame(outputPath, verifyPath);
@@ -27,6 +29,8 @@ namespace RobMensching.TinySite.Test
             var bookPath = Path.GetFullPath(@"data\examples\book");
             var outputPath = Path.GetTempPath() + @"tinysite_test\book_build";
             var verifyPath = Path.GetFullPath(@"data\examples_output\book");
+
+            Directory.Delete(outputPath, true);
 
             RunTinySite(bookPath, outputPath);
 
@@ -40,33 +44,54 @@ namespace RobMensching.TinySite.Test
             var outputPath = Path.GetTempPath() + @"tinysite_test\homepage_build";
             var verifyPath = Path.GetFullPath(@"data\examples_output\homepage");
 
+            Directory.Delete(outputPath, true);
+
             RunTinySite(homepagePath, outputPath);
 
             AssertFoldersSame(outputPath, verifyPath);
         }
+
+        [Fact]
+        public void HomepageRendersNothingSecondPass()
+        {
+            var homepagePath = Path.GetFullPath(@"data\examples\homepage");
+            var outputPath = Path.GetTempPath() + @"tinysite_test\homepage_build";
+            var verifyPath = Path.GetFullPath(@"data\examples_output\homepage");
+
+            Directory.Delete(outputPath, true);
+
+            RunTinySite(homepagePath, outputPath);
+
+            AssertFoldersSame(outputPath, verifyPath);
+
+            RunTinySite(homepagePath, outputPath);
+
+            AssertFoldersSame(outputPath, verifyPath);
+        }
+
 
         private static void RunTinySite(string workingFolder, string outputFolder)
         {
             var result = 0;
             var arguments = "render -out " + outputFolder;
 
-            var path = Path.GetFullPath("tinysite.exe");
-            if (File.Exists(path))
-            {
-                var process = new Process();
-                process.StartInfo = new ProcessStartInfo();
-                process.StartInfo.FileName = path;
-                process.StartInfo.Arguments = arguments;
-                process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.WorkingDirectory = workingFolder;
-                process.Start();
+            //var path = Path.GetFullPath("tinysite.exe");
+            //if (File.Exists(path))
+            //{
+            //    var process = new Process();
+            //    process.StartInfo = new ProcessStartInfo();
+            //    process.StartInfo.FileName = path;
+            //    process.StartInfo.Arguments = arguments;
+            //    process.StartInfo.CreateNoWindow = true;
+            //    process.StartInfo.UseShellExecute = false;
+            //    process.StartInfo.WorkingDirectory = workingFolder;
+            //    process.Start();
 
-                var waited = process.WaitForExit(3 * 60 * 1000);
-                Assert.True(waited);
-                result = process.ExitCode;
-            }
-            else
+            //    var waited = process.WaitForExit(3 * 60 * 1000);
+            //    Assert.True(waited);
+            //    result = process.ExitCode;
+            //}
+            //else
             {
                 var folder= Environment.CurrentDirectory;
                 Environment.CurrentDirectory = workingFolder;

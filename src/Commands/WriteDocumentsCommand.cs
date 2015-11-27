@@ -36,7 +36,8 @@ namespace TinySite.Commands
                 }
             }
 
-            return this.WroteDocuments = this.Documents.Where(d => d.Rendered)
+            return this.WroteDocuments = this.Documents
+                .Where(d => d.Rendered)
                 .AsParallel()
                 .Select(WriteDocument)
                 .Count();
@@ -96,6 +97,10 @@ namespace TinySite.Commands
             {
                 writer.Write(utf8, 0, utf8.Length);
             }
+
+            File.SetCreationTime(document.OutputPath, document.Date);
+
+            File.SetLastWriteTime(document.OutputPath, document.Modified);
 
             return document;
         }

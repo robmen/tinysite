@@ -29,7 +29,7 @@ namespace TinySite.Commands
                 using (var capture = Statistics.Current.Start(StatisticTiming.RenderDocumentContent))
                 {
                     renderedDocuments = this.Site.Documents
-                                        .Where(d => !d.Draft)
+                                        .Where(d => !d.Draft && !d.Unmodified)
                                         .AsParallel()
                                         .Select(documentRendering.RenderDocumentContent)
                                         .ToList();

@@ -19,6 +19,7 @@ namespace TinySite.Commands
         public int Execute()
         {
             return this.CopiedFiles = this.Files
+                .Where(f => !f.Unmodified)
                 .AsParallel()
                 .Select(CopyStaticFile)
                 .Count();
@@ -75,6 +76,10 @@ namespace TinySite.Commands
             Directory.CreateDirectory(folder);
 
             File.Copy(file.SourcePath, file.OutputPath, true);
+
+            File.SetCreationTime(file.OutputPath, file.Date);
+
+            File.SetLastWriteTime(file.OutputPath, file.Modified);
 
             return file;
         }

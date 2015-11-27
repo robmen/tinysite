@@ -18,7 +18,7 @@ namespace TinySite.Models
 
             this.Date = info.CreationTime;
 
-            this.Modified = info.LastWriteTime;
+            this.Modified = (info.LastWriteTime < info.CreationTime) ? info.CreationTime : info.LastWriteTime;
 
             this.Name = Path.GetFileName(path);
 
@@ -33,6 +33,15 @@ namespace TinySite.Models
             this.OutputRootPath = outputRootPath;
 
             this.OutputPath = Path.Combine(this.OutputRootPath, this.OutputRelativePath);
+
+            var outputInfo = new FileInfo(this.OutputPath);
+
+            if (outputInfo.Exists)
+            {
+                var existingModified = (outputInfo.LastWriteTime < outputInfo.CreationTime) ? outputInfo.CreationTime : outputInfo.LastWriteTime;
+
+                this.Unmodified = (existingModified == this.Modified);
+            }
 
             this.TargetExtension = Path.GetExtension(this.OutputRelativePath).TrimStart('.');
 
@@ -73,6 +82,8 @@ namespace TinySite.Models
         public string RelativeUrl { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
         public string TargetExtension { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+
+        internal bool Unmodified { get; set; }
 
         protected void SetTimes(string prefix, DateTime time)
         {
