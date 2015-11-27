@@ -6,6 +6,10 @@ namespace TinySite.Models
 {
     public abstract class OutputFile : CaseInsensitiveExpando
     {
+        public OutputFile()
+        {
+        }
+
         public OutputFile(string path, string rootPath, string outputPath, string outputRootPath, string rootUrl, string relativeUrl)
         {
             var actualRootPath = Path.GetDirectoryName(rootPath.TrimEnd('\\'));

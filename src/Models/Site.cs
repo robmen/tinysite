@@ -9,6 +9,11 @@ namespace TinySite.Models
     public class Site : CaseInsensitiveExpando
     {
         public Site(SiteConfig config, IEnumerable<DocumentFile> documents, IEnumerable<StaticFile> files, IEnumerable<LayoutFile> layouts, Site parent = null)
+            : this(config, documents, files, new LayoutFileCollection(layouts), parent)
+        {
+        }
+
+        public Site(SiteConfig config, IEnumerable<DocumentFile> documents, IEnumerable<StaticFile> files, LayoutFileCollection layouts, Site parent = null)
         {
             config.Metadata.Assign(this);
 

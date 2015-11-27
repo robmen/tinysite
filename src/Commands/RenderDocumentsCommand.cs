@@ -7,11 +7,17 @@ namespace TinySite.Commands
 {
     public class RenderDocumentsCommand
     {
-        public IDictionary<string, RenderingEngine> Engines { private get; set; }
-
-        public Site Site { private get; set; }
+        public RenderDocumentsCommand(IDictionary<string, RenderingEngine> engines, Site site)
+        {
+            this.Engines = engines;
+            this.Site = site;
+        }
 
         public int RenderedDocuments { get; private set; }
+
+        private IDictionary<string, RenderingEngine> Engines { get; }
+
+        private Site Site { get; }
 
         public int Execute()
         {
@@ -33,16 +39,14 @@ namespace TinySite.Commands
                 {
                     foreach (var document in renderedDocuments)
                     {
-                        var layout = documentRendering.GetLayoutForDocument(document);
+                        var content = document.Content;
 
-                        if (layout == null)
+                        foreach (var layout in document.Layouts)
                         {
-                            document.RenderedContent = document.Content;
+                            content = documentRendering.RenderDocumentContentUsingLayout(document, content, layout);
                         }
-                        else
-                        {
-                            document.RenderedContent = documentRendering.RenderDocumentContentUsingLayout(document, document.Content, layout);
-                        }
+
+                        document.RenderedContent = content;
 
                         document.Rendered = document.RenderedContent != null;
                     }

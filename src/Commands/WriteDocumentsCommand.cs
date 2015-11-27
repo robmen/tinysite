@@ -9,9 +9,14 @@ namespace TinySite.Commands
 {
     public class WriteDocumentsCommand
     {
-        public IEnumerable<DocumentFile> Documents { private get; set; }
+        public WriteDocumentsCommand(IEnumerable<DocumentFile> documents)
+        {
+            this.Documents = documents;
+        }
 
         public int WroteDocuments { get; private set; }
+
+        private IEnumerable<DocumentFile> Documents { get; }
 
         public int Execute()
         {

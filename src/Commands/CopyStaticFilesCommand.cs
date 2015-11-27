@@ -7,13 +7,19 @@ namespace TinySite.Commands
 {
     public class CopyStaticFilesCommand
     {
-        public IEnumerable<StaticFile> Files { private get; set; }
+        public CopyStaticFilesCommand(IEnumerable<StaticFile> files)
+        {
+            this.Files = files;
+        }
 
         public int CopiedFiles { get; private set; }
 
+        private IEnumerable<StaticFile> Files { get; }
+
         public int Execute()
         {
-            return this.CopiedFiles = this.Files.AsParallel()
+            return this.CopiedFiles = this.Files
+                .AsParallel()
                 .Select(CopyStaticFile)
                 .Count();
         }

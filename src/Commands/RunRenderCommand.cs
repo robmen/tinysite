@@ -38,13 +38,25 @@ namespace TinySite.Commands
 
             using (var capture = Statistics.Current.Start(StatisticTiming.LoadedSite))
             {
+                // Load layouts.
+                LayoutFileCollection layouts;
+                {
+                    var load = new LoadLayoutsCommand();
+                    load.LayoutsPath = config.LayoutsPath;
+                    var loaded = await load.ExecuteAsync();
+
+                    layouts = new LayoutFileCollection(loaded);
+                }
+
                 // Load documents.
                 IEnumerable<DocumentFile> documents;
                 {
                     var load = new LoadDocumentsCommand();
                     load.Author = config.Author;
                     load.OutputRootPath = config.OutputPath;
+                    load.Layouts = layouts;
                     load.RenderedExtensions = renderedExtensions;
+                    load.DefaultLayoutForExtension = config.DefaultLayoutForExtension;
                     load.DocumentsPath = config.DocumentsPath;
                     load.RootUrl = config.RootUrl;
                     load.ApplicationUrl = config.Url;
@@ -61,14 +73,6 @@ namespace TinySite.Commands
                     load.RootUrl = config.RootUrl;
                     load.Url = config.Url;
                     files = load.Execute();
-                }
-
-                // Load layouts.
-                IEnumerable<LayoutFile> layouts;
-                {
-                    var load = new LoadLayoutsCommand();
-                    load.LayoutsPath = config.LayoutsPath;
-                    layouts = await load.ExecuteAsync();
                 }
 
                 site = new Site(config, documents, files, layouts);
@@ -115,7 +119,7 @@ namespace TinySite.Commands
             {
                 using (var capture = Statistics.Current.Start(StatisticTiming.RenderPartials))
                 {
-                    var render = new RenderPartialsCommand() { Engines = engines, Site = site };
+                    var render = new RenderPartialsCommand(engines, site);
                     render.Execute();
 
                     Statistics.Current.RenderedPartials = render.RenderedPartials;
@@ -123,7 +127,7 @@ namespace TinySite.Commands
 
                 using (var capture = Statistics.Current.Start(StatisticTiming.RenderDocuments))
                 {
-                    var render = new RenderDocumentsCommand() { Engines = engines, Site = site };
+                    var render = new RenderDocumentsCommand(engines, site);
                     render.Execute();
 
                     Statistics.Current.RenderedDocuments = render.RenderedDocuments;
@@ -131,7 +135,7 @@ namespace TinySite.Commands
 
                 using (var capture = Statistics.Current.Start(StatisticTiming.WriteDocuments))
                 {
-                    var write = new WriteDocumentsCommand() { Documents = site.Documents };
+                    var write = new WriteDocumentsCommand(site.Documents);
                     write.Execute();
 
                     Statistics.Current.WroteDocuments = write.WroteDocuments;
@@ -139,7 +143,7 @@ namespace TinySite.Commands
 
                 using (var capture = Statistics.Current.Start(StatisticTiming.CopyStaticFiles))
                 {
-                    var copy = new CopyStaticFilesCommand() { Files = site.Files };
+                    var copy = new CopyStaticFilesCommand(site.Files);
                     copy.Execute();
 
                     Statistics.Current.CopiedFiles = copy.CopiedFiles;

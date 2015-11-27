@@ -7,11 +7,17 @@ namespace TinySite.Commands
 {
     public class RenderPartialsCommand
     {
-        public IDictionary<string, RenderingEngine> Engines { private get; set; }
-
-        public Site Site { private get; set; }
+        public RenderPartialsCommand(IDictionary<string, RenderingEngine> engines, Site site)
+        {
+            this.Engines = engines;
+            this.Site = site;
+        }
 
         public int RenderedPartials { get; private set; }
+
+        private IDictionary<string, RenderingEngine> Engines { get; }
+
+        private Site Site { get; }
 
         public int Execute()
         {
@@ -33,16 +39,14 @@ namespace TinySite.Commands
                 {
                     foreach (var partial in renderedPartials)
                     {
-                        var layout = contentRendering.GetLayoutForDocument(partial);
+                        var content = partial.Content;
 
-                        if (layout == null)
+                        foreach (var layout in partial.Layouts)
                         {
-                            partial.RenderedContent = partial.Content;
+                            content = contentRendering.RenderDocumentContentUsingLayout(partial, content, layout);
                         }
-                        else
-                        {
-                            partial.RenderedContent = contentRendering.RenderDocumentContentUsingLayout(partial, partial.Content, layout);
-                        }
+
+                        partial.RenderedContent = content;
 
                         partial.Rendered = true;
                     }

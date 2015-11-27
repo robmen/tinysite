@@ -24,10 +24,14 @@ namespace TinySite.Models
         {
             this.ExtensionsForRendering = new List<string>(original.ExtensionsForRendering);
 
-            this.Partial = Partial;
+            this.Layouts = new List<LayoutFile>(original.Layouts);
+
+            this.Partial = original.Partial;
         }
 
         internal IList<string> ExtensionsForRendering { get; set; }
+
+        internal IEnumerable<LayoutFile> Layouts { get; set; }
 
         internal bool Partial { get; set; }
 

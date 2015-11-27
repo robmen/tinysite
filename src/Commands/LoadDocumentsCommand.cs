@@ -28,6 +28,10 @@ namespace TinySite.Commands
 
         public IEnumerable<string> RenderedExtensions { private get; set; }
 
+        public LayoutFileCollection Layouts { private get; set; }
+
+        public IDictionary<string, string> DefaultLayoutForExtension { private get; set; }
+
         public IEnumerable<DocumentFile> Documents { get; private set; }
 
         public async Task<IEnumerable<DocumentFile>> ExecuteAsync()
@@ -48,12 +52,12 @@ namespace TinySite.Commands
                         continue;
                     }
 
-                    yield return this.LoadDocumentAsync(path, LoadDocumentFlags.DateFromFileName | LoadDocumentFlags.InsertDateIntoPath | LoadDocumentFlags.OrderFromFileName | LoadDocumentFlags.SanitizePath | LoadDocumentFlags.CleanUrls, this.RenderedExtensions);
+                    yield return this.LoadDocumentAsync(path, LoadDocumentFlags.DateFromFileName | LoadDocumentFlags.InsertDateIntoPath | LoadDocumentFlags.OrderFromFileName | LoadDocumentFlags.SanitizePath | LoadDocumentFlags.CleanUrls, this.RenderedExtensions, this.Layouts);
                 }
             }
         }
 
-        private async Task<DocumentFile> LoadDocumentAsync(string file, LoadDocumentFlags flags, IEnumerable<string> knownExtensions)
+        private async Task<DocumentFile> LoadDocumentAsync(string file, LoadDocumentFlags flags, IEnumerable<string> knownExtensions, LayoutFileCollection availableLayouts)
         {
             // Parse the document and update our document metadata.
             //
@@ -85,7 +89,7 @@ namespace TinySite.Commands
             //
             var extensionsForRendering = new List<string>();
 
-            for (; ; )
+            for (;;)
             {
                 var extension = Path.GetExtension(fileName).TrimStart('.');
                 if (extension.Equals("partial", StringComparison.OrdinalIgnoreCase))
@@ -103,6 +107,12 @@ namespace TinySite.Commands
                     break;
                 }
             }
+
+            var targetExtension = Path.GetExtension(fileName).TrimStart('.');
+
+            var layoutName = parser.Metadata.Get<string>("layout");
+
+            var layouts = GetLayouts(layoutName, targetExtension, file);
 
             if (LoadDocumentFlags.DateFromFileName == (flags & LoadDocumentFlags.DateFromFileName))
             {
@@ -202,6 +212,8 @@ namespace TinySite.Commands
 
             documentFile.ExtensionsForRendering = extensionsForRendering;
 
+            documentFile.Layouts = layouts;
+
             documentFile.Order = parser.Metadata.Get<int>("order", order);
             parser.Metadata.Remove("order");
 
@@ -211,6 +223,35 @@ namespace TinySite.Commands
             documentFile.SourceContent = parser.Content;
 
             return documentFile;
+        }
+
+        private IEnumerable<LayoutFile> GetLayouts(string layoutName, string targetExtension, string file)
+        {
+            if (String.IsNullOrEmpty(layoutName) && this.DefaultLayoutForExtension != null)
+            {
+                if (!this.DefaultLayoutForExtension.TryGetValue(targetExtension, out layoutName))
+                {
+                    this.DefaultLayoutForExtension.TryGetValue("*", out layoutName);
+                }
+            }
+
+            while (!String.IsNullOrEmpty(layoutName))
+            {
+                var layout = this.Layouts[layoutName];
+
+                if (layout == null)
+                {
+                    Console.Error.WriteLine("Cannot find layout: '{0}' while processing file: {1}", layoutName, Path.GetFullPath(file));
+
+                    break;
+                }
+
+                yield return layout;
+
+                file = layout.SourcePath;
+
+                layout.TryGet("layout", out layoutName);
+            }
         }
 
         private bool IgnoreFile(string path)

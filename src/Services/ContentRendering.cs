@@ -13,37 +13,13 @@ namespace TinySite.Services
             this.Transaction = transaction;
         }
 
-        private RenderingTransaction Transaction { get; set; }
-
-        public LayoutFile GetLayoutForDocument(DocumentFile document)
-        {
-            var layoutName = document.Layout;
-
-            if (String.IsNullOrEmpty(layoutName))
-            {
-                if (!this.Transaction.Site.DefaultLayoutForExtension.TryGetValue(document.TargetExtension, out layoutName))
-                {
-                    this.Transaction.Site.DefaultLayoutForExtension.TryGetValue("*", out layoutName);
-                }
-
-                document.Layout = layoutName;
-            }
-
-            if (!String.IsNullOrEmpty(layoutName) && !this.Transaction.Site.Layouts.Contains(layoutName))
-            {
-                Console.Error.WriteLine("Cannot find layout: '{0}' while processing file: {1}", layoutName, document.SourcePath);
-
-                layoutName = null;
-            }
-
-            return String.IsNullOrEmpty(layoutName) ? null : this.Transaction.Site.Layouts[layoutName];
-        }
+        private RenderingTransaction Transaction { get; }
 
         public DocumentFile RenderDocumentContent(DocumentFile document)
         {
             var content = document.SourceContent;
 
-            var layout = this.GetLayoutForDocument(document);
+            var layout = document?.Layouts.FirstOrDefault();
 
             foreach (var extension in document.ExtensionsForRendering)
             {
@@ -67,25 +43,16 @@ namespace TinySite.Services
 
         public string RenderDocumentContentUsingLayout(DocumentFile document, string documentContent, LayoutFile layout)
         {
-            var content = this.RenderContentForExtension(layout.SourcePath, layout.SourceContent, layout.Extension, document, documentContent, layout);
-
-            string parentLayoutName;
-
-            if (layout.TryGet<string>("layout", out parentLayoutName))
-            {
-                var parentLayout = this.Transaction.Site.Layouts[parentLayoutName];
-
-                content = this.RenderDocumentContentUsingLayout(document, content, parentLayout);
-            }
-
-            return content;
+            return this.RenderContentForExtension(layout.SourcePath, layout.SourceContent, layout.Extension, document, documentContent, layout);
         }
 
         private string RenderContentForExtension(string path, string content, string extension, DocumentFile document, string documentContent, LayoutFile layout)
         {
             var data = new CaseInsensitiveExpando();
 
-            var partialsContent = this.Transaction.Site.Partials.Where(d => d.Rendered).ToDictionary(d => d.Id.Replace('-', '_').Replace('\\', '_').Replace('/', '_'), d => (object)d.RenderedContent);
+            var partialsContent = this.Transaction.Site.Partials
+                .Where(d => d.Rendered)
+                .ToDictionary(d => d.Id.Replace('-', '_').Replace('\\', '_').Replace('/', '_'), d => (object)d.RenderedContent);
 
             var backupContent = document.Content;
 
@@ -95,7 +62,7 @@ namespace TinySite.Services
             data["Document"] = document;
             data["Layout"] = layout;
             data["PartialsContent"] = new CaseInsensitiveExpando(partialsContent);
-            data["Books"] = this.Transaction.Site.Books == null ? null : this.Transaction.Site.Books.Select(b => b.GetBookWithActiveDocument(document)).ToList();
+            data["Books"] = this.Transaction.Site.Books?.Select(b => b.GetBookWithActiveDocument(document)).ToList();
 
             var engine = this.Transaction.Engines[extension];
 
