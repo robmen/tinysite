@@ -16,7 +16,7 @@ namespace RobMensching.TinySite.Test
             var outputPath = Path.GetTempPath() + @"tinysite_test\blog_build";
             var verifyPath = Path.GetFullPath(@"data\examples_output\blog");
 
-            Directory.Delete(outputPath, true);
+            SafeDeleteFolder(outputPath);
 
             RunTinySite(blogPath, outputPath);
 
@@ -30,7 +30,7 @@ namespace RobMensching.TinySite.Test
             var outputPath = Path.GetTempPath() + @"tinysite_test\book_build";
             var verifyPath = Path.GetFullPath(@"data\examples_output\book");
 
-            Directory.Delete(outputPath, true);
+            SafeDeleteFolder(outputPath);
 
             RunTinySite(bookPath, outputPath);
 
@@ -44,7 +44,7 @@ namespace RobMensching.TinySite.Test
             var outputPath = Path.GetTempPath() + @"tinysite_test\homepage_build";
             var verifyPath = Path.GetFullPath(@"data\examples_output\homepage");
 
-            Directory.Delete(outputPath, true);
+            SafeDeleteFolder(outputPath);
 
             RunTinySite(homepagePath, outputPath);
 
@@ -58,7 +58,7 @@ namespace RobMensching.TinySite.Test
             var outputPath = Path.GetTempPath() + @"tinysite_test\homepage_build";
             var verifyPath = Path.GetFullPath(@"data\examples_output\homepage");
 
-            Directory.Delete(outputPath, true);
+            SafeDeleteFolder(outputPath);
 
             RunTinySite(homepagePath, outputPath);
 
@@ -69,6 +69,16 @@ namespace RobMensching.TinySite.Test
             AssertFoldersSame(outputPath, verifyPath);
         }
 
+        private static void SafeDeleteFolder(string outputPath)
+        {
+            try
+            {
+                Directory.Delete(outputPath, true);
+            }
+            catch (DirectoryNotFoundException)
+            {
+            }
+        }
 
         private static void RunTinySite(string workingFolder, string outputFolder)
         {
@@ -93,7 +103,7 @@ namespace RobMensching.TinySite.Test
             //}
             //else
             {
-                var folder= Environment.CurrentDirectory;
+                var folder = Environment.CurrentDirectory;
                 Environment.CurrentDirectory = workingFolder;
 
                 result = Program.Main(arguments.Split(' '));
