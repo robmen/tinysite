@@ -10,9 +10,6 @@ namespace TinySite.Models
         LoadedSite,
         Ordering,
         Pagination,
-        RenderPartialsContent,
-        RenderPartialsLayouts,
-        RenderPartials,
         RenderDocumentContent,
         RenderDocumentLayouts,
         RenderDocuments,
@@ -66,9 +63,6 @@ namespace TinySite.Models
             this.ReportTiming("   Loaded {1} site files in {0} s", StatisticTiming.LoadedSite, this.SiteFiles);
             this.ReportTiming("   Ordered {1} the documents s", StatisticTiming.Pagination, this.OrderedFiles);
             this.ReportTiming("   Paginated the site into {1} documents {0} s", StatisticTiming.Pagination, this.PagedFiles);
-            this.ReportTiming("      Rendered {1} partials in {0} s", StatisticTiming.RenderPartials, this.RenderedPartials);
-            this.ReportTiming("          Partial content rendered in {0} s", StatisticTiming.RenderPartialsContent);
-            this.ReportTiming("          Partial layouts rendered in {0} s", StatisticTiming.RenderPartialsLayouts);
             this.ReportTiming("      Rendered {1} documents in {0} s", StatisticTiming.RenderDocuments, this.RenderedDocuments);
             this.ReportTiming("          Document content rendered in {0} s", StatisticTiming.RenderDocumentContent);
             this.ReportTiming("          Document layouts rendered in {0} s", StatisticTiming.RenderDocumentLayouts);

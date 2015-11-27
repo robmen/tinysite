@@ -73,7 +73,6 @@
     <Compile Include="Commands\OrderCommand.cs" />
     <Compile Include="Commands\PaginateCommand.cs" />
     <Compile Include="Commands\CopyStaticFilesCommand.cs" />
-    <Compile Include="Commands\RenderPartialsCommand.cs" />
     <Compile Include="Commands\RunRenderCommand.cs" />
     <Compile Include="Commands\RunServeCommand.cs" />
     <Compile Include="Commands\RunWatchCommand.cs" />
@@ -88,6 +87,7 @@
     <Compile Include="Models\Page.cs" />
     <Compile Include="Models\Pagination.cs" />
     <Compile Include="Models\Paginator.cs" />
+    <Compile Include="Models\PartialsContent.cs" />
     <Compile Include="Models\QueryResult.cs" />
     <Compile Include="Models\Query\OrderClause.cs" />
     <Compile Include="Models\Query\OrderOperator.cs" />

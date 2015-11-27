@@ -117,14 +117,6 @@ namespace TinySite.Commands
         {
             using (var rendering = Statistics.Current.Start(StatisticTiming.Rendered))
             {
-                using (var capture = Statistics.Current.Start(StatisticTiming.RenderPartials))
-                {
-                    var render = new RenderPartialsCommand(engines, site);
-                    render.Execute();
-
-                    Statistics.Current.RenderedPartials = render.RenderedPartials;
-                }
-
                 using (var capture = Statistics.Current.Start(StatisticTiming.RenderDocuments))
                 {
                     var render = new RenderDocumentsCommand(engines, site);

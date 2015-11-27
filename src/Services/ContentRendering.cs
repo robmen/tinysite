@@ -50,9 +50,7 @@ namespace TinySite.Services
         {
             var data = new CaseInsensitiveExpando();
 
-            var partialsContent = this.Transaction.Site.Partials
-                .Where(d => d.Rendered)
-                .ToDictionary(d => d.Id.Replace('-', '_').Replace('\\', '_').Replace('/', '_'), d => (object)d.RenderedContent);
+            var partialsContent = new PartialsContent(this.Transaction.Site.Partials);
 
             var backupContent = document.Content;
 
@@ -61,7 +59,7 @@ namespace TinySite.Services
             data["Site"] = this.Transaction.Site;
             data["Document"] = document;
             data["Layout"] = layout;
-            data["PartialsContent"] = new CaseInsensitiveExpando(partialsContent);
+            data["PartialsContent"] = partialsContent;
             data["Books"] = this.Transaction.Site.Books?.Select(b => b.GetBookWithActiveDocument(document)).ToList();
 
             var engine = this.Transaction.Engines[extension];
