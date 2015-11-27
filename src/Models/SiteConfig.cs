@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace TinySite.Models
@@ -9,6 +10,8 @@ namespace TinySite.Models
         public SiteConfig()
         {
             this.DefaultLayoutForExtension = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+            this.IgnoreFiles = Enumerable.Empty<Regex>();
 
             this.Metadata = new MetadataCollection();
         }
@@ -27,7 +30,7 @@ namespace TinySite.Models
 
         public string OutputPath { get; set; }
 
-        public Regex[] IgnoreFiles { get; set; }
+        public IEnumerable<Regex> IgnoreFiles { get; set; }
 
         public SiteConfig[] SubsiteConfigs { get; set; }
 

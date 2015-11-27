@@ -18,7 +18,7 @@ namespace TinySite.Models
             config.Metadata.Assign(this);
 
             this.DefaultLayoutForExtension = new Dictionary<string, string>(config.DefaultLayoutForExtension);
-            this.IgnoreFiles = config.IgnoreFiles ?? new Regex[0];
+            this.IgnoreFiles = config.IgnoreFiles;
 
             this.Author = config.Author;
             this.LiveReloadScript = config.LiveReloadScript;
@@ -42,9 +42,9 @@ namespace TinySite.Models
             this.Layouts = new LayoutFileCollection(layouts);
         }
 
-        public IDictionary<string, string> DefaultLayoutForExtension { get; private set; }
+        public IDictionary<string, string> DefaultLayoutForExtension { get; }
 
-        public Regex[] IgnoreFiles { get; set; }
+        public IEnumerable<Regex> IgnoreFiles { get; }
 
         public Author Author { get { return this.Get<Author>(); } set { this.Set<Author>(value); } }
 
