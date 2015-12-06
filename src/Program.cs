@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using TinySite.Commands;
 using TinySite.Models;
 using TinySite.Services;
@@ -13,7 +16,17 @@ namespace TinySite
         public Program()
         {
             Statistics.Current = new Statistics();
+
+            this.LastRunJsonSettings = new JsonSerializerSettings()
+            {
+                DateFormatHandling = DateFormatHandling.IsoDateFormat,
+                Formatting = Formatting.Indented,
+                DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate,
+                NullValueHandling = NullValueHandling.Ignore,
+            };
         }
+
+        private JsonSerializerSettings LastRunJsonSettings { get;  }
 
         public static int Main(string[] args)
         {
@@ -62,15 +75,17 @@ namespace TinySite
         {
             var config = await this.LoadConfig(commandLine.SitePath, commandLine.OutputPath);
 
+            var lastRunState = await this.LoadLastRunState(commandLine.SitePath);
+
             switch (commandLine.Command)
             {
                 case ProcessingCommand.Render:
                     {
                         var engines = RenderingEngine.Load();
-                        var command = new RunRenderCommand();
-                        command.Config = config;
-                        command.Engines = engines;
+                        var command = new RunRenderCommand(config, lastRunState, engines);
                         await command.ExecuteAsync();
+
+                        lastRunState = command.LastRunState;
                     }
                     break;
 
@@ -85,9 +100,7 @@ namespace TinySite
                 case ProcessingCommand.Watch:
                     {
                         var engines = RenderingEngine.Load();
-                        var command = new RunWatchCommand();
-                        command.Config = config;
-                        command.Engines = engines;
+                        var command = new RunWatchCommand(config, lastRunState, engines);
                         command.Execute();
                     }
                     break;
@@ -95,6 +108,8 @@ namespace TinySite
                 default:
                     throw new InvalidOperationException(String.Format("Unknown ProcessingCommand: {0}", commandLine.Command));
             }
+
+            await this.SaveLastRunState(commandLine.SitePath, lastRunState);
         }
 
         private async Task<SiteConfig> LoadConfig(string sitePath, string outputPath)
@@ -111,6 +126,46 @@ namespace TinySite
                 command.ConfigPath = configPath;
                 command.OutputPath = outputPath;
                 return await command.ExecuteAsync();
+            }
+        }
+
+        private async Task<IEnumerable<LastRunDocument>> LoadLastRunState(string sitePath)
+        {
+            var statePath = Path.GetFullPath(Path.Combine(sitePath, "site.lastrun"));
+
+            if (!File.Exists(statePath))
+            {
+                return Enumerable.Empty<LastRunDocument>();
+            }
+
+            string json;
+            using (var reader = new StreamReader(statePath))
+            {
+                json = await reader.ReadToEndAsync();
+            }
+
+            var result = JsonConvert.DeserializeObject<IEnumerable<LastRunDocument>>(json, this.LastRunJsonSettings);
+            return result;
+        }
+
+        private async Task SaveLastRunState(string sitePath, IEnumerable<LastRunDocument> lastRunState)
+        {
+            var statePath = Path.GetFullPath(Path.Combine(sitePath, "site.lastrun"));
+
+            if (!lastRunState.Any())
+            {
+                File.Delete(statePath);
+            }
+            else
+            {
+                var json = JsonConvert.SerializeObject(lastRunState, this.LastRunJsonSettings);
+
+                var bytes = Encoding.UTF8.GetBytes(json);
+
+                using (var writer = File.Open(statePath, FileMode.Create, FileAccess.Write, FileShare.Delete))
+                {
+                    await writer.WriteAsync(bytes, 0, bytes.Length);
+                }
             }
         }
     }

@@ -35,6 +35,8 @@ namespace TinySite.Services
         public IEnumerable<StaticFile> Files { get; set; }
 
         public LayoutFileCollection Layouts { get; set; }
+        
+        #region // IDisposable
 
         public void Dispose()
         {
@@ -59,5 +61,7 @@ namespace TinySite.Services
 
             _disposed = true;
         }
+
+        #endregion
     }
 }

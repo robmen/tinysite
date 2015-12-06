@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FuManchu;
+using TinySite.Models;
 using TinySite.Rendering;
 
 namespace TinySite.Renderers
@@ -10,13 +11,15 @@ namespace TinySite.Renderers
     [Render("handlebars")]
     public class HandlebarsRenderer : IRenderer
     {
-        private object sync = new object();
+        private object _renderLock = new object();
 
         private Dictionary<string, Func<object, string>> compiledTemplates = new Dictionary<string, Func<object, string>>();
 
-        public string Render(string path, string template, object data)
+        public string Render(SourceFile sourceFile, string template, object data)
         {
-            lock (sync)
+            var path = sourceFile.SourcePath;
+
+            lock (_renderLock)
             {
                 try
                 {
@@ -44,7 +47,7 @@ namespace TinySite.Renderers
 
         public void Unload(IEnumerable<string> paths)
         {
-            lock (sync)
+            lock (_renderLock)
             {
                 foreach (var path in paths)
                 {

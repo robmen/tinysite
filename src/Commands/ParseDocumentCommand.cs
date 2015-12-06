@@ -15,8 +15,6 @@ namespace TinySite.Commands
 
         public string DocumentPath { private get; set; }
 
-        public string SummaryMarker { private get; set; }
-
         public string Content { get; private set; }
 
         public DateTime? Date { get; private set; }
@@ -58,11 +56,6 @@ namespace TinySite.Commands
             } while (retry > 0);
 
             content = ParseMetadataHeaderFromContent(content);
-
-            //if (!String.IsNullOrEmpty(content) && !String.IsNullOrEmpty(this.SummaryMarker))
-            //{
-            //    content = this.ParseOutSummary(content);
-            //}
 
             this.Content = content;
         }

@@ -55,12 +55,15 @@ namespace TinySite.Commands
 
                         dupe["PageNumber"] = i + 1;
                         dupe.Paginator = this.CreatePaginator(i + 1, query.PageEvery, pages, documentRelativeUrl, format, pagedPosts);
+                        dupe.AddContributingFiles(pagedPosts);
 
                         dupes.Add(dupe);
                     }
                 }
 
                 document.Paginator = this.CreatePaginator(1, query.PageEvery, pages, documentRelativeUrl, format, pagedPosts);
+
+                document.AddContributingFiles(pagedPosts);
             }
 
             this.PagedDocuments = dupes;

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TinySite.Models;
 using TinySite.Services;
@@ -7,15 +9,26 @@ namespace TinySite.Commands
 {
     class RunRenderCommand
     {
-        public SiteConfig Config { private get; set; }
+        public RunRenderCommand(SiteConfig config, IEnumerable<LastRunDocument> lastRunState, IDictionary<string, RenderingEngine> engines)
+        {
+            this.Config = config;
+            this.Engines = engines;
+            this.InitialLastRunState = lastRunState;
+        }
 
-        public IDictionary<string, RenderingEngine> Engines { get; set; }
+        public IEnumerable<LastRunDocument> LastRunState { get; private set; }
+
+        private SiteConfig Config { get; }
+
+        private IDictionary<string, RenderingEngine> Engines { get; }
+
+        private IEnumerable<LastRunDocument> InitialLastRunState { get; }
 
         public async Task ExecuteAsync()
         {
             // Load the site documents.
             //
-            var site = await this.LoadSite(this.Config, this.Engines.Keys);
+            var site = await this.LoadSite(this.Config, this.InitialLastRunState, this.Engines.Keys);
 
             // Order the documents.
             //
@@ -30,9 +43,11 @@ namespace TinySite.Commands
             // Render the documents.
             //
             this.Render(site, this.Engines);
+
+            this.LastRunState = this.CalculateLastRunState(site).ToList();
         }
 
-        private async Task<Site> LoadSite(SiteConfig config, IEnumerable<string> renderedExtensions)
+        private async Task<Site> LoadSite(SiteConfig config, IEnumerable<LastRunDocument> lastRunState, IEnumerable<string> renderedExtensions)
         {
             Site site;
 
@@ -73,6 +88,12 @@ namespace TinySite.Commands
                     load.RootUrl = config.RootUrl;
                     load.Url = config.Url;
                     files = load.Execute();
+                }
+
+                // Calculate unmodified state.
+                {
+                    var unmodified = new SetUnmodifiedCommand(config.SitePath, documents, files, this.InitialLastRunState);
+                    unmodified.Execute();
                 }
 
                 site = new Site(config, documents, files, layouts);
@@ -140,6 +161,28 @@ namespace TinySite.Commands
 
                     Statistics.Current.CopiedFiles = copy.CopiedFiles;
                 }
+            }
+        }
+
+        private IEnumerable<LastRunDocument> CalculateLastRunState(Site site)
+        {
+            var dt = this.InitialLastRunState.ToDictionary(l => l.Path);
+
+            foreach (var document in site.Documents.Where(d => !d.Cloned && !d.Unmodified))
+            {
+                var contributors = document.AllContributingFiles()
+                    .Select(d => new LastRunContributingFile(d.SourceRelativePath, d.Modified));
+
+                var lastRunDocument = new LastRunDocument(document.SourceRelativePath, document.Modified, contributors);
+
+                dt.Remove(document.SourceRelativePath);
+
+                yield return lastRunDocument;
+            }
+
+            foreach (var lrd in dt.Values)
+            {
+                yield return lrd;
             }
         }
     }

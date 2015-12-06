@@ -14,8 +14,12 @@ namespace TinySite.Commands
     {
         private object sync = new object();
 
-        public RunWatchCommand()
+        public RunWatchCommand(SiteConfig config, IEnumerable<LastRunDocument> lastRunState, IDictionary<string, RenderingEngine> engines)
         {
+            this.Config = config;
+            this.Engines = engines;
+            this.LastRunState = lastRunState;
+
             this.Paths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             this.Waits = new EventWaitHandle[] {
@@ -24,9 +28,11 @@ namespace TinySite.Commands
             };
         }
 
-        public SiteConfig Config { private get; set; }
+        private SiteConfig Config { get; }
 
-        public IDictionary<string, RenderingEngine> Engines { private get; set; }
+        private IDictionary<string, RenderingEngine> Engines { get; }
+
+        private IEnumerable<LastRunDocument> LastRunState { get; }
 
         private ISet<string> Paths { get; set; }
 
@@ -178,9 +184,7 @@ namespace TinySite.Commands
 
         private async Task Render()
         {
-            var command = new RunRenderCommand();
-            command.Config = this.Config;
-            command.Engines = this.Engines;
+            var command = new RunRenderCommand(this.Config, this.LastRunState, this.Engines);
             await command.ExecuteAsync();
         }
 

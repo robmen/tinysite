@@ -23,7 +23,7 @@ namespace TinySite.Services
 
             foreach (var extension in document.ExtensionsForRendering)
             {
-                content = this.RenderContentForExtension(document.SourcePath, content, extension, document, content, layout);
+                content = this.RenderContentForExtension(document, content, extension, document, content, layout);
             }
 
             document.Content = content;
@@ -43,30 +43,33 @@ namespace TinySite.Services
 
         public string RenderDocumentContentUsingLayout(DocumentFile document, string documentContent, LayoutFile layout)
         {
-            return this.RenderContentForExtension(layout.SourcePath, layout.SourceContent, layout.Extension, document, documentContent, layout);
+            var content = this.RenderContentForExtension(layout, layout.SourceContent, layout.Extension, document, documentContent, layout);
+
+            document.AddContributingFile(layout);
+
+            return content;
         }
 
-        private string RenderContentForExtension(string path, string content, string extension, DocumentFile document, string documentContent, LayoutFile layout)
+        private string RenderContentForExtension(SourceFile source, string content, string extension, DocumentFile contextDocument, string documentContent, LayoutFile contextLayout)
         {
+            var backupContent = contextDocument.Content;
+
+            contextDocument.Content = documentContent;
+
+            var partialsContent = new PartialsContent(this.Transaction.Site.Partials, contextDocument);
+
             var data = new CaseInsensitiveExpando();
-
-            var partialsContent = new PartialsContent(this.Transaction.Site.Partials);
-
-            var backupContent = document.Content;
-
-            document.Content = documentContent;
-
             data["Site"] = this.Transaction.Site;
-            data["Document"] = document;
-            data["Layout"] = layout;
+            data["Document"] = contextDocument;
+            data["Layout"] = contextLayout;
             data["PartialsContent"] = partialsContent;
-            data["Books"] = this.Transaction.Site.Books?.Select(b => b.GetBookWithActiveDocument(document)).ToList();
+            data["Books"] = this.Transaction.Site.Books?.Select(b => b.GetBookWithActiveDocument(contextDocument)).ToList();
 
             var engine = this.Transaction.Engines[extension];
 
-            var result = engine.Render(path, content, data);
+            var result = engine.Render(source, content, data);
 
-            document.Content = backupContent;
+            contextDocument.Content = backupContent;
 
             return result;
         }

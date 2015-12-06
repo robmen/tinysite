@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace TinySite.Models
 {
@@ -27,11 +28,15 @@ namespace TinySite.Models
             this.Layouts = new List<LayoutFile>(original.Layouts);
 
             this.Partial = original.Partial;
+
+            this.Cloned = true;
         }
 
         internal IList<string> ExtensionsForRendering { get; set; }
 
-        internal IEnumerable<LayoutFile> Layouts { get; set; }
+        internal IEnumerable<LayoutFile> Layouts { get; private set; }
+
+        internal bool Cloned { get; }
 
         internal bool Partial { get; set; }
 
@@ -77,6 +82,11 @@ namespace TinySite.Models
         {
             var clone = new DocumentFile(this);
             return clone;
+        }
+
+        public void AssignLayouts(IEnumerable<LayoutFile> layouts)
+        {
+            this.Layouts = layouts.ToList();
         }
     }
 }

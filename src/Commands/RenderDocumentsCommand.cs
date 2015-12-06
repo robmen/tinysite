@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TinySite.Models;
 using TinySite.Services;
@@ -48,7 +49,7 @@ namespace TinySite.Commands
 
                         document.RenderedContent = content;
 
-                        document.Rendered = document.RenderedContent != null;
+                        document.Rendered = (document.RenderedContent != null);
                     }
                 }
 

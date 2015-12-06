@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using MarkdownDeep;
+using TinySite.Models;
 using TinySite.Rendering;
 
 namespace TinySite.Renderers
@@ -17,7 +18,7 @@ namespace TinySite.Renderers
 
         private Markdown MarkdownEngine { get; set; }
 
-        public string Render(string path, string template, object data)
+        public string Render(SourceFile sourceFile, string template, object data)
         {
             lock (this.MarkdownEngine)
             {

@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncPump.cs" />
+    <Compile Include="Commands\SetUnmodifiedCommand.cs" />
     <Compile Include="Commands\LoadSiteConfigCommand.cs" />
     <Compile Include="Commands\LoadLayoutsCommand.cs" />
     <Compile Include="Commands\LoadFilesCommand.cs" />
@@ -78,12 +79,16 @@
     <Compile Include="Commands\RunWatchCommand.cs" />
     <Compile Include="Commands\WriteDocumentsCommand.cs" />
     <Compile Include="Extensions\CaseInsensitiveExpando.cs" />
+    <Compile Include="Extensions\QueueExtensions.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Book.cs" />
     <Compile Include="Models\BookPage.cs" />
     <Compile Include="Models\CommandLine.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Models\LastRunDocument.cs" />
+    <Compile Include="Models\LastRunContributingFile.cs" />
     <Compile Include="Models\MetadataCollection.cs" />
+    <Compile Include="Models\SourceFile.cs" />
     <Compile Include="Models\Page.cs" />
     <Compile Include="Models\Pagination.cs" />
     <Compile Include="Models\Paginator.cs" />

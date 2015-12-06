@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using TinySite.Models;
 using TinySite.Rendering;
 
 namespace TinySite.Services
@@ -48,7 +49,7 @@ namespace TinySite.Services
             return engines;
         }
 
-        public string Render(string path, string template, object data)
+        public string Render(SourceFile sourceFile, string template, object data)
         {
             if (this.Renderer == null)
             {
@@ -66,7 +67,7 @@ namespace TinySite.Services
                 }
             }
 
-            return this.Renderer.Render(path, template, data);
+            return this.Renderer.Render(sourceFile, template, data);
         }
 
         internal void Unload(IEnumerable<string> paths)

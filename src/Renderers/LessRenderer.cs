@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using dotless.Core;
+using TinySite.Models;
 using TinySite.Rendering;
 
 namespace TinySite.Renderers
@@ -7,11 +8,11 @@ namespace TinySite.Renderers
     [Render("less")]
     public class LessRenderer : IRenderer
     {
-        private object sync = new object();
+        private object _renderLock = new object();
 
-        public string Render(string path, string template, object data)
+        public string Render(SourceFile sourceFile, string template, object data)
         {
-            lock (sync)
+            lock (_renderLock)
             {
                 var result = Less.Parse(template);
 

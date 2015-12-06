@@ -6,6 +6,7 @@ using RazorEngine;
 using RazorEngine.Configuration;
 using RazorEngine.Templating;
 using RazorEngine.Text;
+using TinySite.Models;
 using TinySite.Rendering;
 using TinySite.Services;
 
@@ -14,30 +15,34 @@ namespace TinySite.Renderers
     [Render("cshtml")]
     public class RazorRenderer : IRenderer
     {
-        private object sync = new object();
+        private object _renderLock = new object();
 
         public RazorRenderer()
         {
             this.InitializeRazorEngine();
         }
 
-        private Dictionary<string, LoadedTemplateSource> TopLevelTemplates { get; set; }
+        private RazorRendererTemplateManager TemplateManager { get; set; }
 
-        public string Render(string path, string template, object data)
+        public string Render(SourceFile sourceFile, string template, object data)
         {
-            lock (sync)
+            var path = sourceFile.SourcePath;
+
+            lock (_renderLock)
             {
                 LoadedTemplateSource loadedTemplate;
 
-                if (!this.TopLevelTemplates.TryGetValue(path, out loadedTemplate))
+                if (!this.TemplateManager.TopLevelTemplates.TryGetValue(path, out loadedTemplate))
                 {
                     loadedTemplate = new LoadedTemplateSource(template, path);
 
-                    this.TopLevelTemplates.Add(path, loadedTemplate);
+                    this.TemplateManager.TopLevelTemplates.Add(path, loadedTemplate);
                 }
 
                 try
                 {
+                    this.TemplateManager.CurrentSourceFile = sourceFile;
+
                     var result = Engine.Razor.RunCompile(loadedTemplate, path, null, data);
 
                     return result;
@@ -57,6 +62,10 @@ namespace TinySite.Renderers
                 {
                     Console.Error.WriteLine("Razor failure while processing: {0}, error: {1}", path, e.Message);
                 }
+                finally
+                {
+                    this.TemplateManager.CurrentSourceFile = null;
+                }
 
                 return null;
             }
@@ -64,7 +73,7 @@ namespace TinySite.Renderers
 
         public void Unload(IEnumerable<string> paths)
         {
-            lock (sync)
+            lock (_renderLock)
             {
                 this.InitializeRazorEngine();
             }
@@ -72,10 +81,7 @@ namespace TinySite.Renderers
 
         private void InitializeRazorEngine()
         {
-            this.TopLevelTemplates = new Dictionary<string, LoadedTemplateSource>();
-
-            var manager = new TemplateManager();
-            manager.TopLevelTemplates = this.TopLevelTemplates;
+            this.TemplateManager = new RazorRendererTemplateManager();
 
             var config = new TemplateServiceConfiguration();
             config.AllowMissingPropertiesOnDynamic = true;
@@ -84,15 +90,17 @@ namespace TinySite.Renderers
             config.Namespaces.Add("System.IO");
             config.Namespaces.Add("RazorEngine.Text");
             config.Namespaces.Add("TinySite.Renderers");
-            config.TemplateManager = manager;
+            config.TemplateManager = this.TemplateManager;
 
             var service = RazorEngineService.Create(config);
             Engine.Razor = service;
         }
 
-        private class TemplateManager : ITemplateManager
+        private class RazorRendererTemplateManager : ITemplateManager
         {
-            public Dictionary<string, LoadedTemplateSource> TopLevelTemplates { get; set; }
+            public SourceFile CurrentSourceFile { get; set; }
+
+            public Dictionary<string, LoadedTemplateSource> TopLevelTemplates { get; } = new Dictionary<string, LoadedTemplateSource>();
 
             public void AddDynamic(ITemplateKey key, ITemplateSource source)
             {
@@ -107,21 +115,21 @@ namespace TinySite.Renderers
             {
                 var name = key.Name;
 
+                var parentFile = this.GetParentSourceFile(key);
+
+                // Always try to get a matching layout so the parent file gets a
+                // chance to track the layout as a contributing file.
+                LayoutFile layout = null;
+
+                if (this.TryGetLayout(name, out layout) && parentFile != layout)
+                {
+                    parentFile.AddContributingFile(layout);
+                }
+
                 LoadedTemplateSource loadedTemplate;
 
                 if (!this.TopLevelTemplates.TryGetValue(name, out loadedTemplate))
                 {
-                    var id = Path.GetFileNameWithoutExtension(name);
-
-                    var extension = Path.GetExtension(name).TrimStart('.');
-
-                    var layout = RenderingTransaction.Current.Layouts[id];
-
-                    if (!layout.Extension.Equals(String.IsNullOrEmpty(extension) ? "cshtml" : extension, StringComparison.OrdinalIgnoreCase))
-                    {
-                        // TODO: throw new exception.
-                    }
-
                     loadedTemplate = new LoadedTemplateSource(layout.SourceContent, layout.SourcePath);
 
                     // Do not need to add this loaded template to our list of cached top level templates
@@ -129,6 +137,46 @@ namespace TinySite.Renderers
                 }
 
                 return loadedTemplate;
+            }
+
+            private SourceFile GetParentSourceFile(ITemplateKey key)
+            {
+                var parentFile = this.CurrentSourceFile;
+
+                // If the template is actually an include in the parent then
+                // the parent is the layout doing the including, not the current
+                // source file being rendered.
+                if (key.TemplateType == ResolveType.Include)
+                {
+                    var parentName = Path.GetFileName(key.Context.Name);
+
+                    var parentId = Path.GetFileNameWithoutExtension(parentName);
+
+                    parentFile = RenderingTransaction.Current.Layouts[parentId];
+                }
+
+                return parentFile;
+            }
+
+            private bool TryGetLayout(string name, out LayoutFile layout)
+            {
+                layout = null;
+
+                var id = Path.GetFileNameWithoutExtension(name);
+
+                if (RenderingTransaction.Current.Layouts.Contains(id))
+                {
+                    layout = RenderingTransaction.Current.Layouts[id];
+
+                    var extension = Path.GetExtension(name).TrimStart('.');
+
+                    if (!layout.Extension.Equals(String.IsNullOrEmpty(extension) ? "cshtml" : extension, StringComparison.OrdinalIgnoreCase))
+                    {
+                        // TODO: throw new exception.
+                    }
+                }
+
+                return (layout != null);
             }
         }
     }

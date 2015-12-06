@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using TinySite.Models;
 using TinySite.Rendering;
 
 namespace TinySite.Renderers
@@ -10,15 +11,15 @@ namespace TinySite.Renderers
     [Render("json")]
     public class JsonRenderer : IRenderer
     {
-        private object sync = new object();
+        private object _renderLock = new object();
 
-        public string Render(string path, string template, dynamic data)
+        public string Render(SourceFile sourceFile, string template, dynamic data)
         {
             var document = data.Document;
 
             var content = String.Empty;
 
-            lock (sync)
+            lock (_renderLock)
             {
                 try
                 {
@@ -41,7 +42,7 @@ namespace TinySite.Renderers
                 }
                 catch (JsonReaderException e)
                 {
-                    Console.Error.WriteLine("{0}({1},{2}): error JSON1 : {3}", path, e.LineNumber, e.LinePosition, e.Message);
+                    Console.Error.WriteLine("{0}({1},{2}): error JSON1 : {3}", sourceFile.SourcePath, e.LineNumber, e.LinePosition, e.Message);
                     return null;
                 }
             }

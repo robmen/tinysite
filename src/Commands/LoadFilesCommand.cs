@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TinySite.Extensions;
 using TinySite.Models;
 
 namespace TinySite.Commands
@@ -26,7 +27,8 @@ namespace TinySite.Commands
 
             return this.Files = Directory.GetFiles(this.FilesPath, "*", SearchOption.AllDirectories)
                 .AsParallel()
-                .Select(file => new StaticFile(file, this.FilesPath, this.OutputPath, this.Url, this.RootUrl));
+                .Select(file => new StaticFile(file, this.FilesPath, this.OutputPath, this.Url, this.RootUrl))
+                .ToList();
         }
     }
 }

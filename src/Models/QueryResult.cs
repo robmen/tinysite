@@ -19,6 +19,5 @@ namespace TinySite.Models
         public WhereClause Where { get; set; }
 
         public IQueryable<dynamic> Results { get; set; }
-
     }
 }

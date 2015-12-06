@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TinySite.Models;
 using TinySite.Rendering;
 
 namespace TinySite.Renderers
@@ -6,7 +7,7 @@ namespace TinySite.Renderers
     [Render("mustache")]
     public class MustacheRenderer : IRenderer
     {
-        public string Render(string path, string template, object data)
+        public string Render(SourceFile sourceFile, string template, object data)
         {
             var result = Nustache.Core.Render.StringToString(template, data);
 

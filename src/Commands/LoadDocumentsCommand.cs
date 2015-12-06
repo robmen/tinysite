@@ -63,7 +63,6 @@ namespace TinySite.Commands
             //
             var parser = new ParseDocumentCommand();
             parser.DocumentPath = file;
-            parser.SummaryMarker = "\r\n\r\n===";
             await parser.ExecuteAsync();
 
             var metadataDate = parser.Date;
@@ -212,7 +211,7 @@ namespace TinySite.Commands
 
             documentFile.ExtensionsForRendering = extensionsForRendering;
 
-            documentFile.Layouts = layouts;
+            documentFile.AssignLayouts(layouts);
 
             documentFile.Order = parser.Metadata.Get<int>("order", order);
             parser.Metadata.Remove("order");

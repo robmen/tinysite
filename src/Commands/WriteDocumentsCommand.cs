@@ -98,9 +98,11 @@ namespace TinySite.Commands
                 writer.Write(utf8, 0, utf8.Length);
             }
 
+            var modified = document.LatestModifiedOfContributingFiles();
+
             File.SetCreationTime(document.OutputPath, document.Date);
 
-            File.SetLastWriteTime(document.OutputPath, document.Modified);
+            File.SetLastWriteTime(document.OutputPath, modified);
 
             return document;
         }
