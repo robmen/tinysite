@@ -6,6 +6,7 @@ namespace TinySite.Models
     public abstract class DynamicRenderingSourceFile : DynamicRenderingObject
     {
         protected DynamicRenderingSourceFile(SourceFile file)
+            : base(file.SourceRelativePath)
         {
             this.File = file;
         }

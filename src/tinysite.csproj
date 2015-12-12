@@ -86,6 +86,8 @@
     <Compile Include="Models\CommandLine.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\DynamicRenderingBookPage.cs" />
+    <Compile Include="Models\DynamicRenderingPage.cs" />
+    <Compile Include="Models\DynamicRenderingPagination.cs" />
     <Compile Include="Models\DynamicRenderingPaginator.cs" />
     <Compile Include="Models\DynamicRenderingSourceFile.cs" />
     <Compile Include="Models\DynamicRenderingOutputFile.cs" />

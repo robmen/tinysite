@@ -37,7 +37,7 @@ namespace TinySite.Models
             data.Add(nameof(this.Document.Chapter), new Lazy<object>(GetChapter));
             data.Add(nameof(this.Document.Paginator), new Lazy<object>(GetPaginator));
 
-            this.Document.Metadata?.Assign(data);
+            this.Document.Metadata?.AssignTo(this.Document.SourceRelativePath, data);
 
             return data;
         }
@@ -100,8 +100,8 @@ namespace TinySite.Models
         {
             if (this.Document.Chapter != null)
             {
-                // TODO: consider dynamic rendering object for this
-                return this.Document.Chapter;
+                this.ActiveDocument.AddContributingFile(this.Document.Chapter.Document);
+                return new DynamicRenderingBookPage(this.ActiveDocument, this.Document.Chapter);
             }
 
             return null;

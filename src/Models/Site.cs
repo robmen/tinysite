@@ -18,6 +18,8 @@ namespace TinySite.Models
             this.DefaultLayoutForExtension = new Dictionary<string, string>(config.DefaultLayoutForExtension);
             this.IgnoreFiles = config.IgnoreFiles;
 
+            this.SitePath = config.SitePath;
+
             this.Author = config.Author;
             this.LiveReloadScript = config.LiveReloadScript;
             this.DocumentsPath = config.DocumentsPath;
@@ -41,6 +43,8 @@ namespace TinySite.Models
 
             this.Metadata = config.Metadata;
         }
+
+        public string SitePath { get; }
 
         public IDictionary<string, string> DefaultLayoutForExtension { get; }
 
@@ -78,7 +82,7 @@ namespace TinySite.Models
 
         public IEnumerable<Book> Books { get { return this.Get<IEnumerable<Book>>(); } set { this.Set<IEnumerable<Book>>(value); } }
 
-        public MetadataCollection Metadata { get; private set; }
+        public MetadataCollection Metadata { get; }
 
         private void UpdateFullUrl()
         {

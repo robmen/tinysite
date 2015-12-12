@@ -6,6 +6,7 @@ namespace TinySite.Models
     public class DynamicRenderingLayout : DynamicRenderingObject
     {
         public DynamicRenderingLayout(DocumentFile activeDocument, LayoutFile layout)
+            : base(layout.SourceRelativePath)
         {
             this.ActiveDocument = activeDocument;
             this.Layout = layout;
@@ -24,7 +25,7 @@ namespace TinySite.Models
                 { nameof(this.Layout.SourceContent), this.Layout.SourceContent }
             };
 
-            this.Layout.Metadata?.Assign(data);
+            this.Layout.Metadata?.AssignTo(this.Layout.SourceRelativePath, data);
 
             return data;
         }

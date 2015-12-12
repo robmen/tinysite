@@ -6,6 +6,7 @@ namespace TinySite.Models
     public class DynamicRenderingSite : DynamicRenderingObject
     {
         public DynamicRenderingSite(DocumentFile activeDocument, Site site)
+            : base(site.SitePath)
         {
             this.ActiveDocument = activeDocument;
             this.Site = site;
@@ -37,7 +38,7 @@ namespace TinySite.Models
                 { nameof(this.Site.Partials), new Lazy<object>(GetPartials) },
             };
 
-            this.Site.Metadata?.Assign(data);
+            this.Site.Metadata?.AssignTo(this.Site.SitePath, data);
 
             return data;
         }

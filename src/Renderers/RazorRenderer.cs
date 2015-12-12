@@ -167,13 +167,6 @@ namespace TinySite.Renderers
                 if (RenderingTransaction.Current.Layouts.Contains(id))
                 {
                     layout = RenderingTransaction.Current.Layouts[id];
-
-                    var extension = Path.GetExtension(name).TrimStart('.');
-
-                    if (!layout.Extension.Equals(String.IsNullOrEmpty(extension) ? "cshtml" : extension, StringComparison.OrdinalIgnoreCase))
-                    {
-                        // TODO: throw new exception.
-                    }
                 }
 
                 return (layout != null);

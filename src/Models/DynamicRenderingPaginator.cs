@@ -6,6 +6,7 @@ namespace TinySite.Models
     public class DynamicRenderingPaginator : DynamicRenderingObject
     {
         public DynamicRenderingPaginator(DocumentFile activeDocument, Paginator Paginator)
+            : base(null)
         {
             this.ActiveDocument = activeDocument;
             this.Paginator = Paginator;
@@ -19,7 +20,6 @@ namespace TinySite.Models
         {
             return new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
             {
-                { nameof(this.Paginator.Count), this.Paginator.Count },
                 { nameof(this.Paginator.Documents), new Lazy<object>(GetDocuments) },
                 { nameof(this.Paginator.Pagination), new Lazy<object>(GetPagination) },
             };
@@ -40,8 +40,12 @@ namespace TinySite.Models
 
         private object GetPagination()
         {
-            // TODO: revisit this
-            return this.Paginator.Pagination;
+            if (this.Paginator.Pagination != null)
+            {
+                return new DynamicRenderingPagination(this.ActiveDocument, this.Paginator.Pagination);
+            }
+
+            return null;
         }
     }
 }

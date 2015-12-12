@@ -13,11 +13,12 @@ namespace TinySite.Models
         private LayoutFile _layout;
         private Site _site;
 
-        public DynamicRenderingData(DocumentFile contextDocument, LayoutFile contextLayout, Site site)
+        public DynamicRenderingData(DocumentFile document, LayoutFile layout, Site site)
+            : base(document.SourceRelativePath)
         {
-            this._document = contextDocument;
-            this._layout = contextLayout;
-            this._site = site;
+            _document = document;
+            _layout = layout;
+            _site = site;
         }
 
         protected override IDictionary<string, object> GetData()

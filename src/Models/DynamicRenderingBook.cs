@@ -6,6 +6,7 @@ namespace TinySite.Models
     public class DynamicRenderingBook : DynamicRenderingObject
     {
         public DynamicRenderingBook(DocumentFile activeDocument, Book book)
+            : base(null)
         {
             this.ActiveDocument = activeDocument;
             this.Book = book;

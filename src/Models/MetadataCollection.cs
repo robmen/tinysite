@@ -22,7 +22,7 @@ namespace TinySite.Models
             this.Dictionary.Add(key, value);
         }
 
-        public void Assign(IDictionary<string, object> target)
+        public void AssignTo(string path, IDictionary<string, object> target)
         {
             foreach (var kvp in this.Dictionary)
             {
@@ -32,7 +32,7 @@ namespace TinySite.Models
                 }
                 catch (ArgumentException)
                 {
-                    // TODO: print a warning that metadata is being ignored.
+                    Console.WriteLine("Document metadata in: {0} cannot overwrite built in or existing metadata: \"{1}\" with value: \"{2}\"", path, kvp.Key, kvp.Value);
                 }
             }
         }

@@ -8,12 +8,16 @@ namespace TinySite.Models
 {
     public abstract class DynamicRenderingObject : DynamicObject, IDictionary<string, object>
     {
-        protected DynamicRenderingObject()
+        protected DynamicRenderingObject(string sourceRelativePath)
         {
             this.Data = new Lazy<IDictionary<string, object>>(GetData);
+
+            this.SourceRelativePath = sourceRelativePath;
         }
 
         private Lazy<IDictionary<string, object>> Data { get; }
+
+        private string SourceRelativePath { get; }
 
         protected abstract IDictionary<string, object> GetData();
 
@@ -67,10 +71,8 @@ namespace TinySite.Models
         {
             get
             {
-                object value = null;
-                this.TryGetValue(key, out value);
-                // TODO: should this throw if key not found?
-                return value;
+                object value;
+                return this.TryGetValue(key, out value) ? value : null;
             }
 
             set
@@ -95,8 +97,8 @@ namespace TinySite.Models
         public void Add(string key, object value)
         {
             if (!this.TrySetValue(key, value))
-            { 
-                // TODO: warn that metadata cannot be set
+            {
+                Console.WriteLine("Document metadata in: {0} cannot overwrite built in or existing metadata: \"{1}\" with value: \"{2}\"", this.SourceRelativePath, key, value);
             }
         }
 

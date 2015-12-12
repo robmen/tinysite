@@ -22,7 +22,13 @@ namespace TinySite.Models
             this.NowFriendlyDate = now.ToString("D");
             this.NowStandardUtcDate = now.ToUniversalTime().ToString("yyyy-MM-ddThh:mm:ssZ");
 
-            this.Metadata = metadata;
+            if (metadata != null)
+            {
+                this.Layout = metadata.Get<string>("layout");
+                metadata.Remove("layout");
+
+                this.Metadata = metadata;
+            }
         }
 
         private DocumentFile(DocumentFile original)
