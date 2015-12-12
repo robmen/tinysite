@@ -15,8 +15,6 @@ namespace TinySite.Models
 
         public Site(SiteConfig config, IEnumerable<DocumentFile> documents, IEnumerable<StaticFile> files, LayoutFileCollection layouts, Site parent = null)
         {
-            config.Metadata.Assign(this);
-
             this.DefaultLayoutForExtension = new Dictionary<string, string>(config.DefaultLayoutForExtension);
             this.IgnoreFiles = config.IgnoreFiles;
 
@@ -40,6 +38,8 @@ namespace TinySite.Models
             this.Files = files.ToList();
 
             this.Layouts = new LayoutFileCollection(layouts);
+
+            this.Metadata = config.Metadata;
         }
 
         public IDictionary<string, string> DefaultLayoutForExtension { get; }
@@ -77,6 +77,8 @@ namespace TinySite.Models
         public LayoutFileCollection Layouts { get { return this.Get<LayoutFileCollection>(); } set { this.Set<LayoutFileCollection>(value); } }
 
         public IEnumerable<Book> Books { get { return this.Get<IEnumerable<Book>>(); } set { this.Set<IEnumerable<Book>>(value); } }
+
+        public MetadataCollection Metadata { get; private set; }
 
         private void UpdateFullUrl()
         {

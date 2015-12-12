@@ -45,6 +45,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DynamicRenderingObjectsFixture.cs" />
     <Compile Include="IntegrationFixture.cs" />
     <Compile Include="QueryProcessorFixture.cs" />
     <Compile Include="OrderCommandFixture.cs" />

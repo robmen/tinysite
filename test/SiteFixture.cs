@@ -73,7 +73,7 @@ namespace RobMensching.TinySite.Test
 
             var site = new Site(config, Enumerable.Empty<DocumentFile>(), Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
 
-            dynamic data = site; //.GetAsDynamic();
+            dynamic data = new DynamicRenderingSite(null, site); //.GetAsDynamic();
 
             Assert.Equal("Test Blog.", (string)data.tiTle);
         }

@@ -73,7 +73,7 @@ namespace TinySite.Commands
 
             var relativeDocumentPath = Path.GetFullPath(file).Substring(this.DocumentsPath.Length);
 
-            var outputRelativePath = parser.Metadata.Get<string>("output", relativeDocumentPath);
+            var outputRelativePath = parser.Metadata.Get("output", relativeDocumentPath);
             parser.Metadata.Remove("output");
 
             // The rest of this function is about calculating the correct
@@ -198,7 +198,7 @@ namespace TinySite.Commands
 
             if (metadataDate.HasValue)
             {
-                documentFile.Date = metadataDate.Value;
+                documentFile.SetTimes(metadataDate.Value);
             }
 
             documentFile.Id = parser.Metadata.Get<string>("id", id.Trim('\\'));
@@ -213,10 +213,10 @@ namespace TinySite.Commands
 
             documentFile.AssignLayouts(layouts);
 
-            documentFile.Order = parser.Metadata.Get<int>("order", order);
+            documentFile.Order = parser.Metadata.Get("order", order);
             parser.Metadata.Remove("order");
 
-            documentFile.PaginateQuery = parser.Metadata.Get<string>("paginate", null);
+            documentFile.PaginateQuery = parser.Metadata.Get<string>("paginate");
             parser.Metadata.Remove("paginate");
 
             documentFile.SourceContent = parser.Content;
@@ -249,7 +249,7 @@ namespace TinySite.Commands
 
                 file = layout.SourcePath;
 
-                layout.TryGet("layout", out layoutName);
+                layoutName = layout.Layout;
             }
         }
 

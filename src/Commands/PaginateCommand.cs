@@ -82,29 +82,28 @@ namespace TinySite.Commands
 
         private Paginator CreatePaginator(int page, int perPage, int pages, string baseUrl, string format, IEnumerable<DocumentFile> documents)
         {
-            var paginator = new Paginator();
-
             // It is important that this query is not executed here (aka: do not add ToList() or ToArray()). This
             // query should be executed by the rendering engine so the returned documents are rendered first.
-            paginator.Documents = documents.Skip((page - 1) * perPage).Take(perPage);
+            var pagedDocuments = documents.Skip((page - 1) * perPage).Take(perPage);
+
+            var pagination = new Pagination();
 
             if (pages > 1 && !String.IsNullOrEmpty(format))
             {
-                paginator.Pagination = new Pagination();
-                paginator.Pagination.Page = page;
-                paginator.Pagination.PerPage = perPage;
-                paginator.Pagination.TotalPage = pages;
-                paginator.Pagination.NextPageUrl = page < pages ? this.UrlForPage(page + 1, baseUrl, format) : null;
-                paginator.Pagination.PreviousPageUrl = page > 1 ? this.UrlForPage(page - 1, baseUrl, format) : null;
+                pagination.Page = page;
+                pagination.PerPage = perPage;
+                pagination.TotalPage = pages;
+                pagination.NextPageUrl = page < pages ? this.UrlForPage(page + 1, baseUrl, format) : null;
+                pagination.PreviousPageUrl = page > 1 ? this.UrlForPage(page - 1, baseUrl, format) : null;
 
                 var start = Math.Max(1, page - 3);
                 var end = Math.Min(pages, start + 6);
                 start = Math.Max(start, end - 6);
 
-                paginator.Pagination.Pages = this.CreatePages(page, start, end, baseUrl, format).ToList();
+                pagination.Pages = this.CreatePages(page, start, end, baseUrl, format).ToList();
             }
 
-            return paginator;
+            return new Paginator(pagedDocuments, pagination);
         }
 
         private IEnumerable<Page> CreatePages(int current, int start, int end, string baseUrl, string format)

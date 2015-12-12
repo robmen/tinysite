@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using TinySite.Extensions;
 using TinySite.Models;
 
 namespace TinySite.Commands
@@ -57,7 +58,7 @@ namespace TinySite.Commands
 
             foreach (var groupedDocuments in orderedGroupedByParent)
             {
-                DocumentFile parentDocument = documentsById[groupedDocuments.Key].FirstOrDefault();
+                var parentDocument = documentsById[groupedDocuments.Key].FirstOrDefault();
 
                 // If there is no parent document or the parent document is not an ordered
                 // document then this set of grouped documents must be a set of chapters in
@@ -81,7 +82,7 @@ namespace TinySite.Commands
                         documentsToChapter.Add(document, chapter);
                     }
 
-                    var book = new Book(groupedDocuments.Key, chapters, parentDocument);
+                    var book = new Book(groupedDocuments.Key, chapters, parentDocument, null);
 
                     books.Add(book);
                 }
@@ -146,7 +147,7 @@ namespace TinySite.Commands
 
         private static DocumentFile ProcessBookAndChapterOrder(Book book, BookPage chapter, DocumentFile parent, DocumentFile previous)
         {
-            var bookWithActiveDocument = book.GetBookWithActiveDocument(chapter.Document);
+            var bookWithActiveDocument = book.GetBookWithRenderingDocument(chapter.Document);
 
             chapter.Document.Book = bookWithActiveDocument;
 
@@ -164,7 +165,7 @@ namespace TinySite.Commands
                 }
                 else
                 {
-                    page.Document.Book = book.GetBookWithActiveDocument(page.Document);
+                    page.Document.Book = book.GetBookWithRenderingDocument(page.Document);
                 }
             }
 
@@ -181,10 +182,7 @@ namespace TinySite.Commands
 
                 if (page.Chapter)
                 {
-                    foreach (var subPage in page.SubPages)
-                    {
-                        queue.Enqueue(subPage);
-                    }
+                    queue.EnqueueRange(page.SubPages);
 
                     yield return page;
                 }
@@ -199,10 +197,10 @@ namespace TinySite.Commands
             }
 
             document.ParentDocument = parent;
+
             document.PreviousDocument = previous;
 
-            previous = document;
-            return previous;
+            return document;
         }
     }
 }

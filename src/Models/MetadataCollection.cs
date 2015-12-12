@@ -26,7 +26,14 @@ namespace TinySite.Models
         {
             foreach (var kvp in this.Dictionary)
             {
-                target[kvp.Key] = kvp.Value;
+                try
+                {
+                    target.Add(kvp);
+                }
+                catch (ArgumentException)
+                {
+                    // TODO: print a warning that metadata is being ignored.
+                }
             }
         }
 

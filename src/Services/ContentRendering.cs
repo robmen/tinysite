@@ -54,24 +54,22 @@ namespace TinySite.Services
         {
             var backupContent = contextDocument.Content;
 
-            contextDocument.Content = documentContent;
+            try
+            {
+                contextDocument.Content = documentContent;
 
-            var partialsContent = new PartialsContent(this.Transaction.Site.Partials, contextDocument);
+                dynamic data = new DynamicRenderingData(contextDocument, contextLayout, this.Transaction.Site);
 
-            var data = new CaseInsensitiveExpando();
-            data["Site"] = this.Transaction.Site;
-            data["Document"] = contextDocument;
-            data["Layout"] = contextLayout;
-            data["PartialsContent"] = partialsContent;
-            data["Books"] = this.Transaction.Site.Books?.Select(b => b.GetBookWithActiveDocument(contextDocument)).ToList();
+                var engine = this.Transaction.Engines[extension];
 
-            var engine = this.Transaction.Engines[extension];
+                var result = engine.Render(source, content, data);
 
-            var result = engine.Render(source, content, data);
-
-            contextDocument.Content = backupContent;
-
-            return result;
+                return result;
+            }
+            finally
+            {
+                contextDocument.Content = backupContent;
+            }
         }
 
         private string Summarize(string content)

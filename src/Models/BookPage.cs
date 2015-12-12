@@ -30,7 +30,7 @@ namespace TinySite.Models
 
         public IList<BookPage> SubPages { get { return this.Get<IList<BookPage>>(); } private set { this.Set<IList<BookPage>>(value); } }
 
-        public BookPage GetWithActiveDocument(DocumentFile activeDocument)
+        public BookPage GetWithRenderingDocument(DocumentFile activeDocument)
         {
             var page = this;
 
@@ -46,7 +46,7 @@ namespace TinySite.Models
             }
             else if (this.SubPages != null)
             {
-                var subPages = this.SubPages.Select(p => p.GetWithActiveDocument(activeDocument)).ToList();
+                var subPages = this.SubPages.Select(p => p.GetWithRenderingDocument(activeDocument)).ToList();
 
                 if (subPages.Any(c => c.Active || c.SubPageActive))
                 {

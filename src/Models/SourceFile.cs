@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using TinySite.Extensions;
 
 namespace TinySite.Models
@@ -18,7 +17,7 @@ namespace TinySite.Models
 
             var info = new FileInfo(path);
 
-            this.Date = info.CreationTime;
+            this.SetTimes(info.CreationTime);
 
             this.Modified = (info.LastWriteTime < info.CreationTime) ? info.CreationTime : info.LastWriteTime;
 
@@ -38,11 +37,17 @@ namespace TinySite.Models
 
         internal List<SourceFile> ContributingFiles { get; } = new List<SourceFile>();
 
-        public DateTime Date { get { return this.Get<DateTime>(); } set { this.SetTimes(null, value); } }
+        public DateTime Date { get { return this.Get<DateTime>(); } private set { this.Set(value); } }
 
-        public DateTime Modified { get { return this.Get<DateTime>(); } set { this.Set<DateTime>(value); } }
+        public DateTime DateUtc { get { return this.Get<DateTime>(); } private set { this.Set(value); } }
+
+        public string FriendlyDate { get { return this.Get<string>(); } private set { this.Set<string>(value); } }
+
+        public string StandardUtcDate { get { return this.Get<string>(); } private set { this.Set<string>(value); } }
 
         public string Name { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+
+        public DateTime Modified { get { return this.Get<DateTime>(); } set { this.Set<DateTime>(value); } }
 
         public string Extension { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
@@ -52,7 +57,7 @@ namespace TinySite.Models
 
         public SourceFile AddContributingFile(SourceFile contributor)
         {
-            if (contributor != this)
+            if (contributor != null && contributor != this)
             {
                 this.ContributingFiles.Add(contributor);
             }
@@ -104,12 +109,12 @@ namespace TinySite.Models
             return latest;
         }
 
-        protected void SetTimes(string prefix, DateTime time)
+        internal void SetTimes(DateTime time)
         {
-            this.Set<DateTime>(time, prefix ?? "Date");
-            this.Set<DateTime>(time.ToUniversalTime(), prefix ?? "Date" + "Utc");
-            this.Set<string>(time.ToString("D"), prefix + "FriendlyDate");
-            this.Set<string>(time.ToUniversalTime().ToString("yyyy-MM-ddThh:mm:ssZ"), prefix + "StandardUtcDate");
+            this.Date = time;
+            this.DateUtc = time.ToUniversalTime();
+            this.FriendlyDate = time.ToString("D");
+            this.StandardUtcDate = time.ToUniversalTime().ToString("yyyy-MM-ddThh:mm:ssZ");
         }
     }
 }

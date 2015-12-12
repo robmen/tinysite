@@ -9,12 +9,19 @@ namespace TinySite.Models
     public class Book : CaseInsensitiveExpando
     {
         public Book(string id, List<BookPage> chapters, DocumentFile parentDocument)
+            : this(id, chapters, parentDocument, null)
+        {
+        }
+
+        public Book(string id, List<BookPage> chapters, DocumentFile parentDocument, DocumentFile renderingDocument)
         {
             this.Id = id;
 
             this.ParentDocument = parentDocument;
 
             this.Chapters = chapters;
+
+            this.RenderingDocument = renderingDocument;
         }
 
         public string Id { get { return this.Get<string>(); } private set { this.Set<string>(value); } }
@@ -23,18 +30,13 @@ namespace TinySite.Models
 
         public DocumentFile ParentDocument { get { return this.Get<DocumentFile>(); } private set { this.Set<DocumentFile>(value); } }
 
-        public Book GetBookWithActiveDocument(DocumentFile activeDocument)
+        internal DocumentFile RenderingDocument { get; private set; }
+
+        public Book GetBookWithRenderingDocument(DocumentFile renderingDocument)
         {
-            var book = this;
+            var chapters = this.Chapters.Select(c => c.GetWithRenderingDocument(renderingDocument)).ToList();
 
-            var chapters = this.Chapters.Select(c => c.GetWithActiveDocument(activeDocument)).ToList();
-
-            if (chapters.Any(c => c.Active || c.SubPageActive))
-            {
-                book = new Book(this.Id, chapters, this.ParentDocument);
-            }
-
-            return book;
+            return new Book(this.Id, chapters, this.ParentDocument, renderingDocument);
         }
     }
 }

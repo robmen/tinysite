@@ -85,6 +85,17 @@
     <Compile Include="Models\BookPage.cs" />
     <Compile Include="Models\CommandLine.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Models\DynamicRenderingBookPage.cs" />
+    <Compile Include="Models\DynamicRenderingPaginator.cs" />
+    <Compile Include="Models\DynamicRenderingSourceFile.cs" />
+    <Compile Include="Models\DynamicRenderingOutputFile.cs" />
+    <Compile Include="Models\DynamicRenderingLayout.cs" />
+    <Compile Include="Models\DynamicRenderingStaticFile.cs" />
+    <Compile Include="Models\DynamicRenderingData.cs" />
+    <Compile Include="Models\DynamicRenderingBook.cs" />
+    <Compile Include="Models\DynamicRenderingDocument.cs" />
+    <Compile Include="Models\DynamicRenderingObject.cs" />
+    <Compile Include="Models\DynamicRenderingSite.cs" />
     <Compile Include="Models\LastRunDocument.cs" />
     <Compile Include="Models\LastRunContributingFile.cs" />
     <Compile Include="Models\MetadataCollection.cs" />

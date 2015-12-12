@@ -13,14 +13,12 @@ namespace TinySite.Models
 
         public PartialsContent(IEnumerable<DocumentFile> partials, DocumentFile renderingDocument)
         {
-            var dict = partials.ToDictionary(IdForPartial);
-
             this.RenderingDocument = renderingDocument;
 
-            _partials = new Dictionary<string, DocumentFile>(dict, StringComparer.OrdinalIgnoreCase);
+            _partials = partials.ToDictionary(IdForPartial, StringComparer.OrdinalIgnoreCase);
         }
 
-        public DocumentFile RenderingDocument { get; private set; }
+        private DocumentFile RenderingDocument { get; }
 
         #region // IDictionary<string, object>
 
@@ -121,10 +119,8 @@ namespace TinySite.Models
                 {
                     this.RenderPartial(partial);
                 }
-                else
-                {
-                    this.RenderingDocument.AddContributingFile(partial);
-                }
+
+                this.RenderingDocument.AddContributingFile(partial);
 
                 value = partial.RenderedContent;
                 return true;
@@ -164,8 +160,6 @@ namespace TinySite.Models
             {
                 content = contentRendering.RenderDocumentContentUsingLayout(partial, content, layout);
             }
-
-            this.RenderingDocument.AddContributingFile(partial);
 
             partial.RenderedContent = content;
 

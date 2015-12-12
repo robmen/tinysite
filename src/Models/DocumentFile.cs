@@ -13,11 +13,16 @@ namespace TinySite.Models
         public DocumentFile(string path, string rootPath, string outputPath, string outputRootPath, string url, string rootUrl, Author author, MetadataCollection metadata)
             : base(path, rootPath, outputPath, outputRootPath, rootUrl, url)
         {
-            metadata.Assign(this);
-
             this.Author = author;
 
-            this.Now = DateTime.Now;
+            var now = DateTime.Now;
+
+            this.Now = now;
+            this.NowUtc = now.ToUniversalTime();
+            this.NowFriendlyDate = now.ToString("D");
+            this.NowStandardUtcDate = now.ToUniversalTime().ToString("yyyy-MM-ddThh:mm:ssZ");
+
+            this.Metadata = metadata;
         }
 
         private DocumentFile(DocumentFile original)
@@ -28,6 +33,8 @@ namespace TinySite.Models
             this.Layouts = new List<LayoutFile>(original.Layouts);
 
             this.Partial = original.Partial;
+
+            this.Metadata = original.Metadata;
 
             this.Cloned = true;
         }
@@ -76,7 +83,15 @@ namespace TinySite.Models
 
         public Paginator Paginator { get { return this.Get<Paginator>(); } set { this.Set<Paginator>(value); } }
 
-        public DateTime Now { get { return this.Get<DateTime>(); } set { this.SetTimes("Now", value); } }
+        public DateTime Now { get { return this.Get<DateTime>(); } private set { this.Set(value); } }
+
+        public DateTime NowUtc { get { return this.Get<DateTime>(); } private set { this.Set(value); } }
+
+        public string NowFriendlyDate { get { return this.Get<string>(); } private set { this.Set<string>(value); } }
+
+        public string NowStandardUtcDate { get { return this.Get<string>(); } private set { this.Set<string>(value); } }
+
+        public MetadataCollection Metadata { get; private set; }
 
         public DocumentFile Clone()
         {

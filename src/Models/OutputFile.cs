@@ -20,13 +20,6 @@ namespace TinySite.Models
 
             this.OutputPath = Path.Combine(this.OutputRootPath, this.OutputRelativePath);
 
-            var outputInfo = new FileInfo(this.OutputPath);
-
-            if (outputInfo.Exists)
-            {
-                this.ExistingOutputModified = (outputInfo.LastWriteTime < outputInfo.CreationTime) ? outputInfo.CreationTime : outputInfo.LastWriteTime;
-            }
-
             this.TargetExtension = Path.GetExtension(this.OutputRelativePath).TrimStart('.');
 
             this.RelativeUrl = relativeUrl;
@@ -40,9 +33,7 @@ namespace TinySite.Models
             base(original)
         {
         }
-
-        private DateTime ExistingOutputModified { get; }
-
+        
         public string OutputPath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
         public string OutputRootPath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
