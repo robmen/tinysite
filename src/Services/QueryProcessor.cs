@@ -15,6 +15,8 @@ namespace TinySite.Services
 
         public static QueryResult Parse(Site site, string query)
         {
+            var dynamicSite = new DynamicSite(null, site);
+
             var result = new QueryResult();
 
             // query documents every 10 where relativepath startswith "documents\posts\" descending date formaturl "posts/page/{0}"
@@ -27,7 +29,7 @@ namespace TinySite.Services
                 switch (token)
                 {
                     case "query":
-                        result.Source = ParseSource(site, tokens, ref i);
+                        result.Source = ParseSource(dynamicSite, tokens, ref i);
                         break;
 
                     case "ascending":
@@ -174,7 +176,7 @@ namespace TinySite.Services
             }
         }
 
-        private static IEnumerable<dynamic> ParseSource(Site site, string[] tokens, ref int i)
+        private static IEnumerable<dynamic> ParseSource(DynamicSite site, string[] tokens, ref int i)
         {
             ++i;
 
@@ -183,13 +185,13 @@ namespace TinySite.Services
             switch (source)
             {
                 case "documents":
-                    return site.Documents;
+                    return site[source] as IEnumerable<dynamic>;
 
-                case "files":
-                    return site.Files;
+                //case "files":
+                //    return site.Files;
 
-                case "layouts":
-                    return site.Layouts;
+                //case "layouts":
+                //    return site.Layouts;
 
                 default:
                     throw new InvalidOperationException(String.Format("Unknown query source: {0}", source));

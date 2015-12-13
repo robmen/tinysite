@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace TinySite.Models
 {
-    public class DynamicRenderingBook : DynamicRenderingObject
+    public class DynamicBook : DynamicBase
     {
-        public DynamicRenderingBook(DocumentFile activeDocument, Book book)
+        public DynamicBook(DocumentFile activeDocument, Book book)
             : base(null)
         {
             this.ActiveDocument = activeDocument;
@@ -28,12 +28,12 @@ namespace TinySite.Models
 
         private object GetChapters()
         {
-            var chapters = new List<DynamicRenderingBookPage>();
+            var chapters = new List<DynamicBookPage>();
 
             foreach (var chapter in this.Book.Chapters)
             {
                 this.ActiveDocument.AddContributingFile(chapter.Document);
-                chapters.Add(new DynamicRenderingBookPage(this.ActiveDocument, chapter));
+                chapters.Add(new DynamicBookPage(this.ActiveDocument, chapter));
             }
 
             return chapters;
@@ -42,7 +42,7 @@ namespace TinySite.Models
         private object GetParentDocument()
         {
             this.ActiveDocument.AddContributingFile(this.Book.ParentDocument);
-            return new DynamicRenderingDocument(this.ActiveDocument, this.Book.ParentDocument);
+            return new DynamicDocumentFile(this.ActiveDocument, this.Book.ParentDocument);
         }
     }
 }

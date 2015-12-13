@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TinySite.Models
 {
-    public class DynamicRenderingData : DynamicRenderingObject
+    public class DynamicData : DynamicBase
     {
         // These are fields because as properties their typical name (e.g. "Document" 
         // for "_document") would hide the dynamic properties we are trying to expose
@@ -13,7 +13,7 @@ namespace TinySite.Models
         private LayoutFile _layout;
         private Site _site;
 
-        public DynamicRenderingData(DocumentFile document, LayoutFile layout, Site site)
+        public DynamicData(DocumentFile document, LayoutFile layout, Site site)
             : base(document.SourceRelativePath)
         {
             _document = document;
@@ -35,26 +35,26 @@ namespace TinySite.Models
 
         private object GetDocument()
         {
-            return new DynamicRenderingDocument(this._document, this._document);
+            return new DynamicDocumentFile(this._document, this._document);
         }
 
         private object GetLayout()
         {
-            return new DynamicRenderingLayout(this._document, this._layout);
+            return new DynamicLayoutFile(this._document, this._layout);
         }
 
         private object GetSite()
         {
-            return new DynamicRenderingSite(this._document, this._site);
+            return new DynamicSite(this._document, this._site);
         }
 
         private object GetBooks()
         {
-            var books = new List<DynamicRenderingBook>();
+            var books = new List<DynamicBook>();
 
             foreach (var book in this._site.Books)
             {
-                books.Add(new DynamicRenderingBook(this._document, book));
+                books.Add(new DynamicBook(this._document, book));
             }
 
             return books;

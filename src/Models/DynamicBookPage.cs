@@ -4,9 +4,9 @@ using TinySite.Extensions;
 
 namespace TinySite.Models
 {
-    public class DynamicRenderingBookPage : DynamicRenderingObject
+    public class DynamicBookPage : DynamicBase
     {
-        public DynamicRenderingBookPage(DocumentFile activeDocument, BookPage BookPage)
+        public DynamicBookPage(DocumentFile activeDocument, BookPage BookPage)
             : base(null)
         {
             this.ActiveDocument = activeDocument;
@@ -68,20 +68,20 @@ namespace TinySite.Models
             return false;
         }
 
-        private DynamicRenderingDocument GetDocument()
+        private DynamicDocumentFile GetDocument()
         {
             this.ActiveDocument.AddContributingFile(this.BookPage.Document);
-            return new DynamicRenderingDocument(this.ActiveDocument, this.BookPage.Document);
+            return new DynamicDocumentFile(this.ActiveDocument, this.BookPage.Document);
         }
 
-        private IEnumerable<DynamicRenderingBookPage> GetSubPages()
+        private IEnumerable<DynamicBookPage> GetSubPages()
         {
-            var pages = new List<DynamicRenderingBookPage>(this.BookPage.SubPages.Count);
+            var pages = new List<DynamicBookPage>(this.BookPage.SubPages.Count);
 
             foreach (var page in this.BookPage.SubPages)
             {
                 this.ActiveDocument.AddContributingFile(page.Document);
-                pages.Add(new DynamicRenderingBookPage(this.ActiveDocument, page));
+                pages.Add(new DynamicBookPage(this.ActiveDocument, page));
             }
 
             return pages;

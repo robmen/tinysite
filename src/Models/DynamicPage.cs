@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace TinySite.Models
 {
-    public class DynamicRenderingPage : DynamicRenderingObject
+    public class DynamicPage : DynamicBase
     {
-        public DynamicRenderingPage(DocumentFile activeDocument, Page Page)
+        public DynamicPage(DocumentFile activeDocument, Page Page)
             : base(null)
         {
             this.ActiveDocument = activeDocument;

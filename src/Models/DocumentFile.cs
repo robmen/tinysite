@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 
 namespace TinySite.Models
@@ -41,6 +42,8 @@ namespace TinySite.Models
             this.Partial = original.Partial;
 
             this.Metadata = original.Metadata;
+
+            this.Unmodified = original.Unmodified;
 
             this.Cloned = true;
         }
@@ -99,10 +102,25 @@ namespace TinySite.Models
 
         public MetadataCollection Metadata { get; private set; }
 
-        public DocumentFile Clone()
+        public DocumentFile CloneForPage(string urlFormat, string prependPathFormat, Paginator paginator)
         {
-            var clone = new DocumentFile(this);
-            return clone;
+            var prependPath = String.Format(prependPathFormat, paginator.Pagination.Page);
+
+            var prependUrl = String.Format(urlFormat, paginator.Pagination.Page);
+
+            var dupe = new DocumentFile(this);
+
+            var updateFileName = Path.GetFileName(dupe.OutputRelativePath);
+
+            dupe.OutputRelativePath = Path.Combine(prependPath, updateFileName);
+
+            dupe.OutputPath = Path.Combine(dupe.OutputRootPath, prependPath, updateFileName);
+
+            dupe.RelativeUrl = String.Concat(prependUrl, updateFileName.Equals("index.html", StringComparison.OrdinalIgnoreCase) ? String.Empty : updateFileName);
+
+            dupe.Paginator = paginator;
+
+            return dupe;
         }
 
         public void AssignLayouts(IEnumerable<LayoutFile> layouts)

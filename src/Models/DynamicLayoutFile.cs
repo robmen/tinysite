@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace TinySite.Models
 {
-    public class DynamicRenderingLayout : DynamicRenderingObject
+    public class DynamicLayoutFile : DynamicBase
     {
-        public DynamicRenderingLayout(DocumentFile activeDocument, LayoutFile layout)
+        public DynamicLayoutFile(DocumentFile activeDocument, LayoutFile layout)
             : base(layout.SourceRelativePath)
         {
             this.ActiveDocument = activeDocument;

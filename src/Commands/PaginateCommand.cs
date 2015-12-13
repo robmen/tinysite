@@ -24,44 +24,39 @@ namespace TinySite.Commands
             {
                 var query = QueryProcessor.Parse(this.Site, document.PaginateQuery);
 
-                var pagedPosts = query.Results.Cast<DocumentFile>().ToList();
+                var pagedPosts = query.Results.OfType<DynamicDocumentFile>().Select(d => d.GetDocument()).ToList();
 
                 var count = pagedPosts.Count();
 
                 var pages = (count + query.PageEvery - 1) / query.PageEvery;
 
-                var format = query.FormatUrl;
+                var urlFormat = query.FormatUrl;
 
                 var lastSlash = document.RelativeUrl.LastIndexOf('/');
 
                 var documentRelativeUrl = document.RelativeUrl.Substring(0, lastSlash + 1);
 
-                if (!String.IsNullOrEmpty(format))
+                if (!String.IsNullOrEmpty(urlFormat))
                 {
-                    format = format.TrimStart('/');
+                    urlFormat = urlFormat.TrimStart('/');
 
-                    var appendPathFormat = Path.Combine(Path.GetDirectoryName(document.OutputRelativePath), format.Replace('/', '\\'));
+                    var prependPathFormat = Path.Combine(Path.GetDirectoryName(document.OutputRelativePath), urlFormat.Replace('/', '\\'));
 
-                    format = String.Concat(documentRelativeUrl, format.Replace('\\', '/').EnsureEndsWith("/"));
+                    urlFormat = String.Concat(documentRelativeUrl, urlFormat.Replace('\\', '/').EnsureEndsWith("/"));
 
                     for (int i = 1; i < pages; ++i)
                     {
-                        var dupe = document.Clone();
+                        var paginator = this.CreatePaginator(i + 1, query.PageEvery, pages, documentRelativeUrl, urlFormat, pagedPosts);
 
-                        var appendPath = String.Format(appendPathFormat, i + 1);
-                        var appendUrl = String.Format(format, i + 1);
+                        var dupe = document.CloneForPage(urlFormat, prependPathFormat, paginator);
 
-                        this.UpdateOutputPaths(dupe, appendPath, appendUrl);
-
-                        dupe["PageNumber"] = i + 1;
-                        dupe.Paginator = this.CreatePaginator(i + 1, query.PageEvery, pages, documentRelativeUrl, format, pagedPosts);
                         dupe.AddContributingFiles(pagedPosts);
 
                         dupes.Add(dupe);
                     }
                 }
 
-                document.Paginator = this.CreatePaginator(1, query.PageEvery, pages, documentRelativeUrl, format, pagedPosts);
+                document.Paginator = this.CreatePaginator(1, query.PageEvery, pages, documentRelativeUrl, urlFormat, pagedPosts);
 
                 document.AddContributingFiles(pagedPosts);
             }
@@ -69,18 +64,7 @@ namespace TinySite.Commands
             this.PagedDocuments = dupes;
         }
 
-        private void UpdateOutputPaths(DocumentFile document, string appendPath, string appendUrl)
-        {
-            var updateFileName = Path.GetFileName(document.OutputRelativePath);
-
-            document.OutputRelativePath = Path.Combine(appendPath, updateFileName);
-
-            document.OutputPath = Path.Combine(document.OutputRootPath, appendPath, updateFileName);
-
-            document.RelativeUrl = String.Concat(appendUrl, updateFileName.Equals("index.html", StringComparison.OrdinalIgnoreCase) ? String.Empty : updateFileName);
-        }
-
-        private Paginator CreatePaginator(int page, int perPage, int pages, string baseUrl, string format, IEnumerable<DocumentFile> documents)
+        private Paginator CreatePaginator(int page, int perPage, int pages, string baseUrl, string urlFormat, IEnumerable<DocumentFile> documents)
         {
             // It is important that this query is not executed here (aka: do not add ToList() or ToArray()). This
             // query should be executed by the rendering engine so the returned documents are rendered first.
@@ -88,32 +72,52 @@ namespace TinySite.Commands
 
             var pagination = new Pagination();
 
-            if (pages > 1 && !String.IsNullOrEmpty(format))
+            if (pages > 1 && !String.IsNullOrEmpty(urlFormat))
             {
                 pagination.Page = page;
                 pagination.PerPage = perPage;
                 pagination.TotalPage = pages;
-                pagination.NextPageUrl = page < pages ? this.UrlForPage(page + 1, baseUrl, format) : null;
-                pagination.PreviousPageUrl = page > 1 ? this.UrlForPage(page - 1, baseUrl, format) : null;
+                pagination.NextPageUrl = page < pages ? this.UrlForPage(page + 1, baseUrl, urlFormat) : null;
+                pagination.PreviousPageUrl = page > 1 ? this.UrlForPage(page - 1, baseUrl, urlFormat) : null;
 
                 var start = Math.Max(1, page - 3);
                 var end = Math.Min(pages, start + 6);
                 start = Math.Max(start, end - 6);
 
-                pagination.Pages = this.CreatePages(page, start, end, baseUrl, format).ToList();
+                pagination.Pages = this.CreatePages(page, start, end, baseUrl, urlFormat).ToList();
             }
 
             return new Paginator(pagedDocuments, pagination);
         }
 
-        private IEnumerable<Page> CreatePages(int current, int start, int end, string baseUrl, string format)
+        private DocumentFile DupeDocumentForPage(DocumentFile document, string urlFormat, string prependPathFormat, Paginator paginator)
+        {
+            var prependPath = String.Format(prependPathFormat, paginator.Pagination.Page);
+
+            var prependUrl = String.Format(urlFormat, paginator.Pagination.Page);
+
+            var dupe = document.CloneForPage(urlFormat, prependPathFormat, paginator);
+
+            var updateFileName = Path.GetFileName(dupe.OutputRelativePath);
+
+            dupe.OutputRelativePath = Path.Combine(prependPath, updateFileName);
+
+            dupe.OutputPath = Path.Combine(dupe.OutputRootPath, prependPath, updateFileName);
+
+            dupe.RelativeUrl = String.Concat(prependUrl, updateFileName.Equals("index.html", StringComparison.OrdinalIgnoreCase) ? String.Empty : updateFileName);
+
+            dupe.Paginator = paginator;
+            return dupe;
+        }
+
+        private IEnumerable<Page> CreatePages(int current, int start, int end, string baseUrl, string urlFormat)
         {
             for (int i = start; i <= end; ++i)
             {
                 var page = new Page();
                 page.Active = (i == current);
                 page.Number = i;
-                page.Url = this.UrlForPage(i, baseUrl, format);
+                page.Url = this.UrlForPage(i, baseUrl, urlFormat);
 
                 yield return page;
             }

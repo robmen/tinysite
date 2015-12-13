@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace TinySite.Models
 {
-    public class DynamicRenderingDocument : DynamicRenderingOutputFile
+    public class DynamicDocumentFile : DynamicOutputFile
     {
-        public DynamicRenderingDocument(DocumentFile activeDocument, DocumentFile document)
+        public DynamicDocumentFile(DocumentFile activeDocument, DocumentFile document)
             : base(document)
         {
             this.ActiveDocument = activeDocument;
@@ -15,6 +15,11 @@ namespace TinySite.Models
         private DocumentFile ActiveDocument { get; }
 
         private DocumentFile Document { get; }
+
+        public DocumentFile GetDocument()
+        {
+            return this.Document;
+        }
 
         protected override IDictionary<string, object> GetData()
         {
@@ -58,7 +63,7 @@ namespace TinySite.Models
             if (this.Document.NextDocument != null)
             {
                 this.ActiveDocument.AddContributingFile(this.Document.NextDocument);
-                return new DynamicRenderingDocument(this.ActiveDocument, this.Document.NextDocument);
+                return new DynamicDocumentFile(this.ActiveDocument, this.Document.NextDocument);
             }
 
             return null;
@@ -69,7 +74,7 @@ namespace TinySite.Models
             if (this.Document.ParentDocument != null)
             {
                 this.ActiveDocument.AddContributingFile(this.Document.ParentDocument);
-                return new DynamicRenderingDocument(this.ActiveDocument, this.Document.ParentDocument);
+                return new DynamicDocumentFile(this.ActiveDocument, this.Document.ParentDocument);
             }
 
             return null;
@@ -80,7 +85,7 @@ namespace TinySite.Models
             if (this.Document.PreviousDocument != null)
             {
                 this.ActiveDocument.AddContributingFile(this.Document.PreviousDocument);
-                return new DynamicRenderingDocument(this.ActiveDocument, this.Document.PreviousDocument);
+                return new DynamicDocumentFile(this.ActiveDocument, this.Document.PreviousDocument);
             }
 
             return null;
@@ -90,7 +95,7 @@ namespace TinySite.Models
         {
             if (this.Document.Book != null)
             {
-                return new DynamicRenderingBook(this.ActiveDocument, this.Document.Book);
+                return new DynamicBook(this.ActiveDocument, this.Document.Book);
             }
 
             return null;
@@ -101,7 +106,7 @@ namespace TinySite.Models
             if (this.Document.Chapter != null)
             {
                 this.ActiveDocument.AddContributingFile(this.Document.Chapter.Document);
-                return new DynamicRenderingBookPage(this.ActiveDocument, this.Document.Chapter);
+                return new DynamicBookPage(this.ActiveDocument, this.Document.Chapter);
             }
 
             return null;
@@ -111,7 +116,7 @@ namespace TinySite.Models
         {
             if (this.Document.Paginator != null)
             {
-                return new DynamicRenderingPaginator(this.ActiveDocument, this.Document.Paginator);
+                return new DynamicPaginator(this.ActiveDocument, this.Document.Paginator);
             }
 
             return null;

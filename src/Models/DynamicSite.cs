@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace TinySite.Models
 {
-    public class DynamicRenderingSite : DynamicRenderingObject
+    public class DynamicSite : DynamicBase
     {
-        public DynamicRenderingSite(DocumentFile activeDocument, Site site)
+        public DynamicSite(DocumentFile activeDocument, Site site)
             : base(site.SitePath)
         {
             this.ActiveDocument = activeDocument;
@@ -45,16 +45,16 @@ namespace TinySite.Models
 
         private object GetParentSite()
         {
-            return (this.Site.Parent == null) ? null : new DynamicRenderingSite(this.ActiveDocument, this.Site.Parent);
+            return (this.Site.Parent == null) ? null : new DynamicSite(this.ActiveDocument, this.Site.Parent);
         }
 
         private object GetBooks()
         {
-            var books = new List<DynamicRenderingBook>();
+            var books = new List<DynamicBook>();
 
             foreach (var book in this.Site.Books)
             {
-                books.Add(new DynamicRenderingBook(this.ActiveDocument, book));
+                books.Add(new DynamicBook(this.ActiveDocument, book));
             }
 
             return books;
@@ -62,12 +62,12 @@ namespace TinySite.Models
 
         private object GetDocuments()
         {
-            var documents = new List<DynamicRenderingDocument>(this.Site.Documents.Count);
+            var documents = new List<DynamicDocumentFile>(this.Site.Documents.Count);
 
             foreach (var document in this.Site.Documents)
             {
-                this.ActiveDocument.AddContributingFile(document);
-                documents.Add(new DynamicRenderingDocument(this.ActiveDocument, document));
+                this.ActiveDocument?.AddContributingFile(document);
+                documents.Add(new DynamicDocumentFile(this.ActiveDocument, document));
             }
 
             return documents;
@@ -75,12 +75,12 @@ namespace TinySite.Models
 
         private object GetFiles()
         {
-            var files = new List<DynamicRenderingStaticFile>(this.Site.Files.Count);
+            var files = new List<DynamicStaticFile>(this.Site.Files.Count);
 
             foreach (var file in this.Site.Files)
             {
-                this.ActiveDocument.AddContributingFile(file);
-                files.Add(new DynamicRenderingStaticFile(this.ActiveDocument, file));
+                this.ActiveDocument?.AddContributingFile(file);
+                files.Add(new DynamicStaticFile(this.ActiveDocument, file));
             }
 
             return files;
@@ -88,12 +88,12 @@ namespace TinySite.Models
 
         private object GetLayouts()
         {
-            var layouts = new List<DynamicRenderingLayout>(this.Site.Layouts.Count);
+            var layouts = new List<DynamicLayoutFile>(this.Site.Layouts.Count);
 
             foreach (var layout in this.Site.Layouts)
             {
-                this.ActiveDocument.AddContributingFile(layout);
-                layouts.Add(new DynamicRenderingLayout(this.ActiveDocument, layout));
+                this.ActiveDocument?.AddContributingFile(layout);
+                layouts.Add(new DynamicLayoutFile(this.ActiveDocument, layout));
             }
 
             return layouts;

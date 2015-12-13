@@ -58,7 +58,7 @@ namespace TinySite.Services
             {
                 contextDocument.Content = documentContent;
 
-                dynamic data = new DynamicRenderingData(contextDocument, contextLayout, this.Transaction.Site);
+                dynamic data = new DynamicData(contextDocument, contextLayout, this.Transaction.Site);
 
                 var engine = this.Transaction.Engines[extension];
 

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace TinySite.Models
 {
-    public class DynamicRenderingPagination : DynamicRenderingObject
+    public class DynamicPagination : DynamicBase
     {
-        public DynamicRenderingPagination(DocumentFile activeDocument, Pagination Pagination)
+        public DynamicPagination(DocumentFile activeDocument, Pagination Pagination)
             : base(null)
         {
             this.ActiveDocument = activeDocument;
@@ -31,11 +31,11 @@ namespace TinySite.Models
 
         private object GetPages()
         {
-            var pages = new List<DynamicRenderingPage>();
+            var pages = new List<DynamicPage>();
 
             foreach (var page in this.Pagination.Pages)
             {
-                pages.Add(new DynamicRenderingPage(this.ActiveDocument, page));
+                pages.Add(new DynamicPage(this.ActiveDocument, page));
             }
 
             return pages;

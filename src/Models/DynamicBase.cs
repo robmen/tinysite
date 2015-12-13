@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace TinySite.Models
 {
-    public abstract class DynamicRenderingObject : DynamicObject, IDictionary<string, object>
+    public abstract class DynamicBase : DynamicObject, IDictionary<string, object>
     {
-        protected DynamicRenderingObject(string sourceRelativePath)
+        protected DynamicBase(string sourceRelativePath)
         {
             this.Data = new Lazy<IDictionary<string, object>>(GetData);
 

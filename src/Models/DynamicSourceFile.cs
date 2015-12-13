@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace TinySite.Models
 {
-    public abstract class DynamicRenderingSourceFile : DynamicRenderingObject
+    public abstract class DynamicSourceFile : DynamicBase
     {
-        protected DynamicRenderingSourceFile(SourceFile file)
+        protected DynamicSourceFile(SourceFile file)
             : base(file.SourceRelativePath)
         {
             this.File = file;

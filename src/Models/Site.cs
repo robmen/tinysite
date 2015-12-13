@@ -80,7 +80,7 @@ namespace TinySite.Models
 
         public LayoutFileCollection Layouts { get { return this.Get<LayoutFileCollection>(); } set { this.Set<LayoutFileCollection>(value); } }
 
-        public IEnumerable<Book> Books { get { return this.Get<IEnumerable<Book>>(); } set { this.Set<IEnumerable<Book>>(value); } }
+        public IEnumerable<Book> Books { get; set; }
 
         public MetadataCollection Metadata { get; }
 

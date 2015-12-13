@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace TinySite.Models
 {
-    public class DynamicRenderingPaginator : DynamicRenderingObject
+    public class DynamicPaginator : DynamicBase
     {
-        public DynamicRenderingPaginator(DocumentFile activeDocument, Paginator Paginator)
+        public DynamicPaginator(DocumentFile activeDocument, Paginator Paginator)
             : base(null)
         {
             this.ActiveDocument = activeDocument;
@@ -27,12 +27,12 @@ namespace TinySite.Models
 
         private object GetDocuments()
         {
-            var documents = new List<DynamicRenderingDocument>();
+            var documents = new List<DynamicDocumentFile>();
 
             foreach (var document in this.Paginator.Documents)
             {
                 this.ActiveDocument.AddContributingFile(document);
-                documents.Add(new DynamicRenderingDocument(this.ActiveDocument, document));
+                documents.Add(new DynamicDocumentFile(this.ActiveDocument, document));
             }
 
             return documents;
@@ -42,7 +42,7 @@ namespace TinySite.Models
         {
             if (this.Paginator.Pagination != null)
             {
-                return new DynamicRenderingPagination(this.ActiveDocument, this.Paginator.Pagination);
+                return new DynamicPagination(this.ActiveDocument, this.Paginator.Pagination);
             }
 
             return null;
