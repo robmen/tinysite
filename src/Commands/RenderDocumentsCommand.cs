@@ -50,6 +50,17 @@ namespace TinySite.Commands
                         document.RenderedContent = content;
 
                         document.Rendered = (document.RenderedContent != null);
+
+#if DEBUG
+                        Console.WriteLine("Rendered: {0} to {1}", document.SourceRelativePath, document.OutputRelativePath);
+
+                        foreach (var contributor in document.AllContributingFiles())
+                        {
+                            Console.WriteLine("   Contributor: {0}", contributor.SourceRelativePath);
+                        }
+
+                        Console.WriteLine();
+#endif
                     }
                 }
 
