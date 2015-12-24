@@ -12,8 +12,7 @@ namespace RobMensching.TinySite.Test
             var path = Path.GetFullPath(@"data\documents\nometa.txt");
             string expected = "This is text.\r\n   It has no metadata.";
 
-            var command = new ParseDocumentCommand();
-            command.DocumentPath = path;
+            var command = new ParseDocumentCommand(path);
             command.ExecuteAsync().Wait();
 
             Assert.Null(command.Date);
@@ -28,8 +27,7 @@ namespace RobMensching.TinySite.Test
             var path = Path.GetFullPath(@"data\documents\hasmeta.txt");
             string expected = "This is text.\r\n   It has title metadata.";
 
-            var command = new ParseDocumentCommand();
-            command.DocumentPath = path;
+            var command = new ParseDocumentCommand(path);
             command.ExecuteAsync().Wait();
 
             Assert.Null(command.Date);
@@ -44,8 +42,7 @@ namespace RobMensching.TinySite.Test
             var path = Path.GetFullPath(@"data\documents\draft.txt");
             string expected = "This is a draft.\r\n   It has metadata.";
 
-            var command = new ParseDocumentCommand();
-            command.DocumentPath = path;
+            var command = new ParseDocumentCommand(path);
             command.ExecuteAsync().Wait();
 
             Assert.Null(command.Date);
@@ -59,8 +56,7 @@ namespace RobMensching.TinySite.Test
         {
             var path = Path.GetFullPath(@"data\documents\hastag.txt");
 
-            var command = new ParseDocumentCommand();
-            command.DocumentPath = path;
+            var command = new ParseDocumentCommand(path);
             command.ExecuteAsync().Wait();
 
             Assert.Equal(new[] { "foo" }, command.Metadata.Get<string[]>("tags"));
@@ -71,8 +67,7 @@ namespace RobMensching.TinySite.Test
         {
             var path = Path.GetFullPath(@"data\documents\hastags.txt");
 
-            var command = new ParseDocumentCommand();
-            command.DocumentPath = path;
+            var command = new ParseDocumentCommand(path);
             command.ExecuteAsync().Wait();
 
             Assert.Equal(new[] { "foo", "bar", "baz" }, command.Metadata.Get<string[]>("tags"));

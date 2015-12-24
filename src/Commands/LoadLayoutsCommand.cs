@@ -31,8 +31,7 @@ namespace TinySite.Commands
 
         private async Task<LayoutFile> LoadLayoutAsync(string path)
         {
-            var parser = new ParseDocumentCommand();
-            parser.DocumentPath = path;
+            var parser = new ParseDocumentCommand(path);
             await parser.ExecuteAsync();
 
             return new LayoutFile(path, this.LayoutsPath, parser.Content, parser.Metadata);

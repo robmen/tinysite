@@ -13,7 +13,10 @@ namespace TinySite.Commands
         private static readonly Regex SmarterDateTime = new Regex(@"^\s*(?<year>\d{4})-(?<month>\d{1,2})-(?<day>\d{1,2})([Tt@](?<hour>\d{1,2})[\:\.](?<minute>\d{1,2})([\:\.](?<second>\d{1,2}))?)?\s*$", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
         private static readonly Regex MetadataKeyValue = new Regex(@"^(?<key>\w+):\s?(?<value>.+)?$", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
-        public string DocumentPath { private get; set; }
+        public ParseDocumentCommand(string documentPath)
+        {
+            this.DocumentPath = documentPath;
+        }
 
         public string Content { get; private set; }
 
@@ -23,6 +26,8 @@ namespace TinySite.Commands
 
         public MetadataCollection Metadata { get; private set; }
 
+        private string DocumentPath { get; }
+        
         public async Task ExecuteAsync()
         {
             this.Metadata = new MetadataCollection();

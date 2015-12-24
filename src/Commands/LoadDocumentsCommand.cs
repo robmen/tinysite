@@ -61,8 +61,7 @@ namespace TinySite.Commands
         {
             // Parse the document and update our document metadata.
             //
-            var parser = new ParseDocumentCommand();
-            parser.DocumentPath = file;
+            var parser = new ParseDocumentCommand(file);
             await parser.ExecuteAsync();
 
             var metadataDate = parser.Date;
