@@ -236,14 +236,14 @@ namespace TinySite.Commands
 
             while (!String.IsNullOrEmpty(layoutName))
             {
-                var layout = this.Layouts[layoutName];
-
-                if (layout == null)
+                if (!this.Layouts.Contains(layoutName))
                 {
                     Console.Error.WriteLine("Cannot find layout: '{0}' while processing file: {1}", layoutName, Path.GetFullPath(file));
 
                     break;
                 }
+
+                var layout = this.Layouts[layoutName];
 
                 yield return layout;
 

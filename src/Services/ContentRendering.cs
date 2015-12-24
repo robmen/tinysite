@@ -60,11 +60,19 @@ namespace TinySite.Services
 
                 dynamic data = new DynamicData(contextDocument, contextLayout, this.Transaction.Site);
 
-                var engine = this.Transaction.Engines[extension];
+                RenderingEngine engine;
 
-                var result = engine.Render(source, content, data);
+                if (this.Transaction.Engines.TryGetValue(extension, out engine))
+                {
+                    var result = engine.Render(source, content, data);
 
-                return result;
+                    return result;
+                }
+                else
+                {
+                    Console.WriteLine("Cannot find a rendering engine for extension: {0}", extension);
+                    return null;
+                }
             }
             finally
             {
