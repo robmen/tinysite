@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -11,7 +12,7 @@ namespace TinySite.Commands
     public class ParseDocumentCommand
     {
         private static readonly Regex SmarterDateTime = new Regex(@"^\s*(?<year>\d{4})-(?<month>\d{1,2})-(?<day>\d{1,2})([Tt@](?<hour>\d{1,2})[\:\.](?<minute>\d{1,2})([\:\.](?<second>\d{1,2}))?)?\s*$", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-        private static readonly Regex MetadataKeyValue = new Regex(@"^(?<key>\w+):\s?(?<value>.+)?$", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+        private static readonly Regex MetadataKeyValue = new Regex(@"^(?<key>\w+\??):\s?(?<value>.+)?$", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
         public ParseDocumentCommand(string documentPath)
         {
@@ -26,11 +27,14 @@ namespace TinySite.Commands
 
         public MetadataCollection Metadata { get; private set; }
 
+        public IDictionary<string, string> Queries { get; private set; }
+
         private string DocumentPath { get; }
         
         public async Task ExecuteAsync()
         {
             this.Metadata = new MetadataCollection();
+            this.Queries = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
             var content = String.Empty;
             var retry = 0;
@@ -131,7 +135,7 @@ namespace TinySite.Commands
                             case "draft":
                             case "ignore":
                             case "ignored":
-                                this.Draft = value.ToLowerInvariant().Equals("true");
+                                this.Draft = (value.Equals("true", StringComparison.OrdinalIgnoreCase) || value.Equals("yes", StringComparison.OrdinalIgnoreCase));
                                 break;
 
                             case "tag":
@@ -145,7 +149,7 @@ namespace TinySite.Commands
                                 break;
 
                             default:
-                                this.Metadata.Add(key, value);
+                                this.HandleDefaultMetdata(key, value);
                                 break;
                         }
                     }
@@ -178,6 +182,18 @@ namespace TinySite.Commands
             }
 
             return null;
+        }
+
+        private void HandleDefaultMetdata(string key, string value)
+        {
+            if (key.EndsWith("?"))
+            {
+                this.Queries.Add(key.TrimEnd('?'), value);
+            }
+            else
+            {
+                this.Metadata.Add(key, value);
+            }
         }
     }
 }

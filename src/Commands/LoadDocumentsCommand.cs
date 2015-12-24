@@ -191,7 +191,7 @@ namespace TinySite.Commands
 
             // Finally create the document.
             //
-            var documentFile = new DocumentFile(file, this.DocumentsPath, output, this.OutputRootPath, relativeUrl, this.RootUrl, this.Author, parser.Metadata);
+            var documentFile = new DocumentFile(file, this.DocumentsPath, output, this.OutputRootPath, relativeUrl, this.RootUrl, this.Author, parser.Metadata, parser.Queries);
 
             documentFile.Partial = partial;
 

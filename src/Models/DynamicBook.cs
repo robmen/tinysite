@@ -5,16 +5,19 @@ namespace TinySite.Models
 {
     public class DynamicBook : DynamicBase
     {
-        public DynamicBook(DocumentFile activeDocument, Book book)
+        public DynamicBook(DocumentFile activeDocument, Book book, Site site)
             : base(null)
         {
             this.ActiveDocument = activeDocument;
             this.Book = book;
+            this.Site = site;
         }
 
         private DocumentFile ActiveDocument { get; }
 
         private Book Book { get; }
+
+        private Site Site { get; }
 
         protected override IDictionary<string, object> GetData()
         {
@@ -33,7 +36,7 @@ namespace TinySite.Models
             foreach (var chapter in this.Book.Chapters)
             {
                 this.ActiveDocument.AddContributingFile(chapter.Document);
-                chapters.Add(new DynamicBookPage(this.ActiveDocument, chapter));
+                chapters.Add(new DynamicBookPage(this.ActiveDocument, chapter, this.Site));
             }
 
             return chapters;
@@ -42,7 +45,7 @@ namespace TinySite.Models
         private object GetParentDocument()
         {
             this.ActiveDocument.AddContributingFile(this.Book.ParentDocument);
-            return new DynamicDocumentFile(this.ActiveDocument, this.Book.ParentDocument);
+            return new DynamicDocumentFile(this.ActiveDocument, this.Book.ParentDocument, this.Site);
         }
     }
 }

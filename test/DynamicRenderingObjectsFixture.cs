@@ -15,8 +15,8 @@ namespace RobMensching.TinySite.Test
             var layoutsPath = sitePath + @"layouts\";
             var outputPath = sitePath + @"build\";
 
-            var document = new DocumentFile(documentsPath + "foo.html.md", documentsPath, outputPath + "foo.html", outputPath, String.Empty, String.Empty, null, null);
-            var layout = new LayoutFile(layoutsPath + "default.cshtml", layoutsPath, String.Empty, null);
+            var document = new DocumentFile(documentsPath + "foo.html.md", documentsPath, outputPath + "foo.html", outputPath, String.Empty, String.Empty, null, null, null);
+            var layout = new LayoutFile(layoutsPath + "default.cshtml", layoutsPath, String.Empty, null, null);
             var config = new SiteConfig() { OutputPath = outputPath, Url = "http://example.com", RootUrl = String.Empty, };
             var site = new Site(config, new[] { document }, Enumerable.Empty<StaticFile>(), new LayoutFileCollection(new[] { layout }));
 
@@ -38,8 +38,8 @@ namespace RobMensching.TinySite.Test
             var layoutsPath = sitePath + @"layouts\";
             var outputPath = sitePath + @"build\";
 
-            var doc = new DocumentFile(documentsPath + "foo.html.md", documentsPath, outputPath + "foo.html", outputPath, String.Empty, String.Empty, null, null);
-            var dyn = new DynamicDocumentFile(null, doc);
+            var doc = new DocumentFile(documentsPath + "foo.html.md", documentsPath, outputPath + "foo.html", outputPath, String.Empty, String.Empty, null, null, null);
+            var dyn = new DynamicDocumentFile(null, doc, null);
 
             Assert.Same(doc, dyn.GetDocument());
 

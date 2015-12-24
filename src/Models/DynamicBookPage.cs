@@ -6,16 +6,19 @@ namespace TinySite.Models
 {
     public class DynamicBookPage : DynamicBase
     {
-        public DynamicBookPage(DocumentFile activeDocument, BookPage BookPage)
+        public DynamicBookPage(DocumentFile activeDocument, BookPage bookPage, Site site)
             : base(null)
         {
             this.ActiveDocument = activeDocument;
-            this.BookPage = BookPage;
+            this.BookPage = bookPage;
+            this.Site = site;
         }
 
         private DocumentFile ActiveDocument { get; }
 
         private BookPage BookPage { get; }
+
+        private Site Site { get; }
 
         protected override IDictionary<string, object> GetData()
         {
@@ -71,7 +74,7 @@ namespace TinySite.Models
         private DynamicDocumentFile GetDocument()
         {
             this.ActiveDocument.AddContributingFile(this.BookPage.Document);
-            return new DynamicDocumentFile(this.ActiveDocument, this.BookPage.Document);
+            return new DynamicDocumentFile(this.ActiveDocument, this.BookPage.Document, this.Site);
         }
 
         private IEnumerable<DynamicBookPage> GetSubPages()
@@ -81,7 +84,7 @@ namespace TinySite.Models
             foreach (var page in this.BookPage.SubPages)
             {
                 this.ActiveDocument.AddContributingFile(page.Document);
-                pages.Add(new DynamicBookPage(this.ActiveDocument, page));
+                pages.Add(new DynamicBookPage(this.ActiveDocument, page, this.Site));
             }
 
             return pages;

@@ -11,7 +11,7 @@ namespace TinySite.Models
     {
         private object _lock = new object();
 
-        public DocumentFile(string path, string rootPath, string outputPath, string outputRootPath, string url, string rootUrl, Author author, MetadataCollection metadata)
+        public DocumentFile(string path, string rootPath, string outputPath, string outputRootPath, string url, string rootUrl, Author author, MetadataCollection metadata, IDictionary<string, string> queries)
             : base(path, rootPath, outputPath, outputRootPath, rootUrl, url)
         {
             this.Author = author;
@@ -30,6 +30,8 @@ namespace TinySite.Models
 
                 this.Metadata = metadata;
             }
+
+            this.Queries = queries;
         }
 
         private DocumentFile(DocumentFile original)
@@ -43,6 +45,8 @@ namespace TinySite.Models
 
             this.Metadata = original.Metadata;
 
+            this.Queries = original.Queries;
+
             this.Unmodified = original.Unmodified;
 
             this.Cloned = true;
@@ -51,6 +55,8 @@ namespace TinySite.Models
         internal IList<string> ExtensionsForRendering { get; set; }
 
         internal IEnumerable<LayoutFile> Layouts { get; private set; }
+
+        internal IDictionary<string, string> Queries { get; private set; }
 
         internal bool Cloned { get; }
 

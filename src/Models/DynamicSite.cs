@@ -54,7 +54,7 @@ namespace TinySite.Models
 
             foreach (var book in this.Site.Books)
             {
-                books.Add(new DynamicBook(this.ActiveDocument, book));
+                books.Add(new DynamicBook(this.ActiveDocument, book, this.Site));
             }
 
             return books;
@@ -67,7 +67,7 @@ namespace TinySite.Models
             foreach (var document in this.Site.Documents)
             {
                 this.ActiveDocument?.AddContributingFile(document);
-                documents.Add(new DynamicDocumentFile(this.ActiveDocument, document));
+                documents.Add(new DynamicDocumentFile(this.ActiveDocument, document, this.Site));
             }
 
             return documents;
@@ -93,7 +93,7 @@ namespace TinySite.Models
             foreach (var layout in this.Site.Layouts)
             {
                 this.ActiveDocument?.AddContributingFile(layout);
-                layouts.Add(new DynamicLayoutFile(this.ActiveDocument, layout));
+                layouts.Add(new DynamicLayoutFile(this.ActiveDocument, layout, this.Site));
             }
 
             return layouts;

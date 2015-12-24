@@ -34,7 +34,7 @@ namespace TinySite.Commands
             var parser = new ParseDocumentCommand(path);
             await parser.ExecuteAsync();
 
-            return new LayoutFile(path, this.LayoutsPath, parser.Content, parser.Metadata);
+            return new LayoutFile(path, this.LayoutsPath, parser.Content, parser.Metadata, parser.Queries);
         }
     }
 }

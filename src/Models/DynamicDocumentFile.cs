@@ -1,20 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using TinySite.Services;
 
 namespace TinySite.Models
 {
     public class DynamicDocumentFile : DynamicOutputFile
     {
-        public DynamicDocumentFile(DocumentFile activeDocument, DocumentFile document)
+        public DynamicDocumentFile(DocumentFile activeDocument, DocumentFile document, Site site)
             : base(document)
         {
             this.ActiveDocument = activeDocument;
             this.Document = document;
+            this.Site = site;
         }
 
         private DocumentFile ActiveDocument { get; }
 
         private DocumentFile Document { get; }
+
+        private Site Site { get; }
 
         public DocumentFile GetDocument()
         {
@@ -44,6 +48,14 @@ namespace TinySite.Models
 
             this.Document.Metadata?.AssignTo(this.Document.SourceRelativePath, data);
 
+            if (this.Document.Queries != null)
+            {
+                foreach (var query in this.Document.Queries)
+                {
+                    data.Add(query.Key, new Lazy<object>(() => ExecuteQuery(query.Value)));
+                }
+            }
+
             return data;
         }
 
@@ -63,7 +75,7 @@ namespace TinySite.Models
             if (this.Document.NextDocument != null)
             {
                 this.ActiveDocument.AddContributingFile(this.Document.NextDocument);
-                return new DynamicDocumentFile(this.ActiveDocument, this.Document.NextDocument);
+                return new DynamicDocumentFile(this.ActiveDocument, this.Document.NextDocument, this.Site);
             }
 
             return null;
@@ -74,7 +86,7 @@ namespace TinySite.Models
             if (this.Document.ParentDocument != null)
             {
                 this.ActiveDocument.AddContributingFile(this.Document.ParentDocument);
-                return new DynamicDocumentFile(this.ActiveDocument, this.Document.ParentDocument);
+                return new DynamicDocumentFile(this.ActiveDocument, this.Document.ParentDocument, this.Site);
             }
 
             return null;
@@ -85,7 +97,7 @@ namespace TinySite.Models
             if (this.Document.PreviousDocument != null)
             {
                 this.ActiveDocument.AddContributingFile(this.Document.PreviousDocument);
-                return new DynamicDocumentFile(this.ActiveDocument, this.Document.PreviousDocument);
+                return new DynamicDocumentFile(this.ActiveDocument, this.Document.PreviousDocument, this.Site);
             }
 
             return null;
@@ -95,7 +107,7 @@ namespace TinySite.Models
         {
             if (this.Document.Book != null)
             {
-                return new DynamicBook(this.ActiveDocument, this.Document.Book);
+                return new DynamicBook(this.ActiveDocument, this.Document.Book, this.Site);
             }
 
             return null;
@@ -106,7 +118,7 @@ namespace TinySite.Models
             if (this.Document.Chapter != null)
             {
                 this.ActiveDocument.AddContributingFile(this.Document.Chapter.Document);
-                return new DynamicBookPage(this.ActiveDocument, this.Document.Chapter);
+                return new DynamicBookPage(this.ActiveDocument, this.Document.Chapter, this.Site);
             }
 
             return null;
@@ -116,10 +128,17 @@ namespace TinySite.Models
         {
             if (this.Document.Paginator != null)
             {
-                return new DynamicPaginator(this.ActiveDocument, this.Document.Paginator);
+                return new DynamicPaginator(this.ActiveDocument, this.Document.Paginator, this.Site);
             }
 
             return null;
+        }
+
+        private object ExecuteQuery(string queryString)
+        {
+            var query = QueryProcessor.Parse(this.Site, queryString);
+
+            return query.Results;
         }
     }
 }

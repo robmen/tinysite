@@ -20,8 +20,8 @@ namespace RobMensching.TinySite.Test
 
             var documents = new[] 
             {
-            new DocumentFile("bar.html.md", "documents", "documents", "documents", "bar", "bar", null, new MetadataCollection()),
-            new DocumentFile("foo.html.md", "documents", "documents", "documents", "foo", "foo", null, new MetadataCollection()),
+            new DocumentFile("bar.html.md", "documents", "documents", "documents", "bar", "bar", null, new MetadataCollection(), null),
+            new DocumentFile("foo.html.md", "documents", "documents", "documents", "foo", "foo", null, new MetadataCollection(), null),
             };
 
             var site = new Site(config, documents, Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
@@ -54,8 +54,8 @@ namespace RobMensching.TinySite.Test
 
             var documents = new[] 
             {
-            new DocumentFile("bar.html.md", "documents", "documents", "documents", "bar", "bar", null, new MetadataCollection()),
-            new DocumentFile("foo.html.md", "documents", "documents", "documents", "foo", "foo", null, new MetadataCollection()),
+            new DocumentFile("bar.html.md", "documents", "documents", "documents", "bar", "bar", null, new MetadataCollection(), null),
+            new DocumentFile("foo.html.md", "documents", "documents", "documents", "foo", "foo", null, new MetadataCollection(), null),
             };
 
             var site = new Site(config, documents, Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
@@ -89,9 +89,9 @@ namespace RobMensching.TinySite.Test
 
             var documents = new[]
             {
-                new DocumentFile("1.html.md", "documents", "documents", "1", "1", String.Empty, null, meta1),
-                new DocumentFile("20.html.md", "documents", "documents", "20", "20", String.Empty, null, meta2),
-                new DocumentFile("3.html.md", "documents", "documents", "3", "3", String.Empty, null, meta3),
+                new DocumentFile("1.html.md", "documents", "documents", "1", "1", String.Empty, null, meta1, null),
+                new DocumentFile("20.html.md", "documents", "documents", "20", "20", String.Empty, null, meta2, null),
+                new DocumentFile("3.html.md", "documents", "documents", "3", "3", String.Empty, null, meta3, null),
             };
 
             var site = new Site(config, documents, Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());

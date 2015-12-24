@@ -35,26 +35,26 @@ namespace TinySite.Models
 
         private object GetDocument()
         {
-            return new DynamicDocumentFile(this._document, this._document);
+            return new DynamicDocumentFile(_document, _document, _site);
         }
 
         private object GetLayout()
         {
-            return new DynamicLayoutFile(this._document, this._layout);
+            return new DynamicLayoutFile(_document, _layout, _site);
         }
 
         private object GetSite()
         {
-            return new DynamicSite(this._document, this._site);
+            return new DynamicSite(_document, _site);
         }
 
         private object GetBooks()
         {
             var books = new List<DynamicBook>();
 
-            foreach (var book in this._site.Books)
+            foreach (var book in _site.Books)
             {
-                books.Add(new DynamicBook(this._document, book));
+                books.Add(new DynamicBook(_document, book, _site));
             }
 
             return books;
@@ -62,7 +62,7 @@ namespace TinySite.Models
 
         private object GetPartialsContent()
         {
-            return new PartialsContent(this._site.Partials, this._document);
+            return new PartialsContent(_site.Partials, _document);
         }
     }
 }

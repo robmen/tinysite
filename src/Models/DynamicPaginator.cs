@@ -5,16 +5,19 @@ namespace TinySite.Models
 {
     public class DynamicPaginator : DynamicBase
     {
-        public DynamicPaginator(DocumentFile activeDocument, Paginator Paginator)
+        public DynamicPaginator(DocumentFile activeDocument, Paginator Paginator, Site site)
             : base(null)
         {
             this.ActiveDocument = activeDocument;
             this.Paginator = Paginator;
+            this.Site = site;
         }
 
         private DocumentFile ActiveDocument { get; }
 
         private Paginator Paginator { get; }
+
+        public Site Site { get; }
 
         protected override IDictionary<string, object> GetData()
         {
@@ -32,7 +35,7 @@ namespace TinySite.Models
             foreach (var document in this.Paginator.Documents)
             {
                 this.ActiveDocument.AddContributingFile(document);
-                documents.Add(new DynamicDocumentFile(this.ActiveDocument, document));
+                documents.Add(new DynamicDocumentFile(this.ActiveDocument, document, this.Site));
             }
 
             return documents;

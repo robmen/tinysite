@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 namespace TinySite.Models
@@ -6,7 +7,7 @@ namespace TinySite.Models
     [DebuggerDisplay("LayoutFile: {Id}, Source: {SourcePath}")]
     public class LayoutFile : SourceFile
     {
-        public LayoutFile(string path, string rootPath, string sourceContent, MetadataCollection metadata)
+        public LayoutFile(string path, string rootPath, string sourceContent, MetadataCollection metadata, IDictionary<string, string> queries)
             : base(path, rootPath)
         {
             var relativePath = this.SourcePath.Substring(rootPath.Length);
@@ -24,7 +25,11 @@ namespace TinySite.Models
 
                 this.Metadata.Remove("layout");
             }
+
+            this.Queries = queries;
         }
+
+        internal IDictionary<string, string> Queries { get; }
 
         public string Id { get { return this.Get<string>(); } private set { this.Set<string>(value); } }
 
