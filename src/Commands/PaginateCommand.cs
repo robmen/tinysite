@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using TinySite.Extensions;
 using TinySite.Models;
+using TinySite.Models.Dynamic;
 using TinySite.Services;
 
 namespace TinySite.Commands

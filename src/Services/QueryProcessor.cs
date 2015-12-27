@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TinySite.Models;
+using TinySite.Models.Dynamic;
 using TinySite.Models.Query;
 
 namespace TinySite.Services

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using TinySite.Extensions;
 
-namespace TinySite.Models
+namespace TinySite.Models.Dynamic
 {
     public class DynamicBookPage : DynamicBase
     {

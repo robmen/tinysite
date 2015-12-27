@@ -2,6 +2,7 @@
 using System.Linq;
 using TinySite.Commands;
 using TinySite.Models;
+using TinySite.Models.Dynamic;
 using Xunit;
 
 namespace RobMensching.TinySite.Test

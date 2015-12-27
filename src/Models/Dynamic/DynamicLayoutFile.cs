@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using TinySite.Services;
 
-namespace TinySite.Models
+namespace TinySite.Models.Dynamic
 {
     public class DynamicLayoutFile : DynamicBase
     {

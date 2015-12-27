@@ -1,5 +1,4 @@
-﻿
-namespace TinySite.Models
+﻿namespace TinySite.Models.Dynamic
 {
     public class DynamicStaticFile : DynamicOutputFile
     {

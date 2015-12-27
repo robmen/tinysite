@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 
-namespace TinySite.Models
+namespace TinySite.Models.Dynamic
 {
     public abstract class DynamicBase : DynamicObject, IDictionary<string, object>
     {

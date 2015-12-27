@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TinySite.Models
+namespace TinySite.Models.Dynamic
 {
     public abstract class DynamicSourceFile : DynamicBase
     {
