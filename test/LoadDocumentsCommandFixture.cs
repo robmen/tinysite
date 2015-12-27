@@ -76,5 +76,33 @@ namespace RobMensching.TinySite.Test
             Assert.Equal("parent\\third-document-from-metadata.txt", documents[5].OutputRelativePath);
             Assert.Equal("parent", documents[5].ParentId);
         }
+
+        [Fact]
+        public void CanLoadComplexMetadata()
+        {
+            var path = Path.GetFullPath(@"data\test-documents\complex-metadata");
+            var outputPath = Path.GetFullPath("output");
+
+            var command = new LoadDocumentsCommand();
+            command.Author = new Author();
+            command.DocumentsPath = path;
+            command.OutputRootPath = outputPath;
+            command.RenderedExtensions = new[] { "md" };
+            command.RootUrl = "http://www.example.com/";
+            command.ApplicationUrl = "/app/sub";
+            command.ExecuteAsync().Wait();
+
+            var document = command.Documents.Single();
+
+            dynamic dynamicDoc = new DynamicDocumentFile(document, document, null);
+
+            Assert.Equal("Complex Metadata is Fun!", dynamicDoc.Subtitle);
+            Assert.Equal("/item1/", dynamicDoc.ComplexItems[0].Url);
+            Assert.Equal("Item 1", dynamicDoc.ComplexItems[0].Text);
+            Assert.Equal("bar", dynamicDoc.ComplexItems[0].Zzz.Foo);
+            Assert.Equal("/item2/subitem/", dynamicDoc.ComplexItems[1].Url);
+            Assert.Equal("Item 2 Subitem", dynamicDoc.ComplexItems[1].Text);
+            Assert.Equal("g-value", dynamicDoc.ComplexItems[1].Ttt.Ooo.Ggg);
+        }
     }
 }

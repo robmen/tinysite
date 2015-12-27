@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using Newtonsoft.Json.Linq;
 
 namespace TinySite.Extensions
 {
@@ -152,6 +154,28 @@ namespace TinySite.Extensions
             {
                 value = default(T);
                 return false;
+            }
+        }
+
+        public static object FromJson(string json)
+        {
+            return FromJToken(JToken.Parse(json));
+        }
+
+        public static object FromJToken(JToken token)
+        {
+            switch (token.Type)
+            {
+                case JTokenType.Object:
+                    return new CaseInsensitiveExpando(token.Children<JProperty>()
+                                .ToDictionary(prop => prop.Name,
+                                              prop => FromJToken(prop.Value)));
+
+                case JTokenType.Array:
+                    return token.Select(FromJToken).ToList();
+
+                default:
+                    return ((JValue)token).Value;
             }
         }
 

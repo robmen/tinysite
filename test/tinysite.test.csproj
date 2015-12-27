@@ -233,6 +233,9 @@
     <Content Include="data\examples_output\homepage\web.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="data\test-documents\complex-metadata\metadata.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="data\test-documents\explicit-output\hasexplicitoutput.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

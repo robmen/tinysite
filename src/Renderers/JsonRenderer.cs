@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using TinySite.Extensions;
 using TinySite.Models;
 using TinySite.Rendering;
 
@@ -23,20 +23,21 @@ namespace TinySite.Renderers
             {
                 try
                 {
-                    foreach (var token in JObject.Parse(template))
+                    foreach (var keyedToken in JObject.Parse(template))
                     {
-                        if (token.Key.Equals("Content", StringComparison.OrdinalIgnoreCase))
+                        var token = keyedToken.Value;
+
+                        if (keyedToken.Key.Equals("Content", StringComparison.OrdinalIgnoreCase))
                         {
-                            content = (string)token.Value;
+                            content = (string)token;
                         }
-                        else if (token.Value.Type == JTokenType.Array)
+                        else if (token.Type == JTokenType.Array || token.Type == JTokenType.Object)
                         {
-                            var array = (JArray)token.Value;
-                            document[token.Key] = array.Values().Select(t => (string)t).ToArray();
+                            document[keyedToken.Key] = CaseInsensitiveExpando.FromJToken(token);
                         }
                         else
                         {
-                            document[token.Key] = (string)token.Value;
+                            document[keyedToken.Key] = (string)token;
                         }
                     }
                 }

@@ -1,0 +1,7 @@
+subtitle: Complex Metadata is Fun!
+complexItems: [
+  { url: "/item1/", text: "Item 1", zzz: { foo: "bar" } },
+  { url: "/item2/subitem/",  text: "Item 2 Subitem", ttt: {ooo: {ggg: "g-value"} } },
+]
+
+This is the content.
