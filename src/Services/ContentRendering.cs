@@ -52,31 +52,31 @@ namespace TinySite.Services
 
         private string RenderContentForExtension(SourceFile source, string content, string extension, DocumentFile contextDocument, string documentContent, LayoutFile contextLayout)
         {
-            var backupContent = contextDocument.Content;
+            RenderingEngine engine;
 
-            try
+            if (this.Transaction.Engines.TryGetValue(extension, out engine))
             {
-                contextDocument.Content = documentContent;
+                var backupContent = contextDocument.Content;
 
-                dynamic data = new DynamicData(contextDocument, contextLayout, this.Transaction.Site);
-
-                RenderingEngine engine;
-
-                if (this.Transaction.Engines.TryGetValue(extension, out engine))
+                try
                 {
+                    contextDocument.Content = documentContent;
+
+                    dynamic data = new DynamicRenderDocument(contextDocument, contextLayout, this.Transaction.Site);
+
                     var result = engine.Render(source, content, data);
 
                     return result;
                 }
-                else
+                finally
                 {
-                    Console.WriteLine("Cannot find a rendering engine for extension: {0}", extension);
-                    return null;
+                    contextDocument.Content = backupContent;
                 }
             }
-            finally
+            else
             {
-                contextDocument.Content = backupContent;
+                Console.WriteLine("Cannot find a rendering engine for extension: {0}", extension);
+                return null;
             }
         }
 
