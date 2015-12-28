@@ -206,6 +206,9 @@
     <Content Include="data\examples_output\book\introduction\index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="data\examples_output\datasite\index.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="data\examples_output\homepage\about\index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -277,6 +280,18 @@
     <Content Include="data\ordered-documents\parent\Second Document\02. Another Sub-Second Document.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="data\examples\datasite\data\news\one.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Content Include="data\examples\datasite\documents\index.txt.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="data\examples\datasite\data\news\two.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="data\examples\datasite\site.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="data\layout-update-metadata\documents\a.txt.md" />
     <None Include="data\layout-update-metadata\layouts\add_data.hb" />
     <None Include="data\layout-update-metadata\layouts\master.hb" />

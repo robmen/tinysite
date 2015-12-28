@@ -1,0 +1,8 @@
+---
+title: DataSite Homepage
+news?: query data 
+---
+@foreach (var item in Model.Document.News)
+{
+<h1>@item.Title</h1>@Raw(item.Content)
+}

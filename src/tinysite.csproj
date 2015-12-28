@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncPump.cs" />
+    <Compile Include="Commands\LoadDataFilesCommand.cs" />
     <Compile Include="Commands\SetUnmodifiedCommand.cs" />
     <Compile Include="Commands\LoadSiteConfigCommand.cs" />
     <Compile Include="Commands\LoadLayoutsCommand.cs" />
@@ -85,15 +86,18 @@
     <Compile Include="Models\BookPage.cs" />
     <Compile Include="Models\CommandLine.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Models\DataFile.cs" />
     <Compile Include="Models\Dynamic\DynamicBookPage.cs" />
+    <Compile Include="Models\Dynamic\DynamicDataFile.cs" />
     <Compile Include="Models\Dynamic\DynamicPage.cs" />
     <Compile Include="Models\Dynamic\DynamicPagination.cs" />
     <Compile Include="Models\Dynamic\DynamicPaginator.cs" />
+    <Compile Include="Models\Dynamic\DynamicRenderData.cs" />
     <Compile Include="Models\Dynamic\DynamicSourceFile.cs" />
     <Compile Include="Models\Dynamic\DynamicOutputFile.cs" />
     <Compile Include="Models\Dynamic\DynamicLayoutFile.cs" />
     <Compile Include="Models\Dynamic\DynamicStaticFile.cs" />
-    <Compile Include="Models\Dynamic\DynamicData.cs" />
+    <Compile Include="Models\Dynamic\DynamicRenderDocument.cs" />
     <Compile Include="Models\Dynamic\DynamicBook.cs" />
     <Compile Include="Models\Dynamic\DynamicDocumentFile.cs" />
     <Compile Include="Models\Dynamic\DynamicBase.cs" />
@@ -106,7 +110,7 @@
     <Compile Include="Models\Pagination.cs" />
     <Compile Include="Models\Paginator.cs" />
     <Compile Include="Models\PartialsContent.cs" />
-    <Compile Include="Models\QueryResult.cs" />
+    <Compile Include="Models\Query\QueryResult.cs" />
     <Compile Include="Models\Query\OrderClause.cs" />
     <Compile Include="Models\Query\OrderOperator.cs" />
     <Compile Include="Models\Query\WhereClause.cs" />

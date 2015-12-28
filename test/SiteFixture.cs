@@ -47,7 +47,7 @@ namespace RobMensching.TinySite.Test
         {
             var command = new LoadSiteConfigCommand() { ConfigPath = "data\\site.config" };
             var config = command.ExecuteAsync().Result;
-            var site = new Site(config, Enumerable.Empty<DocumentFile>(), Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
+            var site = new Site(config, Enumerable.Empty<DataFile>(), Enumerable.Empty<DocumentFile>(), Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
 
             dynamic data = site; //site.GetAsDynamic();
 
@@ -59,7 +59,7 @@ namespace RobMensching.TinySite.Test
         {
             var command = new LoadSiteConfigCommand() { ConfigPath = "data\\site.config" };
             var config = command.ExecuteAsync().Result;
-            var site = new Site(config, Enumerable.Empty<DocumentFile>(), Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
+            var site = new Site(config, Enumerable.Empty<DataFile>(), Enumerable.Empty<DocumentFile>(), Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
 
             dynamic data = site; //site.GetAsDynamic();
 
@@ -72,7 +72,7 @@ namespace RobMensching.TinySite.Test
             var command = new LoadSiteConfigCommand() { ConfigPath = "data\\site.config" };
             var config = command.ExecuteAsync().Result;
 
-            var site = new Site(config, Enumerable.Empty<DocumentFile>(), Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
+            var site = new Site(config, Enumerable.Empty<DataFile>(), Enumerable.Empty<DocumentFile>(), Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
 
             dynamic data = new DynamicSite(null, site);
 
@@ -85,7 +85,7 @@ namespace RobMensching.TinySite.Test
             var command = new LoadSiteConfigCommand() { ConfigPath = "data\\site.config" };
             var config = command.ExecuteAsync().Result;
 
-            var site = new Site(config, Enumerable.Empty<DocumentFile>(), Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
+            var site = new Site(config, Enumerable.Empty<DataFile>(), Enumerable.Empty<DocumentFile>(), Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
 
             Assert.Equal("test", site.DefaultLayoutForExtension["html"]);
         }

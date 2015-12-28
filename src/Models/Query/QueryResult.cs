@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TinySite.Models.Query;
 
-namespace TinySite.Models
+namespace TinySite.Models.Query
 {
     public class QueryResult
     {

@@ -24,7 +24,7 @@ namespace RobMensching.TinySite.Test
             new DocumentFile("foo.html.md", "documents", "documents", "documents", "foo", "foo", null, new MetadataCollection(), null),
             };
 
-            var site = new Site(config, documents, Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
+            var site = new Site(config, Enumerable.Empty<DataFile>(), documents, Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
 
             var query = @"query documents every 10 where sourcerelativepath startswith ""documents\posts\"" descending date formaturl ""posts/page/{0}""";
 
@@ -58,7 +58,7 @@ namespace RobMensching.TinySite.Test
             new DocumentFile("foo.html.md", "documents", "documents", "documents", "foo", "foo", null, new MetadataCollection(), null),
             };
 
-            var site = new Site(config, documents, Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
+            var site = new Site(config, Enumerable.Empty<DataFile>(), documents, Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
 
             var query = @"query documents where outputpath startswith ""doc"" descending url";
 
@@ -94,7 +94,7 @@ namespace RobMensching.TinySite.Test
                 new DocumentFile("3.html.md", "documents", "documents", "3", "3", String.Empty, null, meta3, null),
             };
 
-            var site = new Site(config, documents, Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
+            var site = new Site(config, Enumerable.Empty<DataFile>(), documents, Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
 
             var query = @"query documents where number gt 1 ascending number";
 

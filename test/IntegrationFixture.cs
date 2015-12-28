@@ -37,6 +37,20 @@ namespace RobMensching.TinySite.Test
         }
 
         [Fact]
+        public void DataSiteRendersCorrectly()
+        {
+            var datasitePath = Path.GetFullPath(@"data\examples\datasite");
+            var outputPath = Path.GetTempPath() + @"tinysite_test\datasite_build";
+            var verifyPath = Path.GetFullPath(@"data\examples_output\datasite");
+
+            SafeDeleteFolder(outputPath);
+
+            RunTinySite(datasitePath, outputPath);
+
+            AssertFoldersSame(outputPath, verifyPath);
+        }
+
+        [Fact]
         public void HomepageRendersCorrectly()
         {
             var homepagePath = Path.GetFullPath(@"data\examples\homepage");

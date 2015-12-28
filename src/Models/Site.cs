@@ -8,12 +8,12 @@ namespace TinySite.Models
 {
     public class Site : CaseInsensitiveExpando
     {
-        public Site(SiteConfig config, IEnumerable<DocumentFile> documents, IEnumerable<StaticFile> files, IEnumerable<LayoutFile> layouts, Site parent = null)
-            : this(config, documents, files, new LayoutFileCollection(layouts), parent)
+        public Site(SiteConfig config, IEnumerable<DataFile> data, IEnumerable<DocumentFile> documents, IEnumerable<StaticFile> files, IEnumerable<LayoutFile> layouts, Site parent = null)
+            : this(config, data, documents, files, new LayoutFileCollection(layouts), parent)
         {
         }
 
-        public Site(SiteConfig config, IEnumerable<DocumentFile> documents, IEnumerable<StaticFile> files, LayoutFileCollection layouts, Site parent = null)
+        public Site(SiteConfig config, IEnumerable<DataFile> data, IEnumerable<DocumentFile> documents, IEnumerable<StaticFile> files, LayoutFileCollection layouts, Site parent = null)
         {
             this.DefaultLayoutForExtension = new Dictionary<string, string>(config.DefaultLayoutForExtension);
             this.IgnoreFiles = config.IgnoreFiles;
@@ -32,6 +32,8 @@ namespace TinySite.Models
             this.RootUrl = config.RootUrl.EnsureEndsWith("/");
 
             var allDocuments = documents.ToList();
+
+            this.Data = data.ToList();
 
             this.Partials = allDocuments.Where(d => d.Partial).ToList();
 
@@ -73,6 +75,8 @@ namespace TinySite.Models
         public string FullUrl { get { return this.Get<string>(); } }
 
         public IList<DocumentFile> Partials { get { return this.Get<IList<DocumentFile>>(); } set { this.Set<IList<DocumentFile>>(value); } }
+
+        public IList<DataFile> Data { get; set; }
 
         public IList<DocumentFile> Documents { get { return this.Get<IList<DocumentFile>>(); } set { this.Set<IList<DocumentFile>>(value); } }
 

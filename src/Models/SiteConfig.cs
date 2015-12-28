@@ -20,6 +20,8 @@ namespace TinySite.Models
 
         public string SitePath { get; set; }
 
+        public string DataPath { get; set; }
+
         public string DocumentsPath { get; set; }
 
         public string FilesPath { get; set; }

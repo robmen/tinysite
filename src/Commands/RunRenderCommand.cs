@@ -63,6 +63,13 @@ namespace TinySite.Commands
                     layouts = new LayoutFileCollection(loaded);
                 }
 
+                // Load data files.
+                IEnumerable<DataFile> data;
+                {
+                    var load = new LoadDataFilesCommand(config.DataPath);
+                    data = await load.ExecuteAsync();
+                }
+
                 // Load documents.
                 IEnumerable<DocumentFile> documents;
                 {
@@ -96,7 +103,7 @@ namespace TinySite.Commands
                     unmodified.Execute();
                 }
 
-                site = new Site(config, documents, files, layouts);
+                site = new Site(config, data, documents, files, layouts);
             }
 
             Statistics.Current.SiteFiles = site.Documents.Count + site.Files.Count + site.Layouts.Count;
@@ -142,6 +149,8 @@ namespace TinySite.Commands
                 {
                     var render = new RenderDocumentsCommand(engines, site);
                     render.Execute();
+
+                    Statistics.Current.RenderedData = render.RenderedData;
 
                     Statistics.Current.RenderedDocuments = render.RenderedDocuments;
                 }

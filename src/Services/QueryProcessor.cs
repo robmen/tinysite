@@ -185,6 +185,9 @@ namespace TinySite.Services
 
             switch (source)
             {
+                case "data":
+                    return site[source] as IEnumerable<dynamic>;
+
                 case "documents":
                     return site[source] as IEnumerable<dynamic>;
 

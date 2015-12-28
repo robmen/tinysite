@@ -14,26 +14,37 @@ namespace TinySite.Commands
             this.Site = site;
         }
 
+        public int RenderedData { get; private set; }
+
         public int RenderedDocuments { get; private set; }
 
         private IDictionary<string, RenderingEngine> Engines { get; }
 
         private Site Site { get; }
 
-        public int Execute()
+        public void Execute()
         {
             using (var tx = new RenderingTransaction(this.Engines, this.Site))
             {
                 var documentRendering = new ContentRendering(tx);
 
+                IEnumerable<DataFile> renderedData;
+                using (var capture = Statistics.Current.Start(StatisticTiming.RenderData))
+                {
+                    renderedData = this.Site.Data
+                        .AsParallel()
+                        .Select(documentRendering.RenderDataContent)
+                        .ToList();
+                }
+
                 IEnumerable<DocumentFile> renderedDocuments;
                 using (var capture = Statistics.Current.Start(StatisticTiming.RenderDocumentContent))
                 {
                     renderedDocuments = this.Site.Documents
-                                        .Where(d => !d.Draft && !d.Unmodified)
-                                        .AsParallel()
-                                        .Select(documentRendering.RenderDocumentContent)
-                                        .ToList();
+                        .Where(d => !d.Draft && !d.Unmodified)
+                        .AsParallel()
+                        .Select(documentRendering.RenderDocumentContent)
+                        .ToList();
                 }
 
                 using (var capture = Statistics.Current.Start(StatisticTiming.RenderDocumentLayouts))
@@ -64,7 +75,9 @@ namespace TinySite.Commands
                     }
                 }
 
-                return this.RenderedDocuments = renderedDocuments.Count();
+                this.RenderedData = renderedData.Count();
+
+                this.RenderedDocuments = renderedDocuments.Count();
             }
         }
     }

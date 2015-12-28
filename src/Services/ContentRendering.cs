@@ -15,6 +15,20 @@ namespace TinySite.Services
 
         private RenderingTransaction Transaction { get; }
 
+        public DataFile RenderDataContent(DataFile dataFile)
+        {
+            RenderingEngine engine;
+
+            if (this.Transaction.Engines.TryGetValue(dataFile.Extension, out engine))
+            {
+                dynamic data = new DynamicRenderData(dataFile, this.Transaction.Site);
+
+                dataFile.Content = engine.Render(dataFile, dataFile.SourceContent, data);
+            }
+
+            return dataFile;
+        }
+
         public DocumentFile RenderDocumentContent(DocumentFile document)
         {
             var content = document.SourceContent;

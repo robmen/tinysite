@@ -12,6 +12,7 @@ namespace TinySite.Models
         Pagination,
         RenderDocumentContent,
         RenderDocumentLayouts,
+        RenderData,
         RenderDocuments,
         WriteDocuments,
         CopyStaticFiles,
@@ -36,6 +37,8 @@ namespace TinySite.Models
         public int PagedFiles { get; set; }
 
         public int RenderedPartials { get; set; }
+
+        public int RenderedData { get; set; }
 
         public int RenderedDocuments { get; set; }
 
@@ -63,6 +66,7 @@ namespace TinySite.Models
             this.ReportTiming("   Loaded {1} site files in {0} s", StatisticTiming.LoadedSite, this.SiteFiles);
             this.ReportTiming("   Ordered {1} documents in {0} s", StatisticTiming.Pagination, this.OrderedFiles);
             this.ReportTiming("   Paginated the site into {1} documents {0} s", StatisticTiming.Pagination, this.PagedFiles);
+            this.ReportTiming("   Rendered {1} data files in {0} s", StatisticTiming.RenderData, this.RenderedData);
             this.ReportTiming("   Rendered {1} documents in {0} s", StatisticTiming.RenderDocuments, this.RenderedDocuments);
             this.ReportTiming("      Document content rendered in {0} s", StatisticTiming.RenderDocumentContent);
             this.ReportTiming("      Document layouts rendered in {0} s", StatisticTiming.RenderDocumentLayouts);

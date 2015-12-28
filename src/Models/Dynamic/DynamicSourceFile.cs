@@ -5,8 +5,8 @@ namespace TinySite.Models.Dynamic
 {
     public abstract class DynamicSourceFile : DynamicBase
     {
-        protected DynamicSourceFile(SourceFile file)
-            : base(file.SourceRelativePath)
+        protected DynamicSourceFile(SourceFile file, MetadataCollection persistedMetadata = null)
+            : base(file.SourceRelativePath, persistedMetadata)
         {
             this.File = file;
         }

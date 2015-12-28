@@ -32,6 +32,7 @@ namespace TinySite.Models.Dynamic
                 { nameof(this.Site.RootUrl), this.Site.RootUrl },
                 { nameof(this.Site.FullUrl), this.Site.FullUrl },
                 { nameof(this.Site.Books), new Lazy<object>(GetBooks) },
+                { nameof(this.Site.Data), new Lazy<object>(GetDataFiles) },
                 { nameof(this.Site.Documents), new Lazy<object>(GetDocuments) },
                 { nameof(this.Site.Files), new Lazy<object>(GetFiles) },
                 { nameof(this.Site.Layouts), new Lazy<object>(GetLayouts) },
@@ -58,6 +59,19 @@ namespace TinySite.Models.Dynamic
             }
 
             return books;
+        }
+
+        private object GetDataFiles()
+        {
+            var dataFiles = new List<DynamicDataFile>(this.Site.Data.Count);
+
+            foreach (var data in this.Site.Data)
+            {
+                this.ActiveDocument?.AddContributingFile(data);
+                dataFiles.Add(new DynamicDataFile(this.ActiveDocument, data, this.Site));
+            }
+
+            return dataFiles;
         }
 
         private object GetDocuments()

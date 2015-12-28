@@ -8,14 +8,18 @@ namespace TinySite.Models.Dynamic
 {
     public abstract class DynamicBase : DynamicObject, IDictionary<string, object>
     {
-        protected DynamicBase(string sourceRelativePath)
+        protected DynamicBase(string sourceRelativePath, MetadataCollection persistedMetadata = null)
         {
             this.Data = new Lazy<IDictionary<string, object>>(GetData);
 
             this.SourceRelativePath = sourceRelativePath;
+
+            this.PersistedMetadata = persistedMetadata;
         }
 
         private Lazy<IDictionary<string, object>> Data { get; }
+
+        private MetadataCollection PersistedMetadata { get; }
 
         private string SourceRelativePath { get; }
 
@@ -26,6 +30,9 @@ namespace TinySite.Models.Dynamic
             try
             {
                 this.Data.Value.Add(key, value);
+
+                this.PersistedMetadata?.Add(key, value);
+
                 return true;
             }
             catch (ArgumentException)
