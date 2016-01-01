@@ -11,8 +11,7 @@ namespace RobMensching.TinySite.Test
         {
             var path = Path.GetFullPath(@"data\layouts\");
 
-            var command = new LoadLayoutsCommand();
-            command.LayoutsPath = path;
+            var command = new LoadLayoutsCommand(path, null, null);
             var layouts = command.ExecuteAsync().Result;
 
             Assert.NotEmpty(command.Layouts);
@@ -24,8 +23,7 @@ namespace RobMensching.TinySite.Test
         {
             var path = Path.GetFullPath(@"data\doesnotexist\");
 
-            var command = new LoadLayoutsCommand();
-            command.LayoutsPath = path;
+            var command = new LoadLayoutsCommand(path, null, null);
             var layouts = command.ExecuteAsync().Result;
 
             Assert.Empty(command.Layouts);

@@ -14,6 +14,8 @@ namespace TinySite.Commands
         private static readonly Regex DateFromFileName = new Regex(@"^\s*(?<year>\d{4})-(?<month>\d{1,2})-(?<day>\d{1,2})([Tt@](?<hour>\d{1,2})\.(?<minute>\d{1,2})(\.(?<second>\d{1,2}))?)?[-\s]\s*", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
         private static readonly Regex OrderFromFileName = new Regex(@"^\s*(?<order>\d+)\.[-\s]\s*", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
+        public IEnumerable<AdditionalMetadataConfig> AdditionalMetadataForFiles { private get; set; }
+
         public IEnumerable<Regex> IgnoreFiles { private get; set; }
 
         public string DocumentsPath { private get; set; }
@@ -63,6 +65,20 @@ namespace TinySite.Commands
             //
             var parser = new ParseDocumentCommand(file);
             await parser.ExecuteAsync();
+
+            if (this.AdditionalMetadataForFiles != null)
+            {
+                var rootPath = Path.GetDirectoryName(this.DocumentsPath.TrimEnd('\\'));
+                var relativePath = file.Substring(rootPath.Length + 1);
+
+                foreach (var additionalMetadataConfig in this.AdditionalMetadataForFiles)
+                {
+                    if (additionalMetadataConfig.Match.IsMatch(relativePath))
+                    {
+                        parser.Metadata.AssignFrom(file, additionalMetadataConfig.Metadata);
+                    }
+                }
+            }
 
             var metadataDate = parser.Date;
 

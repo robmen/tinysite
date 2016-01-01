@@ -69,6 +69,10 @@ namespace TinySite.Commands
                         subsites = value.Values<string>().ToArray();
                         break;
 
+                    case "additionalmetadata":
+                        config.AdditionalMetadataForFiles = this.ParseAdditionalMetadata(value).ToList();
+                        break;
+
                     case "defaultlayoutforextension":
                         this.AssignDefaultLayouts(config, value);
                         break;
@@ -113,6 +117,26 @@ namespace TinySite.Commands
             return this.SiteConfig = config;
         }
 
+        private IEnumerable<AdditionalMetadataConfig> ParseAdditionalMetadata(JToken value)
+        {
+            var config = value as JObject;
+
+            if (config == null)
+            {
+            }
+            else
+            {
+                foreach (var kvp in config)
+                {
+                    var regex = ConvertFileGlobbingToRegex(kvp.Key);
+                    var match = new Regex(regex, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    var metadata = CaseInsensitiveExpando.FromJToken(kvp.Value) as CaseInsensitiveExpando;
+
+                    yield return new AdditionalMetadataConfig(match, metadata);
+                }
+            }
+        }
+
         private void AssignDefaultLayouts(SiteConfig config, JToken token)
         {
             var layoutDefaults = token as JObject;
@@ -134,10 +158,47 @@ namespace TinySite.Commands
         {
             foreach (var pattern in ignoreFilePatterns)
             {
-                var regex = "^" + pattern.Replace(".", @"\.").Replace("?", ".").Replace("*", ".*?") + "$";
+                var regex = ConvertFileGlobbingToRegex(pattern);
 
                 yield return new Regex(regex, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase | RegexOptions.Singleline);
             }
+        }
+
+        private static string ConvertFileGlobbingToRegex(string pattern)
+        {
+            const string findFolder = @"[^?:|""<>]*";
+            const string findFolderAccidentalMatch = @"[^?:|""<>]";
+            const string findFile = @"[^\\/?:|""<>]*?";
+
+            var clean = pattern.Replace(@"\", @"\\");
+
+            clean = clean.Replace("/", @"\\");
+
+            clean = clean.Replace(".", @"\.");
+
+            clean = clean.Replace("?", ".");
+
+            var regex = clean.Replace(@"**\\", findFolder + @"\\?").Replace("**", findFolder);
+
+            for (var index = regex.IndexOf('*'); index > -1; index = regex.IndexOf('*', index + 1))
+            {
+                var before = index == 0 ? String.Empty : regex.Substring(0, index);
+                var after = regex.Substring(index + 1);
+
+                if (!before.EndsWith(findFolderAccidentalMatch))
+                {
+                    regex = before + findFile + after;
+
+                    index += findFile.Length + 1;
+                }
+
+                if (index + 1 >= regex.Length)
+                {
+                    break;
+                }
+            }
+
+            return "^" + regex + "$";
         }
 
         private class JsonTimeZoneConverter : JsonConverter

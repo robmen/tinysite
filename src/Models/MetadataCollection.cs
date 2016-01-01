@@ -22,6 +22,21 @@ namespace TinySite.Models
             this.Dictionary.Add(key, value);
         }
 
+        internal void AssignFrom(string path, IDictionary<string, object> source)
+        {
+            foreach (var kvp in source)
+            {
+                try
+                {
+                    this.Add(kvp.Key, kvp.Value);
+                }
+                catch (ArgumentException)
+                {
+                    Console.WriteLine("Additional metadata configuration metadata cannot overwrite file: {0} metadata: \"{1}\" with value: \"{2}\"", path, kvp.Key, kvp.Value);
+                }
+            }
+        }
+
         public void AssignTo(string path, IDictionary<string, object> target)
         {
             foreach (var kvp in this.Dictionary)

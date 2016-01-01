@@ -105,5 +105,35 @@ namespace RobMensching.TinySite.Test
             Assert.Equal("Item 2 Subitem", dynamicDoc.ComplexItems[1].Text);
             Assert.Equal("g-value", dynamicDoc.ComplexItems[1].Ttt.Ooo.Ggg);
         }
+
+        [Fact]
+        public void CanLoadWithAdditionalMetadata()
+        {
+            var dataFolder = Path.GetFullPath(@"data\additional-metadata\");
+            var outputPath = Path.GetFullPath("output");
+
+            var loadConfig = new LoadSiteConfigCommand() { ConfigPath = dataFolder + "site.json" };
+            var config = loadConfig.ExecuteAsync().Result;
+
+            var loadData = new LoadDataFilesCommand(config.DataPath, config.AdditionalMetadataForFiles, config.IgnoreFiles);
+            loadData.ExecuteAsync().Wait();
+
+            var loadDocuments = new LoadDocumentsCommand();
+            loadDocuments.Author = new Author();
+            loadDocuments.DocumentsPath = config.DocumentsPath;
+            loadDocuments.OutputRootPath = config.OutputPath;
+            loadDocuments.AdditionalMetadataForFiles = config.AdditionalMetadataForFiles;
+            loadDocuments.IgnoreFiles = config.IgnoreFiles;
+            loadDocuments.RenderedExtensions = new[] { "md" };
+            loadDocuments.RootUrl = config.RootUrl;
+            loadDocuments.ApplicationUrl = config.Url;
+            loadDocuments.ExecuteAsync().Wait();
+
+            var data = loadData.DataFiles.Single();
+            var document = loadDocuments.Documents.Single();
+
+            Assert.Equal("bar", data.Metadata.Get<string>("foo"));
+            Assert.Equal("quux", document.Metadata.Get<string>("baz"));
+        }
     }
 }

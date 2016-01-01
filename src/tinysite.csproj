@@ -81,6 +81,7 @@
     <Compile Include="Commands\WriteDocumentsCommand.cs" />
     <Compile Include="Extensions\CaseInsensitiveExpando.cs" />
     <Compile Include="Extensions\QueueExtensions.cs" />
+    <Compile Include="Models\AdditionalMetadataConfig.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Book.cs" />
     <Compile Include="Models\BookPage.cs" />

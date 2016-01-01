@@ -1,0 +1,9 @@
+﻿{
+  "url": "/additionalmetadata/",
+  "rootUrl": "http://www.example.com",
+
+  "additionalmetadata": {
+    "documents/**/*.html.md": { "baz": "quux" },
+    "data/**/*.json": { "foo": "bar" }
+  }
+}

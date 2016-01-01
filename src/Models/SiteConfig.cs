@@ -32,6 +32,8 @@ namespace TinySite.Models
 
         public string OutputPath { get; set; }
 
+        public IEnumerable<AdditionalMetadataConfig> AdditionalMetadataForFiles { get; set; }
+
         public IEnumerable<Regex> IgnoreFiles { get; set; }
 
         public SiteConfig[] SubsiteConfigs { get; set; }

@@ -56,8 +56,7 @@ namespace TinySite.Commands
                 // Load layouts.
                 LayoutFileCollection layouts;
                 {
-                    var load = new LoadLayoutsCommand();
-                    load.LayoutsPath = config.LayoutsPath;
+                    var load = new LoadLayoutsCommand(config.LayoutsPath, config.AdditionalMetadataForFiles, config.IgnoreFiles);
                     var loaded = await load.ExecuteAsync();
 
                     layouts = new LayoutFileCollection(loaded);
@@ -66,7 +65,7 @@ namespace TinySite.Commands
                 // Load data files.
                 IEnumerable<DataFile> data;
                 {
-                    var load = new LoadDataFilesCommand(config.DataPath);
+                    var load = new LoadDataFilesCommand(config.DataPath, config.AdditionalMetadataForFiles, config.IgnoreFiles);
                     data = await load.ExecuteAsync();
                 }
 
