@@ -200,7 +200,8 @@ namespace TinySite.Commands
                 return new DateTime(year, month, day, hour, minute, second);
             }
 
-            return null;
+            DateTime dateTime;
+            return DateTime.TryParse(value, out dateTime) ? (DateTime?)dateTime : null;
         }
 
         private bool TryParseComplexValue(string value, string content, int index, ref int endOfLine, out dynamic complexValue)
@@ -254,6 +255,18 @@ namespace TinySite.Commands
             if (key.EndsWith("?"))
             {
                 this.Queries.Add(key.TrimEnd('?'), value);
+            }
+            else if (key.EndsWith("date", StringComparison.OrdinalIgnoreCase))
+            {
+                var date = ParseDateTimeSmarter(value);
+                if (date.HasValue)
+                {
+                    this.Metadata.Add(key,  date);
+                }
+                else
+                {
+                    this.Metadata.Add(key,  value);
+                }
             }
             else
             {
