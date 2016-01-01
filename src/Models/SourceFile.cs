@@ -21,13 +21,17 @@ namespace TinySite.Models
 
             this.Modified = (info.LastWriteTime < info.CreationTime) ? info.CreationTime : info.LastWriteTime;
 
-            this.Name = Path.GetFileName(path);
+            this.FileName = Path.GetFileName(path);
+
+            this.Name = Path.GetFileNameWithoutExtension(path);
 
             this.Extension = Path.GetExtension(path).TrimStart('.').ToLowerInvariant();
 
             this.SourcePath = Path.GetFullPath(path);
 
             this.SourceRelativePath = this.SourcePath.Substring(actualRootPath.Length + 1);
+
+            this.SourceRelativeFolder = Path.GetDirectoryName(this.SourceRelativePath);
         }
 
         protected SourceFile(SourceFile original) :
@@ -45,6 +49,8 @@ namespace TinySite.Models
 
         public string StandardUtcDate { get { return this.Get<string>(); } private set { this.Set<string>(value); } }
 
+        public string FileName { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+
         public string Name { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
         public DateTime Modified { get { return this.Get<DateTime>(); } set { this.Set<DateTime>(value); } }
@@ -52,6 +58,8 @@ namespace TinySite.Models
         public string Extension { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
         public string SourcePath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+
+        public string SourceRelativeFolder { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
         public string SourceRelativePath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 

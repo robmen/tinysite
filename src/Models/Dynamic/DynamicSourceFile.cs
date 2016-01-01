@@ -22,9 +22,11 @@ namespace TinySite.Models.Dynamic
                 { nameof(this.File.FriendlyDate), this.File.FriendlyDate },
                 { nameof(this.File.StandardUtcDate), this.File.StandardUtcDate },
                 { nameof(this.File.Modified), this.File.Modified},
+                { nameof(this.File.FileName), this.File.FileName},
                 { nameof(this.File.Name), this.File.Name},
                 { nameof(this.File.Extension), this.File.Extension },
                 { nameof(this.File.SourcePath), this.File.SourcePath },
+                { nameof(this.File.SourceRelativeFolder), this.File.SourceRelativeFolder },
                 { nameof(this.File.SourceRelativePath), this.File.SourceRelativePath },
             };
         }
