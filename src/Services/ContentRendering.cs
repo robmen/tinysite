@@ -61,6 +61,8 @@ namespace TinySite.Services
 
             document.AddContributingFile(layout);
 
+            this.AssignLayoutMetadataToDocument(document, layout);
+
             return content;
         }
 
@@ -118,7 +120,7 @@ namespace TinySite.Services
                     !metadataKeyValue.Key.Equals("Name", StringComparison.OrdinalIgnoreCase) &&
                     !metadataKeyValue.Key.Equals("SourcePath", StringComparison.OrdinalIgnoreCase) &&
                     !metadataKeyValue.Key.Equals("SourceContent", StringComparison.OrdinalIgnoreCase) &&
-                    !document.ContainsKey(metadataKeyValue.Key))
+                    !document.Metadata.Contains(metadataKeyValue.Key))
                 {
                     document.Metadata.Add(metadataKeyValue.Key, metadataKeyValue.Value);
                 }
