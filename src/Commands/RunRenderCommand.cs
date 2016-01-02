@@ -81,6 +81,7 @@ namespace TinySite.Commands
                     load.DocumentsPath = config.DocumentsPath;
                     load.RootUrl = config.RootUrl;
                     load.ApplicationUrl = config.Url;
+                    load.AdditionalMetadataForFiles = config.AdditionalMetadataForFiles;
                     load.IgnoreFiles = config.IgnoreFiles;
                     documents = await load.ExecuteAsync();
                 }
