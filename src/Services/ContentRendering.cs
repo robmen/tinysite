@@ -109,7 +109,7 @@ namespace TinySite.Services
 
         private void AssignLayoutMetadataToDocument(DocumentFile document, LayoutFile layout)
         {
-            foreach (var metadataKeyValue in layout)
+            foreach (var metadataKeyValue in layout.Metadata)
             {
                 if (!metadataKeyValue.Key.Equals("Id", StringComparison.OrdinalIgnoreCase) &&
                     !metadataKeyValue.Key.Equals("Extension", StringComparison.OrdinalIgnoreCase) &&
@@ -120,7 +120,7 @@ namespace TinySite.Services
                     !metadataKeyValue.Key.Equals("SourceContent", StringComparison.OrdinalIgnoreCase) &&
                     !document.ContainsKey(metadataKeyValue.Key))
                 {
-                    document.Add(metadataKeyValue);
+                    document.Metadata.Add(metadataKeyValue.Key, metadataKeyValue.Value);
                 }
             }
         }
