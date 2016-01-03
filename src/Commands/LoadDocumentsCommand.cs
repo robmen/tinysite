@@ -54,12 +54,12 @@ namespace TinySite.Commands
                         continue;
                     }
 
-                    yield return this.LoadDocumentAsync(path, LoadDocumentFlags.DateFromFileName | LoadDocumentFlags.InsertDateIntoPath | LoadDocumentFlags.OrderFromFileName | LoadDocumentFlags.SanitizePath | LoadDocumentFlags.CleanUrls, this.RenderedExtensions, this.Layouts);
+                    yield return this.LoadDocumentAsync(path, this.RenderedExtensions, this.Layouts);
                 }
             }
         }
 
-        private async Task<DocumentFile> LoadDocumentAsync(string file, LoadDocumentFlags flags, IEnumerable<string> knownExtensions, LayoutFileCollection availableLayouts)
+        private async Task<DocumentFile> LoadDocumentAsync(string file, IEnumerable<string> knownExtensions, LayoutFileCollection availableLayouts)
         {
             // Parse the document and update our document metadata.
             //
@@ -88,8 +88,7 @@ namespace TinySite.Commands
 
             var relativeDocumentPath = Path.GetFullPath(file).Substring(this.DocumentsPath.Length);
 
-            var outputRelativePath = parser.Metadata.Get("output", relativeDocumentPath);
-            parser.Metadata.Remove("output");
+            var outputRelativePath = parser.Metadata.GetAndRemove("output", relativeDocumentPath);
 
             // The rest of this function is about calculating the correct
             // name for the file.
@@ -128,7 +127,9 @@ namespace TinySite.Commands
 
             var layouts = GetLayouts(layoutName, targetExtension, file);
 
-            if (LoadDocumentFlags.DateFromFileName == (flags & LoadDocumentFlags.DateFromFileName))
+            var disableDateFromFileName = parser.Metadata.GetAndRemove("DisableDateFromFileName", false);
+
+            if (!disableDateFromFileName)
             {
                 var match = DateFromFileName.Match(fileName);
 
@@ -152,7 +153,9 @@ namespace TinySite.Commands
                 }
             }
 
-            if (LoadDocumentFlags.OrderFromFileName == (flags & LoadDocumentFlags.OrderFromFileName))
+            var disableOrderFromFileName = parser.Metadata.GetAndRemove("DisableOrderFromFileName", false);
+
+            if (!disableOrderFromFileName)
             {
                 var match = OrderFromFileName.Match(fileName);
 
@@ -166,7 +169,9 @@ namespace TinySite.Commands
 
             var parentId = String.IsNullOrEmpty(outputRelativeFolder) ? null : SanitizePath(outputRelativeFolder);
 
-            if (LoadDocumentFlags.InsertDateIntoPath == (flags & LoadDocumentFlags.InsertDateIntoPath) && metadataDate.HasValue)
+            var disableInsertDateIntoPath = parser.Metadata.GetAndRemove("DisableInsertDateIntoPath", false);
+
+            if (!disableInsertDateIntoPath && metadataDate.HasValue)
             {
                 outputRelativeFolder = Path.Combine(outputRelativeFolder, metadataDate.Value.Year.ToString(), metadataDate.Value.Month.ToString(), metadataDate.Value.Day.ToString());
             }
@@ -185,12 +190,16 @@ namespace TinySite.Commands
                 fileName = sanitized;
             }
 
-            if (LoadDocumentFlags.SanitizePath == (flags & LoadDocumentFlags.SanitizePath))
+            var disableSanitizePath = parser.Metadata.GetAndRemove("DisableSanitizePath", false);
+
+            if (!disableSanitizePath)
             {
                 outputRelativeFolder = SanitizePath(outputRelativeFolder);
             }
 
-            if (LoadDocumentFlags.CleanUrls == (flags & LoadDocumentFlags.CleanUrls) && !"index.html".Equals(fileName, StringComparison.OrdinalIgnoreCase) && ".html".Equals(Path.GetExtension(fileName), StringComparison.OrdinalIgnoreCase))
+            var disableCleanUrls = parser.Metadata.GetAndRemove("DisableCleanUrls", false);
+
+            if (!disableCleanUrls && !"index.html".Equals(fileName, StringComparison.OrdinalIgnoreCase) && ".html".Equals(Path.GetExtension(fileName), StringComparison.OrdinalIgnoreCase))
             {
                 outputRelativeFolder = Path.Combine(outputRelativeFolder, Path.GetFileNameWithoutExtension(fileName)) + "\\";
 
@@ -198,8 +207,6 @@ namespace TinySite.Commands
             }
 
             var id = String.IsNullOrEmpty(fileName) ? outputRelativeFolder : Path.Combine(outputRelativeFolder, Path.GetFileNameWithoutExtension(fileName));
-
-            //var parentId = String.IsNullOrEmpty(id) ? null : Path.GetDirectoryName(id);
 
             var output = Path.Combine(outputRelativeFolder, fileName ?? "index.html");
 
@@ -216,11 +223,9 @@ namespace TinySite.Commands
                 documentFile.SetTimes(metadataDate.Value);
             }
 
-            documentFile.Id = parser.Metadata.Get<string>("id", id.Trim('\\'));
-            parser.Metadata.Remove("id");
+            documentFile.Id = parser.Metadata.GetAndRemove("id", id.Trim('\\'));
 
-            documentFile.ParentId = parser.Metadata.Get<string>("parent", parentId ?? String.Empty);
-            parser.Metadata.Remove("parent");
+            documentFile.ParentId = parser.Metadata.GetAndRemove("parent", parentId ?? String.Empty);
 
             documentFile.Draft = (parser.Draft || documentFile.Date > DateTime.Now);
 
@@ -228,11 +233,9 @@ namespace TinySite.Commands
 
             documentFile.AssignLayouts(layouts);
 
-            documentFile.Order = parser.Metadata.Get("order", order);
-            parser.Metadata.Remove("order");
+            documentFile.Order = parser.Metadata.GetAndRemove("order", order);
 
-            documentFile.PaginateQuery = parser.Metadata.Get<string>("paginate");
-            parser.Metadata.Remove("paginate");
+            documentFile.PaginateQuery = parser.Metadata.GetAndRemove<string>("paginate");
 
             documentFile.SourceContent = parser.Content;
 

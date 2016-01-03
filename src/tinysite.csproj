@@ -127,7 +127,6 @@
     <Compile Include="Models\DocumentFile.cs" />
     <Compile Include="Models\LayoutFileCollection.cs" />
     <Compile Include="Models\LayoutFile.cs" />
-    <Compile Include="Models\LoadDocumentFlags.cs" />
     <Compile Include="Models\OutputFile.cs" />
     <Compile Include="Models\Site.cs" />
     <Compile Include="Program.cs" />

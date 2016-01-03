@@ -63,6 +63,19 @@ namespace TinySite.Models
             return this.Dictionary.TryGetValue(key, out result) ? (T)Convert.ChangeType(result, typeof(T)) : defaultValue;
         }
 
+        public T GetAndRemove<T>(string key, T defaultValue = default(T))
+        {
+            object result;
+
+            if (!this.Dictionary.TryGetValue(key, out result))
+            {
+                return defaultValue;
+            }
+
+            this.Remove(key);
+            return (T)Convert.ChangeType(result, typeof(T));
+        }
+
         public bool TryGet<T>(string key, out T value)
         {
             object valueObject;
