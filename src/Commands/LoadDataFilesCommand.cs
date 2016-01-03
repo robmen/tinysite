@@ -80,7 +80,14 @@ namespace TinySite.Commands
                 }
             }
 
-            return new DataFile(path, this.DataPath, parser.Content, parser.Metadata, parser.Queries);
+            var dataFile = new DataFile(path, this.DataPath, parser.Content, parser.Metadata, parser.Queries);
+
+            if (parser.Date.HasValue)
+            {
+                dataFile.SetTimes(parser.Date.Value);
+            }
+
+            return dataFile;
         }
     }
 }
