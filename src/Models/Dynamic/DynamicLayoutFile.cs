@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TinySite.Services;
 
 namespace TinySite.Models.Dynamic
@@ -46,7 +47,13 @@ namespace TinySite.Models.Dynamic
         {
             var query = QueryProcessor.Parse(this.Site, queryString);
 
-            return query.Results;
+            var results = query.Results.ToList();
+            foreach (var contributor in results.OfType<DynamicSourceFile>())
+            {
+                this.ActiveDocument.AddContributingFile(contributor.GetSourceFile());
+            }
+
+            return results;
         }
     }
 }

@@ -30,5 +30,10 @@ namespace TinySite.Models.Dynamic
                 { nameof(_sourceFile.SourceRelativePath), _sourceFile.SourceRelativePath }
             };
         }
+
+        internal SourceFile GetSourceFile()
+        {
+            return _sourceFile;
+        }
     }
 }
