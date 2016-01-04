@@ -5,29 +5,29 @@ namespace TinySite.Models.Dynamic
 {
     public abstract class DynamicSourceFile : DynamicBase
     {
+        private SourceFile _sourceFile;
+
         protected DynamicSourceFile(SourceFile file, MetadataCollection persistedMetadata = null)
             : base(file.SourceRelativePath, persistedMetadata)
         {
-            this.File = file;
+            _sourceFile = file;
         }
-
-        private SourceFile File { get; }
 
         protected override IDictionary<string, object> GetData()
         {
             return new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
             {
-                { nameof(this.File.Date), this.File.Date },
-                { nameof(this.File.DateUtc), this.File.DateUtc },
-                { nameof(this.File.FriendlyDate), this.File.FriendlyDate },
-                { nameof(this.File.StandardUtcDate), this.File.StandardUtcDate },
-                { nameof(this.File.Modified), this.File.Modified},
-                { nameof(this.File.FileName), this.File.FileName},
-                { nameof(this.File.Name), this.File.Name},
-                { nameof(this.File.Extension), this.File.Extension },
-                { nameof(this.File.SourcePath), this.File.SourcePath },
-                { nameof(this.File.SourceRelativeFolder), this.File.SourceRelativeFolder },
-                { nameof(this.File.SourceRelativePath), this.File.SourceRelativePath },
+                { nameof(_sourceFile.Date), _sourceFile.Date },
+                { nameof(_sourceFile.DateUtc), _sourceFile.DateUtc },
+                { nameof(_sourceFile.FriendlyDate), _sourceFile.FriendlyDate },
+                { nameof(_sourceFile.StandardUtcDate), _sourceFile.StandardUtcDate },
+                { nameof(_sourceFile.Modified), _sourceFile.Modified},
+                { nameof(_sourceFile.FileName), _sourceFile.FileName},
+                { nameof(_sourceFile.Name), _sourceFile.Name},
+                { nameof(_sourceFile.Extension), _sourceFile.Extension },
+                { nameof(_sourceFile.SourcePath), _sourceFile.SourcePath },
+                { nameof(_sourceFile.SourceRelativeFolder), _sourceFile.SourceRelativeFolder },
+                { nameof(_sourceFile.SourceRelativePath), _sourceFile.SourceRelativePath }
             };
         }
     }

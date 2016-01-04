@@ -1,29 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace TinySite.Models.Dynamic
 {
     public abstract class DynamicOutputFile : DynamicSourceFile
     {
+        private OutputFile _outputFile;
+
         protected DynamicOutputFile(OutputFile file)
             : base(file)
         {
-            this.File = file;
+            _outputFile = file;
         }
-
-        private OutputFile File { get; }
 
         protected override IDictionary<string, object> GetData()
         {
             var data = base.GetData();
 
-            data.Add(nameof(this.File.OutputPath), this.File.OutputPath);
-            data.Add(nameof(this.File.OutputRootPath), this.File.OutputRootPath);
-            data.Add(nameof(this.File.OutputRelativePath), this.File.OutputRelativePath);
-            data.Add(nameof(this.File.Url), this.File.Url);
-            data.Add(nameof(this.File.RootUrl), this.File.RootUrl);
-            data.Add(nameof(this.File.RelativeUrl), this.File.RelativeUrl);
-            data.Add(nameof(this.File.TargetExtension), this.File.TargetExtension);
+            data.Add(nameof(_outputFile.OutputPath), _outputFile.OutputPath);
+            data.Add(nameof(_outputFile.OutputRootPath), _outputFile.OutputRootPath);
+            data.Add(nameof(_outputFile.OutputRelativePath), _outputFile.OutputRelativePath);
+            data.Add(nameof(_outputFile.Url), _outputFile.Url);
+            data.Add(nameof(_outputFile.RootUrl), _outputFile.RootUrl);
+            data.Add(nameof(_outputFile.RelativeUrl), _outputFile.RelativeUrl);
+            data.Add(nameof(_outputFile.TargetExtension), _outputFile.TargetExtension);
 
             return data;
         }
