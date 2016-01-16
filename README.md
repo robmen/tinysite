@@ -20,18 +20,15 @@ These folders are configurable in the site.json as such:
       "output" : "build/",
     }
 
+### Query language
 
-### Future Considerations
+A metadata's value may be a query using the following syntax:
 
-Add a query language that might look something like:
+    metaname?: query documents where relativepath startswith "documents\posts\" descending date
 
-    paginate: ?query documents every 10 where relativepath startswith "documents\posts\" descending date formaturl "posts/page/{0}"
+The `pagination` metadata is a special query that does not need the `?` token to indicate it is a query:
 
-    paginate: query documents every 10 where relativepath startswith "documents\posts\" descending date pagedurl "posts/page/{0}"
-
-    paginate: query documents every 10 where relativepath startswith "documents\posts\" descending date formaturl "posts/page/{0}"
-
-    paginate: [documents] [every 4] [where relativepath startswith "documents\posts\"] [descending date] [pageurl "posts/page/{0}"]
+    paginate: [documents] [every 4] [where relativepath startswith "documents\posts\"] [descending date] [formaturl "posts/page/{0}"]
                            take                         endswith                        ascending
                                                         equals
                                                         greaterthan
