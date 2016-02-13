@@ -23,11 +23,11 @@ namespace TinySite.Models
 
         internal IDictionary<string, string> Queries { get; }
 
-        public string Id { get { return this.Get<string>(); } private set { this.Set<string>(value); } }
+        public string Id { get; }
 
         public string Content { get; internal set; }
 
-        public string SourceContent { get { return this.Get<string>(); } private set { this.Set<string>(value); } }
+        public string SourceContent { get; }
 
         public MetadataCollection Metadata { get; }
     }

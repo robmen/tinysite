@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using TinySite.Extensions;
 
 namespace TinySite.Models
 {
-    public class Paginator : CaseInsensitiveExpando
+    public class Paginator
     {
         public Paginator(IEnumerable<DocumentFile> documents, Pagination pagination)
         {
@@ -11,8 +10,8 @@ namespace TinySite.Models
             this.Pagination = pagination;
         }
 
-        public IEnumerable<DocumentFile> Documents { get { return this.Get<IEnumerable<DocumentFile>>(); } set { this.Set<IEnumerable<DocumentFile>>(value); } }
+        public IEnumerable<DocumentFile> Documents { get; }
 
-        public Pagination Pagination { get { return this.Get<Pagination>(); } set { this.Set<Pagination>(value); } }
+        public Pagination Pagination { get; }
     }
 }

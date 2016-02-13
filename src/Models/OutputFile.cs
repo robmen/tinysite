@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using TinySite.Extensions;
 
 namespace TinySite.Models
 {
     public abstract class OutputFile : SourceFile
     {
-        public OutputFile()
-        {
-        }
-
-        public OutputFile(string path, string rootPath, string outputPath, string outputRootPath, string rootUrl, string relativeUrl)
-            : base(path, rootPath)
+        protected OutputFile(string path, string rootPath, string outputPath, string outputRootPath, string rootUrl, string relativeUrl)
+                : base(path, rootPath)
         {
             this.OutputRelativePath = outputPath ?? this.SourcePath.Substring(rootPath.Length);
 
@@ -29,24 +23,32 @@ namespace TinySite.Models
             this.Url = this.RootUrl.EnsureEndsWith("/") + this.RelativeUrl.TrimStart('/');
         }
 
-        protected OutputFile(OutputFile original) :
-            base(original)
+        protected OutputFile(OutputFile original)
+            : base(original)
         {
+            this.OutputPath = original.OutputPath;
+            this.OutputRootPath = original.OutputRootPath;
+            this.OutputRelativePath = original.OutputRelativePath;
+            this.Url = original.Url;
+            this.RootUrl = original.RootUrl;
+            this.RelativeUrl = original.RelativeUrl;
+            this.TargetExtension = original.TargetExtension;
+            this.Unmodified = original.Unmodified;
         }
-        
-        public string OutputPath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
 
-        public string OutputRootPath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string OutputPath { get; set; }
 
-        public string OutputRelativePath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string OutputRootPath { get; }
 
-        public string Url { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string OutputRelativePath { get; set; }
 
-        public string RootUrl { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string Url { get; }
 
-        public string RelativeUrl { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string RootUrl { get; }
 
-        public string TargetExtension { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string RelativeUrl { get; set; }
+
+        public string TargetExtension { get; }
 
         internal bool Unmodified { get; set; }
     }

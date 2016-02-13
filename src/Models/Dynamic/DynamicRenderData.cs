@@ -9,8 +9,8 @@ namespace TinySite.Models.Dynamic
         // for "_site") would hide the dynamic properties we are trying to expose
         // via the dictionary created by GetData().
         //
-        private DataFile _data;
-        private Site _site;
+        private readonly DataFile _data;
+        private readonly Site _site;
 
         public DynamicRenderData(DataFile dataFile, Site site)
             : base(dataFile.SourceRelativePath)
@@ -23,9 +23,9 @@ namespace TinySite.Models.Dynamic
         {
             return new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
             {
-                { "Document", new Lazy<object>(GetDataFile) }, // "Document" is a synonmym for "Data".
-                { "Data", new Lazy<object>(GetDataFile) },
-                { "Site", new Lazy<object>(GetSite) },
+                { "Document", new Lazy<object>(this.GetDataFile) }, // "Document" is a synonmym for "Data".
+                { "Data", new Lazy<object>(this.GetDataFile) },
+                { "Site", new Lazy<object>(this.GetSite) },
             };
         }
 

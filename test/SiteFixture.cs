@@ -51,7 +51,7 @@ namespace RobMensching.TinySite.Test
 
             dynamic data = site; //site.GetAsDynamic();
 
-            Assert.Equal("/blog/", data.urL);
+            Assert.Equal("/blog/", data.Url);
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace RobMensching.TinySite.Test
 
             dynamic data = site; //site.GetAsDynamic();
 
-            Assert.Equal("http://www.example.com/blog/", data.fullurl);
+            Assert.Equal("http://www.example.com/blog/", data.FullUrl);
         }
 
         [Fact]

@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using TinySite.Extensions;
 
 namespace TinySite.Models
 {
     [DebuggerDisplay("BookPage: {Document.Id}, Source: {Document.SourceRelativePath}")]
-    public class BookPage : CaseInsensitiveExpando
+    public class BookPage
     {
         public BookPage(DocumentFile document, bool chapterPage = false)
         {
@@ -20,15 +19,15 @@ namespace TinySite.Models
             }
         }
 
-        public bool Active { get { return this.Get<bool>(); } set { this.Set<bool>(value); } }
+        public bool Active { get; private set; }
 
-        public bool Chapter { get { return this.Get<bool>(); } private set { this.Set<bool>(value); } }
+        public bool Chapter { get; }
 
-        public bool SubPageActive { get { return this.Get<bool>(); } set { this.Set<bool>(value); } }
+        public bool SubPageActive { get; private set; }
 
-        public DocumentFile Document { get { return this.Get<DocumentFile>(); } private set { this.Set<DocumentFile>(value); } }
+        public DocumentFile Document { get; }
 
-        public IList<BookPage> SubPages { get { return this.Get<IList<BookPage>>(); } private set { this.Set<IList<BookPage>>(value); } }
+        public IList<BookPage> SubPages { get; private set; }
 
         public BookPage GetWithRenderingDocument(DocumentFile activeDocument)
         {

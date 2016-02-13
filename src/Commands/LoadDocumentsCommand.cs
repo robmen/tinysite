@@ -217,7 +217,7 @@ namespace TinySite.Commands
 
             if (metadataDate.HasValue)
             {
-                documentFile.SetTimes(metadataDate.Value);
+                documentFile.Date = metadataDate.Value;
             }
 
             documentFile.Id = parser.Metadata.GetAndRemove("id", id.Trim('\\'));

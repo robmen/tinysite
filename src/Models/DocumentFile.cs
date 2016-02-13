@@ -14,14 +14,9 @@ namespace TinySite.Models
         public DocumentFile(string path, string rootPath, string outputPath, string outputRootPath, string url, string rootUrl, Author author, MetadataCollection metadata, IDictionary<string, string> queries)
             : base(path, rootPath, outputPath, outputRootPath, rootUrl, url)
         {
+            this.Now = DateTime.Now;
+
             this.Author = author;
-
-            var now = DateTime.Now;
-
-            this.Now = now;
-            this.NowUtc = now.ToUniversalTime();
-            this.NowFriendlyDate = now.ToString("D");
-            this.NowStandardUtcDate = now.ToUniversalTime().ToString("yyyy-MM-ddThh:mm:ssZ");
 
             if (metadata != null)
             {
@@ -38,16 +33,28 @@ namespace TinySite.Models
             : base(original)
         {
             this.ExtensionsForRendering = new List<string>(original.ExtensionsForRendering);
-
             this.Layouts = new List<LayoutFile>(original.Layouts);
-
+            this.Queries = original.Queries;
             this.Partial = original.Partial;
 
+            this.Author = original.Author;
+            this.Layout = original.Layout;
+            this.Content = original.Content;
+            this.Draft = original.Draft;
+            this.Id = original.Id;
+            this.Order = original.Order;
+            this.PaginateQuery = original.PaginateQuery;
+            this.ParentId = original.ParentId;
+            this.SourceContent = original.SourceContent;
+            this.Summary = original.Summary;
+            this.NextDocument = original.NextDocument;
+            this.ParentDocument = original.ParentDocument;
+            this.PreviousDocument = original.PreviousDocument;
+            this.Book = original.Book;
+            this.Chapter = original.Chapter;
+            this.Paginator = original.Paginator;
+            this.Now = original.Now;
             this.Metadata = original.Metadata;
-
-            this.Queries = original.Queries;
-
-            this.Unmodified = original.Unmodified;
 
             this.Cloned = true;
         }
@@ -56,7 +63,7 @@ namespace TinySite.Models
 
         internal IEnumerable<LayoutFile> Layouts { get; private set; }
 
-        internal IDictionary<string, string> Queries { get; private set; }
+        internal IDictionary<string, string> Queries { get; }
 
         internal bool Cloned { get; }
 
@@ -66,47 +73,47 @@ namespace TinySite.Models
 
         internal string RenderedContent { get; set; }
 
-        public Author Author { get { return this.Get<Author>(); } set { this.Set<Author>(value); } }
+        public Author Author { get; }
 
-        public string Layout { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string Layout { get; }
 
-        public string Content { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string Content { get; set; }
 
-        public bool Draft { get { return this.Get<bool>(); } set { this.Set<bool>(value); } }
+        public bool Draft { get; set; }
 
-        public string Id { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string Id { get; set; }
 
-        public int Order { get { return this.Get<int>(); } set { this.Set<int>(value); } }
+        public int Order { get; set; }
 
-        public string PaginateQuery { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string PaginateQuery { get; set; }
 
-        public string ParentId { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string ParentId { get; set; }
 
-        public string SourceContent { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string SourceContent { get; set; }
 
-        public string Summary { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string Summary { get; set; }
 
-        public DocumentFile NextDocument { get { return this.Get<DocumentFile>(); } set { this.Set<DocumentFile>(value); } }
+        public DocumentFile NextDocument { get; set; }
 
-        public DocumentFile ParentDocument { get { return this.Get<DocumentFile>(); } set { this.Set<DocumentFile>(value); } }
+        public DocumentFile ParentDocument { get; set; }
 
-        public DocumentFile PreviousDocument { get { return this.Get<DocumentFile>(); } set { this.Set<DocumentFile>(value); } }
+        public DocumentFile PreviousDocument { get; set; }
 
-        public Book Book { get { return this.Get<Book>(); } set { this.Set<Book>(value); } }
+        public Book Book { get; set; }
 
-        public BookPage Chapter { get { return this.Get<BookPage>(); } set { this.Set<BookPage>(value); } }
+        public BookPage Chapter { get; set; }
 
-        public Paginator Paginator { get { return this.Get<Paginator>(); } set { this.Set<Paginator>(value); } }
+        public Paginator Paginator { get; set; }
 
-        public DateTime Now { get { return this.Get<DateTime>(); } private set { this.Set(value); } }
+        public DateTime Now { get; }
 
-        public DateTime NowUtc { get { return this.Get<DateTime>(); } private set { this.Set(value); } }
+        public DateTime NowUtc => this.Now.ToUniversalTime();
 
-        public string NowFriendlyDate { get { return this.Get<string>(); } private set { this.Set<string>(value); } }
+        public string NowFriendlyDate => this.Now.ToString("D");
 
-        public string NowStandardUtcDate { get { return this.Get<string>(); } private set { this.Set<string>(value); } }
+        public string NowStandardUtcDate => this.NowUtc.ToString("yyyy-MM-ddThh:mm:ssZ");
 
-        public MetadataCollection Metadata { get; private set; }
+        public MetadataCollection Metadata { get; }
 
         public DocumentFile CloneForPage(string urlFormat, string prependPathFormat, Paginator paginator)
         {

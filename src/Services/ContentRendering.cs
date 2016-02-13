@@ -21,7 +21,7 @@ namespace TinySite.Services
 
             if (this.Transaction.Engines.TryGetValue(dataFile.Extension, out engine))
             {
-                dynamic data = new DynamicRenderData(dataFile, this.Transaction.Site);
+                var data = new DynamicRenderData(dataFile, this.Transaction.Site);
 
                 dataFile.Content = engine.Render(dataFile, dataFile.SourceContent, data);
             }

@@ -5,19 +5,15 @@ using TinySite.Extensions;
 
 namespace TinySite.Models
 {
-    public abstract class SourceFile : CaseInsensitiveExpando
+    public abstract class SourceFile // : CaseInsensitiveExpando
     {
-        public SourceFile()
-        {
-        }
-
-        public SourceFile(string path, string rootPath)
+        protected SourceFile(string path, string rootPath)
         {
             var actualRootPath = Path.GetDirectoryName(rootPath.TrimEnd('\\'));
 
             var info = new FileInfo(path);
 
-            this.SetTimes(info.CreationTime);
+            this.Date = info.CreationTime;
 
             this.Modified = (info.LastWriteTime < info.CreationTime) ? info.CreationTime : info.LastWriteTime;
 
@@ -34,34 +30,41 @@ namespace TinySite.Models
             this.SourceRelativeFolder = Path.GetDirectoryName(this.SourceRelativePath);
         }
 
-        protected SourceFile(SourceFile original) :
-            base(original)
+        protected SourceFile(SourceFile original)
         {
+            this.Date = original.Date;
+            this.FileName = original.FileName;
+            this.Name = original.Name;
+            this.Modified = original.Modified;
+            this.Extension = original.Extension;
+            this.SourcePath = original.SourcePath;
+            this.SourceRelativeFolder = original.SourceRelativeFolder;
+            this.SourceRelativePath = original.SourceRelativePath;
         }
 
         internal List<SourceFile> ContributingFiles { get; } = new List<SourceFile>();
 
-        public DateTime Date { get { return this.Get<DateTime>(); } private set { this.Set(value); } }
+        public DateTime Date { get; set; }
 
-        public DateTime DateUtc { get { return this.Get<DateTime>(); } private set { this.Set(value); } }
+        public DateTime DateUtc => this.Date.ToUniversalTime();
 
-        public string FriendlyDate { get { return this.Get<string>(); } private set { this.Set<string>(value); } }
+        public string FriendlyDate => this.Date.ToString("D");
 
-        public string StandardUtcDate { get { return this.Get<string>(); } private set { this.Set<string>(value); } }
+        public string StandardUtcDate => this.DateUtc.ToString("yyyy-MM-ddThh:mm:ssZ");
 
-        public string FileName { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string FileName { get; set; }
 
-        public string Name { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string Name { get; set; }
 
-        public DateTime Modified { get { return this.Get<DateTime>(); } set { this.Set<DateTime>(value); } }
+        public DateTime Modified { get; set; }
 
-        public string Extension { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string Extension { get; set; }
 
-        public string SourcePath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string SourcePath { get; set; }
 
-        public string SourceRelativeFolder { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string SourceRelativeFolder { get; set; }
 
-        public string SourceRelativePath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string SourceRelativePath { get; set; }
 
         public SourceFile AddContributingFile(SourceFile contributor)
         {
@@ -115,14 +118,6 @@ namespace TinySite.Models
             }
 
             return latest;
-        }
-
-        internal void SetTimes(DateTime time)
-        {
-            this.Date = time;
-            this.DateUtc = time.ToUniversalTime();
-            this.FriendlyDate = time.ToString("D");
-            this.StandardUtcDate = time.ToUniversalTime().ToString("yyyy-MM-ddThh:mm:ssZ");
         }
     }
 }

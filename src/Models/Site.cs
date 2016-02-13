@@ -6,7 +6,7 @@ using TinySite.Extensions;
 
 namespace TinySite.Models
 {
-    public class Site : CaseInsensitiveExpando
+    public class Site
     {
         public Site(SiteConfig config, IEnumerable<DataFile> data, IEnumerable<DocumentFile> documents, IEnumerable<StaticFile> files, IEnumerable<LayoutFile> layouts, Site parent = null)
             : this(config, data, documents, files, new LayoutFileCollection(layouts), parent)
@@ -31,6 +31,10 @@ namespace TinySite.Models
             this.Url = config.Url.EnsureEndsWith("/");
             this.RootUrl = config.RootUrl.EnsureEndsWith("/");
 
+            var relativeUrl = this.Url?.TrimStart('/');
+
+            this.FullUrl = String.Concat(this.RootUrl, relativeUrl);
+
             var allDocuments = documents.ToList();
 
             this.Data = data.ToList();
@@ -52,51 +56,40 @@ namespace TinySite.Models
 
         public IEnumerable<Regex> IgnoreFiles { get; }
 
-        public Author Author { get { return this.Get<Author>(); } set { this.Set<Author>(value); } }
+        public Author Author { get; }
 
-        public string LiveReloadScript { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string LiveReloadScript { get; }
 
-        public string DocumentsPath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string DocumentsPath { get; }
 
-        public string FilesPath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string FilesPath { get; }
 
-        public string LayoutsPath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string LayoutsPath { get; }
 
-        public string OutputPath { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string OutputPath { get; }
 
-        public Site Parent { get { return this.Get<Site>(); } set { this.Set<Site>(value); } }
+        public Site Parent { get; }
 
-        public TimeZoneInfo TimeZone { get { return this.Get<TimeZoneInfo>(); } set { this.Set<TimeZoneInfo>(value); } }
+        public TimeZoneInfo TimeZone { get; }
 
-        public string Url { get { return this.Get<string>(); } set { this.Set<string>(value); this.UpdateFullUrl(); } }
+        public string Url { get; }
 
-        public string RootUrl { get { return this.Get<string>(); } set { this.Set<string>(value); this.UpdateFullUrl(); } }
+        public string RootUrl { get; }
 
-        public string FullUrl { get { return this.Get<string>(); } }
+        public string FullUrl { get; }
 
-        public IList<DocumentFile> Partials { get { return this.Get<IList<DocumentFile>>(); } set { this.Set<IList<DocumentFile>>(value); } }
+        public IList<DocumentFile> Partials { get; }
 
-        public IList<DataFile> Data { get; set; }
+        public IList<DataFile> Data { get; }
 
-        public IList<DocumentFile> Documents { get { return this.Get<IList<DocumentFile>>(); } set { this.Set<IList<DocumentFile>>(value); } }
+        public IList<DocumentFile> Documents { get; }
 
-        public IList<StaticFile> Files { get { return this.Get<IList<StaticFile>>(); } set { this.Set<IList<StaticFile>>(value); } }
+        public IList<StaticFile> Files { get; }
 
-        public LayoutFileCollection Layouts { get { return this.Get<LayoutFileCollection>(); } set { this.Set<LayoutFileCollection>(value); } }
+        public LayoutFileCollection Layouts { get; }
 
         public IEnumerable<Book> Books { get; set; }
 
         public MetadataCollection Metadata { get; }
-
-        private void UpdateFullUrl()
-        {
-            var rootUrl = (this.RootUrl == null) ? null : this.RootUrl.EnsureEndsWith("/");
-
-            var relativeUrl = (this.Url == null) ? null : this.Url.TrimStart('/');
-
-            var fullUrl = String.Concat(rootUrl, relativeUrl);
-
-            this.Set<string>(fullUrl, "FullUrl");
-        }
     }
 }

@@ -1,18 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using TinySite.Extensions;
 
 namespace TinySite.Models
 {
     [DebuggerDisplay("Book: {Id}")]
-    public class Book : CaseInsensitiveExpando
+    public class Book
     {
-        public Book(string id, List<BookPage> chapters, DocumentFile parentDocument)
-            : this(id, chapters, parentDocument, null)
-        {
-        }
-
         public Book(string id, List<BookPage> chapters, DocumentFile parentDocument, DocumentFile renderingDocument)
         {
             this.Id = id;
@@ -24,11 +18,11 @@ namespace TinySite.Models
             this.RenderingDocument = renderingDocument;
         }
 
-        public string Id { get { return this.Get<string>(); } private set { this.Set<string>(value); } }
+        public string Id { get; }
 
-        public IEnumerable<BookPage> Chapters { get { return this.Get<IEnumerable<BookPage>>(); } private set { this.Set<IEnumerable<BookPage>>(value); } }
+        public IEnumerable<BookPage> Chapters { get; }
 
-        public DocumentFile ParentDocument { get { return this.Get<DocumentFile>(); } private set { this.Set<DocumentFile>(value); } }
+        public DocumentFile ParentDocument { get; }
 
         internal DocumentFile RenderingDocument { get; private set; }
 

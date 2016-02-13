@@ -1,13 +1,11 @@
-﻿using TinySite.Extensions;
-
-namespace TinySite.Models
+﻿namespace TinySite.Models
 {
-    public class Page : CaseInsensitiveExpando
+    public class Page
     {
-        public bool Active { get { return this.Get<bool>(); } set { this.Set<bool>(value); } }
+        public bool Active { get; set; }
 
-        public int Number { get { return this.Get<int>(); } set { this.Set<int>(value); } }
+        public int Number { get; set; }
 
-        public string Url { get { return this.Get<string>(); } set { this.Set<string>(value); } }
+        public string Url { get; set; }
     }
 }

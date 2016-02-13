@@ -109,7 +109,7 @@ namespace TinySite.Commands
 
             if (metadataDate.HasValue)
             {
-                dataFile.SetTimes(metadataDate.Value);
+                dataFile.Date = metadataDate.Value;
             }
 
             return dataFile;
