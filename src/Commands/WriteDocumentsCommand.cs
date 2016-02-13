@@ -44,7 +44,7 @@ namespace TinySite.Commands
         }
 
 #if false
-        public async Task<int> ExecuteAsync()
+        public async Task<int> Execute()
         {
             var streams = new List<Stream>();
 

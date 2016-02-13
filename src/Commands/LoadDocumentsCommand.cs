@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using TinySite.Extensions;
 using TinySite.Models;
 
@@ -36,14 +35,12 @@ namespace TinySite.Commands
 
         public IEnumerable<DocumentFile> Documents { get; private set; }
 
-        public async Task<IEnumerable<DocumentFile>> ExecuteAsync()
+        public IEnumerable<DocumentFile> Execute()
         {
-            var loadTasks = this.LoadDocumentsAsync();
-
-            return this.Documents = await Task.WhenAll(loadTasks);
+            return this.Documents = this.LoadDocuments().ToList();
         }
 
-        private IEnumerable<Task<DocumentFile>> LoadDocumentsAsync()
+        private IEnumerable<DocumentFile> LoadDocuments()
         {
             if (Directory.Exists(this.DocumentsPath))
             {
@@ -54,17 +51,17 @@ namespace TinySite.Commands
                         continue;
                     }
 
-                    yield return this.LoadDocumentAsync(path, this.RenderedExtensions, this.Layouts);
+                    yield return this.LoadDocument(path, this.RenderedExtensions, this.Layouts);
                 }
             }
         }
 
-        private async Task<DocumentFile> LoadDocumentAsync(string file, IEnumerable<string> knownExtensions, LayoutFileCollection availableLayouts)
+        private DocumentFile LoadDocument(string file, IEnumerable<string> knownExtensions, LayoutFileCollection availableLayouts)
         {
             // Parse the document and update our document metadata.
             //
             var parser = new ParseDocumentCommand(file);
-            await parser.ExecuteAsync();
+            parser.Execute();
 
             if (this.AdditionalMetadataForFiles != null)
             {

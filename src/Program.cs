@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using TinySite.Commands;
 using TinySite.Models;
@@ -54,7 +53,7 @@ namespace TinySite
 
                 using (var capture = Statistics.Current.Start(StatisticTiming.Overall))
                 {
-                    AsyncPump.Run(async delegate { await program.Run(commandLine); });
+                    program.Run(commandLine);
                 }
 
                 if (commandLine.ReportStatistics)
@@ -71,11 +70,11 @@ namespace TinySite
             return 0;
         }
 
-        public async Task Run(CommandLine commandLine)
+        public void Run(CommandLine commandLine)
         {
-            var config = await this.LoadConfig(commandLine.SitePath, commandLine.OutputPath);
+            var config = this.LoadConfig(commandLine.SitePath, commandLine.OutputPath);
 
-            var lastRunState = await this.LoadLastRunState(commandLine.SitePath);
+            var lastRunState = this.LoadLastRunState(commandLine.SitePath);
 
             switch (commandLine.Command)
             {
@@ -83,9 +82,7 @@ namespace TinySite
                     {
                         var engines = RenderingEngine.Load();
                         var command = new RunRenderCommand(config, lastRunState, engines);
-                        await command.ExecuteAsync();
-
-                        lastRunState = command.LastRunState;
+                        lastRunState = command.Execute();
                     }
                     break;
 
@@ -109,10 +106,10 @@ namespace TinySite
                     throw new InvalidOperationException(String.Format("Unknown ProcessingCommand: {0}", commandLine.Command));
             }
 
-            await this.SaveLastRunState(commandLine.SitePath, lastRunState);
+            this.SaveLastRunState(commandLine.SitePath, lastRunState);
         }
 
-        private async Task<SiteConfig> LoadConfig(string sitePath, string outputPath)
+        private SiteConfig LoadConfig(string sitePath, string outputPath)
         {
             using (var capture = Statistics.Current.Start(StatisticTiming.LoadedConfiguration))
             {
@@ -125,11 +122,11 @@ namespace TinySite
                 var command = new LoadSiteConfigCommand();
                 command.ConfigPath = configPath;
                 command.OutputPath = outputPath;
-                return await command.ExecuteAsync();
+                return command.Execute();
             }
         }
 
-        private async Task<IEnumerable<LastRunDocument>> LoadLastRunState(string sitePath)
+        private IEnumerable<LastRunDocument> LoadLastRunState(string sitePath)
         {
             var statePath = Path.GetFullPath(Path.Combine(sitePath, "site.lastrun"));
 
@@ -141,14 +138,14 @@ namespace TinySite
             string json;
             using (var reader = new StreamReader(statePath))
             {
-                json = await reader.ReadToEndAsync();
+                json = reader.ReadToEnd();
             }
 
             var result = JsonConvert.DeserializeObject<IEnumerable<LastRunDocument>>(json, this.LastRunJsonSettings);
             return result;
         }
 
-        private async Task SaveLastRunState(string sitePath, IEnumerable<LastRunDocument> lastRunState)
+        private void SaveLastRunState(string sitePath, IEnumerable<LastRunDocument> lastRunState)
         {
             var statePath = Path.GetFullPath(Path.Combine(sitePath, "site.lastrun"));
 
@@ -164,7 +161,7 @@ namespace TinySite
 
                 using (var writer = File.Open(statePath, FileMode.Create, FileAccess.Write, FileShare.Delete))
                 {
-                    await writer.WriteAsync(bytes, 0, bytes.Length);
+                    writer.Write(bytes, 0, bytes.Length);
                 }
             }
         }

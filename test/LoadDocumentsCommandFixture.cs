@@ -24,7 +24,7 @@ namespace RobMensching.TinySite.Test
             command.RenderedExtensions = new[] { "md" };
             command.RootUrl = "http://www.example.com/";
             command.ApplicationUrl = "/app/sub";
-            command.ExecuteAsync().Wait();
+            command.Execute();
 
             var document = command.Documents.Single();
 
@@ -44,7 +44,7 @@ namespace RobMensching.TinySite.Test
             command.RenderedExtensions = new[] { "md" };
             command.RootUrl = "http://www.example.com/";
             command.ApplicationUrl = "/foo";
-            command.ExecuteAsync().Wait();
+            command.Execute();
 
             var documents = command.Documents.OrderBy(d => d.Order).ToList();
 
@@ -91,7 +91,7 @@ namespace RobMensching.TinySite.Test
             command.RenderedExtensions = new[] { "md" };
             command.RootUrl = "http://www.example.com/";
             command.ApplicationUrl = "/app/sub";
-            command.ExecuteAsync().Wait();
+            command.Execute();
 
             var document = command.Documents.Single();
 
@@ -113,10 +113,10 @@ namespace RobMensching.TinySite.Test
             var outputPath = Path.GetFullPath("output");
 
             var loadConfig = new LoadSiteConfigCommand() { ConfigPath = dataFolder + "site.json" };
-            var config = loadConfig.ExecuteAsync().Result;
+            var config = loadConfig.Execute();
 
             var loadData = new LoadDataFilesCommand(config.DataPath, config.AdditionalMetadataForFiles, config.IgnoreFiles);
-            loadData.ExecuteAsync().Wait();
+            loadData.Execute();
 
             var loadDocuments = new LoadDocumentsCommand();
             loadDocuments.Author = new Author();
@@ -127,7 +127,7 @@ namespace RobMensching.TinySite.Test
             loadDocuments.RenderedExtensions = new[] { "md" };
             loadDocuments.RootUrl = config.RootUrl;
             loadDocuments.ApplicationUrl = config.Url;
-            loadDocuments.ExecuteAsync().Wait();
+            loadDocuments.Execute();
 
             var data = loadData.DataFiles.Single();
             var document = loadDocuments.Documents.Single();

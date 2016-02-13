@@ -13,7 +13,7 @@ namespace RobMensching.TinySite.Test
             string expected = "This is text.\r\n   It has no metadata.";
 
             var command = new ParseDocumentCommand(path);
-            command.ExecuteAsync().Wait();
+            command.Execute();
 
             Assert.Null(command.Date);
             Assert.False(command.Draft);
@@ -28,7 +28,7 @@ namespace RobMensching.TinySite.Test
             string expected = "This is text.\r\n   It has title metadata.";
 
             var command = new ParseDocumentCommand(path);
-            command.ExecuteAsync().Wait();
+            command.Execute();
 
             Assert.Null(command.Date);
             Assert.NotEmpty(command.Metadata);
@@ -43,7 +43,7 @@ namespace RobMensching.TinySite.Test
             string expected = "This is a draft.\r\n   It has metadata.";
 
             var command = new ParseDocumentCommand(path);
-            command.ExecuteAsync().Wait();
+            command.Execute();
 
             Assert.Null(command.Date);
             Assert.True(command.Draft);
@@ -57,7 +57,7 @@ namespace RobMensching.TinySite.Test
             var path = Path.GetFullPath(@"data\documents\hastag.txt");
 
             var command = new ParseDocumentCommand(path);
-            command.ExecuteAsync().Wait();
+            command.Execute();
 
             Assert.Equal(new[] { "foo" }, command.Metadata.Get<string[]>("tags"));
         }
@@ -68,7 +68,7 @@ namespace RobMensching.TinySite.Test
             var path = Path.GetFullPath(@"data\documents\hastags.txt");
 
             var command = new ParseDocumentCommand(path);
-            command.ExecuteAsync().Wait();
+            command.Execute();
 
             Assert.Equal(new[] { "foo", "bar", "baz" }, command.Metadata.Get<string[]>("tags"));
         }

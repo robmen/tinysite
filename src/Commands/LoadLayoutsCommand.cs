@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using TinySite.Models;
 
 namespace TinySite.Commands
@@ -23,14 +23,14 @@ namespace TinySite.Commands
 
         private IEnumerable<Regex> IgnoreFiles { get; }
 
-        public async Task<IEnumerable<LayoutFile>> ExecuteAsync()
+        public IEnumerable<LayoutFile> Execute()
         {
-            var loadTasks = this.LoadLayoutsAsync();
+            var loadTasks = this.LoadLayouts();
 
-            return this.Layouts = await Task.WhenAll(loadTasks);
+            return this.Layouts = loadTasks.ToList();
         }
 
-        private IEnumerable<Task<LayoutFile>> LoadLayoutsAsync()
+        private IEnumerable<LayoutFile> LoadLayouts()
         {
             if (Directory.Exists(this.LayoutsPath))
             {
@@ -41,7 +41,7 @@ namespace TinySite.Commands
                         continue;
                     }
 
-                    yield return this.LoadLayoutAsync(path);
+                    yield return this.LoadLayout(path);
                 }
             }
         }
@@ -61,10 +61,10 @@ namespace TinySite.Commands
             return false;
         }
 
-        private async Task<LayoutFile> LoadLayoutAsync(string path)
+        private LayoutFile LoadLayout(string path)
         {
             var parser = new ParseDocumentCommand(path);
-            await parser.ExecuteAsync();
+            parser.Execute();
 
             if (this.AdditionalMetadataForFiles != null)
             {

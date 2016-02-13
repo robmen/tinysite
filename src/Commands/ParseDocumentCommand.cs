@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using TinySite.Extensions;
 using TinySite.Models;
 
@@ -32,7 +31,7 @@ namespace TinySite.Commands
 
         private string DocumentPath { get; }
 
-        public async Task ExecuteAsync()
+        public void Execute()
         {
             this.Metadata = new MetadataCollection();
             this.Queries = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -46,7 +45,7 @@ namespace TinySite.Commands
                 {
                     using (var reader = new StreamReader(this.DocumentPath))
                     {
-                        content = await reader.ReadToEndAsync();
+                        content = reader.ReadToEnd();
                     }
 
                     retry = 0;
@@ -65,7 +64,7 @@ namespace TinySite.Commands
                 }
             } while (retry > 0);
 
-            content = ParseMetadataHeaderFromContent(content);
+            content = this.ParseMetadataHeaderFromContent(content);
 
             this.Content = content;
         }
@@ -204,7 +203,7 @@ namespace TinySite.Commands
             return DateTime.TryParse(value, out dateTime) ? (DateTime?)dateTime : null;
         }
 
-        private bool TryParseComplexValue(string value, string content, int index, ref int endOfLine, out dynamic complexValue)
+        private static bool TryParseComplexValue(string value, string content, int index, ref int endOfLine, out dynamic complexValue)
         {
             complexValue = null;
 

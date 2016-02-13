@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using TinySite.Models;
 using TinySite.Services;
 
@@ -124,7 +123,7 @@ namespace TinySite.Commands
             return false;
         }
 
-        private async static void RenderThread(object context)
+        private static void RenderThread(object context)
         {
             var command = context as RunWatchCommand;
 
@@ -151,7 +150,7 @@ namespace TinySite.Commands
                     group.Key.Unload(group.Select(e => e.Path).Distinct());
                 }
 
-                await command.Render();
+                command.Render();
                 Console.WriteLine("  Refresh completed in {0:n0} s", stopwatch.ElapsedMilliseconds);
 
             } while ((int)EventTypes.FilesChange == WaitHandle.WaitAny(command.Waits));
@@ -182,10 +181,10 @@ namespace TinySite.Commands
             }
         }
 
-        private async Task Render()
+        private void Render()
         {
             var command = new RunRenderCommand(this.Config, this.LastRunState, this.Engines);
-            await command.ExecuteAsync();
+            command.Execute();
         }
 
         private class EngineWithPath

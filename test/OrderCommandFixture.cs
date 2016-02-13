@@ -21,7 +21,7 @@ namespace RobMensching.TinySite.Test
             command.RenderedExtensions = new[] { "md" };
             command.RootUrl = "http://www.example.com/";
             command.ApplicationUrl = "/foo";
-            command.ExecuteAsync().Wait();
+            command.Execute();
 
             var order = new OrderCommand();
             order.Documents = command.Documents;
@@ -74,7 +74,7 @@ namespace RobMensching.TinySite.Test
             command.RenderedExtensions = new[] { "md" };
             command.RootUrl = "http://www.example.com/";
             command.ApplicationUrl = "/foo";
-            command.ExecuteAsync().Wait();
+            command.Execute();
 
             var order = new OrderCommand();
             order.Documents = command.Documents;

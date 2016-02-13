@@ -68,7 +68,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncPump.cs" />
     <Compile Include="Commands\LoadDataFilesCommand.cs" />
     <Compile Include="Commands\SetUnmodifiedCommand.cs" />
     <Compile Include="Commands\LoadSiteConfigCommand.cs" />

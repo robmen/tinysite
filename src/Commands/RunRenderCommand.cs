@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using TinySite.Models;
 using TinySite.Services;
 
@@ -24,11 +22,11 @@ namespace TinySite.Commands
 
         private IEnumerable<LastRunDocument> InitialLastRunState { get; }
 
-        public async Task ExecuteAsync()
+        public IEnumerable<LastRunDocument> Execute()
         {
             // Load the site documents.
             //
-            var site = await this.LoadSite(this.Config, this.InitialLastRunState, this.Engines.Keys);
+            var site = this.LoadSite(this.Config, this.InitialLastRunState, this.Engines.Keys);
 
             // Order the documents.
             //
@@ -44,10 +42,10 @@ namespace TinySite.Commands
             //
             this.Render(site, this.Engines);
 
-            this.LastRunState = this.CalculateLastRunState(site).ToList();
+            return this.LastRunState = this.CalculateLastRunState(site).ToList();
         }
 
-        private async Task<Site> LoadSite(SiteConfig config, IEnumerable<LastRunDocument> lastRunState, IEnumerable<string> renderedExtensions)
+        private Site LoadSite(SiteConfig config, IEnumerable<LastRunDocument> lastRunState, IEnumerable<string> renderedExtensions)
         {
             Site site;
 
@@ -57,7 +55,7 @@ namespace TinySite.Commands
                 LayoutFileCollection layouts;
                 {
                     var load = new LoadLayoutsCommand(config.LayoutsPath, config.AdditionalMetadataForFiles, config.IgnoreFiles);
-                    var loaded = await load.ExecuteAsync();
+                    var loaded = load.Execute();
 
                     layouts = new LayoutFileCollection(loaded);
                 }
@@ -66,7 +64,7 @@ namespace TinySite.Commands
                 IEnumerable<DataFile> data;
                 {
                     var load = new LoadDataFilesCommand(config.DataPath, config.AdditionalMetadataForFiles, config.IgnoreFiles);
-                    data = await load.ExecuteAsync();
+                    data = load.Execute();
                 }
 
                 // Load documents.
@@ -83,7 +81,7 @@ namespace TinySite.Commands
                     load.ApplicationUrl = config.Url;
                     load.AdditionalMetadataForFiles = config.AdditionalMetadataForFiles;
                     load.IgnoreFiles = config.IgnoreFiles;
-                    documents = await load.ExecuteAsync();
+                    documents = load.Execute();
                 }
 
                 // Load files.

@@ -17,7 +17,7 @@ namespace RobMensching.TinySite.Test
             var dataFolder = Path.GetFullPath(@"data\");
 
             var command = new LoadSiteConfigCommand() { ConfigPath = dataFolder + "site.config" };
-            var config = command.ExecuteAsync().Result;
+            var config = command.Execute();
 
             Assert.Empty(config.SubsiteConfigs);
             Assert.Equal(dataFolder + @"build\here\", config.OutputPath);
@@ -31,7 +31,7 @@ namespace RobMensching.TinySite.Test
             var dataFolder = Path.GetFullPath(@"data\");
 
             var command = new LoadSiteConfigCommand() { ConfigPath = dataFolder + "parent.config" };
-            var config = command.ExecuteAsync().Result;
+            var config = command.Execute();
 
             Assert.Equal(dataFolder + @"parent_build\", config.OutputPath);
             Assert.NotEmpty(config.SubsiteConfigs);
@@ -46,7 +46,7 @@ namespace RobMensching.TinySite.Test
         public void CanGetDefaultUrlFromData()
         {
             var command = new LoadSiteConfigCommand() { ConfigPath = "data\\site.config" };
-            var config = command.ExecuteAsync().Result;
+            var config = command.Execute();
             var site = new Site(config, Enumerable.Empty<DataFile>(), Enumerable.Empty<DocumentFile>(), Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
 
             dynamic data = site; //site.GetAsDynamic();
@@ -58,7 +58,7 @@ namespace RobMensching.TinySite.Test
         public void CanGetFullUrlFromData()
         {
             var command = new LoadSiteConfigCommand() { ConfigPath = "data\\site.config" };
-            var config = command.ExecuteAsync().Result;
+            var config = command.Execute();
             var site = new Site(config, Enumerable.Empty<DataFile>(), Enumerable.Empty<DocumentFile>(), Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
 
             dynamic data = site; //site.GetAsDynamic();
@@ -70,7 +70,7 @@ namespace RobMensching.TinySite.Test
         public void CanGetTitle()
         {
             var command = new LoadSiteConfigCommand() { ConfigPath = "data\\site.config" };
-            var config = command.ExecuteAsync().Result;
+            var config = command.Execute();
 
             var site = new Site(config, Enumerable.Empty<DataFile>(), Enumerable.Empty<DocumentFile>(), Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
 
@@ -83,7 +83,7 @@ namespace RobMensching.TinySite.Test
         public void CanGetDefaultLayout()
         {
             var command = new LoadSiteConfigCommand() { ConfigPath = "data\\site.config" };
-            var config = command.ExecuteAsync().Result;
+            var config = command.Execute();
 
             var site = new Site(config, Enumerable.Empty<DataFile>(), Enumerable.Empty<DocumentFile>(), Enumerable.Empty<StaticFile>(), Enumerable.Empty<LayoutFile>());
 
@@ -97,7 +97,7 @@ namespace RobMensching.TinySite.Test
             var dataFolder = Path.GetFullPath(@"data\");
 
             var command = new LoadSiteConfigCommand() { ConfigPath = dataFolder + "site.config" };
-            var config = command.ExecuteAsync().Result;
+            var config = command.Execute();
 
             Assert.Equal(2, config.IgnoreFiles.Count());
 

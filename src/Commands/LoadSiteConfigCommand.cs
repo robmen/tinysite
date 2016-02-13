@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TinySite.Extensions;
@@ -21,7 +20,7 @@ namespace TinySite.Commands
 
         public SiteConfig SiteConfig { get; private set; }
 
-        public async Task<SiteConfig> ExecuteAsync()
+        public SiteConfig Execute()
         {
             var root = Path.GetFullPath(Path.GetDirectoryName(this.ConfigPath));
 
@@ -31,7 +30,7 @@ namespace TinySite.Commands
             string json;
             using (var reader = new StreamReader(this.ConfigPath))
             {
-                json = await reader.ReadToEndAsync();
+                json = reader.ReadToEnd();
             }
 
             var config = new SiteConfig();
@@ -100,19 +99,19 @@ namespace TinySite.Commands
             // If override output path was provided use that.
             config.OutputPath = String.IsNullOrEmpty(this.OutputPath) ? Path.GetFullPath(config.OutputPath) : Path.GetFullPath(this.OutputPath);
 
-            var subsiteLoadTasks = new List<Task<SiteConfig>>(subsites.Length);
+            var siteConfigs = new List<SiteConfig>(subsites.Length);
 
             foreach (var subsite in subsites)
             {
                 var command = new LoadSiteConfigCommand();
                 command.Parent = config;
                 command.ConfigPath = Path.Combine(root, subsite);
-                var task = command.ExecuteAsync();
+                var subsiteConfig = command.Execute();
 
-                subsiteLoadTasks.Add(task);
+                siteConfigs.Add(subsiteConfig);
             }
 
-            config.SubsiteConfigs = await Task.WhenAll(subsiteLoadTasks);
+            config.SubsiteConfigs = siteConfigs.ToArray();
 
             return this.SiteConfig = config;
         }

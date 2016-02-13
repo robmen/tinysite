@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using TinySite.Models;
 
 namespace TinySite.Commands
@@ -26,14 +26,12 @@ namespace TinySite.Commands
 
         private IEnumerable<Regex> IgnoreFiles { get; }
 
-        public async Task<IEnumerable<DataFile>> ExecuteAsync()
+        public IEnumerable<DataFile> Execute()
         {
-            var loadTasks = this.LoadDataFilesAsync();
-
-            return this.DataFiles = await Task.WhenAll(loadTasks);
+            return this.DataFiles = this.LoadDataFiles().ToList();
         }
 
-        private IEnumerable<Task<DataFile>> LoadDataFilesAsync()
+        private IEnumerable<DataFile> LoadDataFiles()
         {
             if (Directory.Exists(this.DataPath))
             {
@@ -44,7 +42,7 @@ namespace TinySite.Commands
                         continue;
                     }
 
-                    yield return this.LoadLayoutAsync(path);
+                    yield return this.LoadLayout(path);
                 }
             }
         }
@@ -64,10 +62,10 @@ namespace TinySite.Commands
             return false;
         }
 
-        private async Task<DataFile> LoadLayoutAsync(string path)
+        private DataFile LoadLayout(string path)
         {
             var parser = new ParseDocumentCommand(path);
-            await parser.ExecuteAsync();
+            parser.Execute();
 
             var metadataDate = parser.Date;
 
