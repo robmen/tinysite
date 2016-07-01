@@ -49,7 +49,8 @@ namespace TinySite.Services
                         break;
 
                     case "where":
-                        result.Where = ParseWhere(tokens, ref i);
+                        var where = ParseWhere(tokens, ref i);
+                        result.Wheres.Add(where);
                         break;
 
                     default:
@@ -59,9 +60,9 @@ namespace TinySite.Services
 
             var q = result.Source.AsQueryable();
 
-            if (result.Where != null)
+            foreach (var where in result.Wheres)
             {
-                q = q.Cast<IDictionary<string, object>>().Where(e => WhereQuery(result.Where, e));
+                q = q.Cast<IDictionary<string, object>>().Where(e => WhereQuery(where, e));
             }
 
             if (result.Order != null)
@@ -339,7 +340,7 @@ namespace TinySite.Services
                 return new ParsedType()
                 {
                     Type = typeof(string),
-                    Value = str.Trim('"'),
+                    Value = (str == null || str.Equals("null", StringComparison.OrdinalIgnoreCase)) ? String.Empty : str.Trim('"'),
                 };
             }
         }

@@ -15,7 +15,7 @@ namespace TinySite.Models.Query
 
         public int Take { get; set; }
 
-        public WhereClause Where { get; set; }
+        public List<WhereClause> Wheres { get; } = new List<WhereClause>();
 
         public IQueryable<dynamic> Results { get; set; }
     }
