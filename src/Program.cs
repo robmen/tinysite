@@ -103,7 +103,7 @@ namespace TinySite
                     break;
 
                 default:
-                    throw new InvalidOperationException(String.Format("Unknown ProcessingCommand: {0}", commandLine.Command));
+                    throw new InvalidOperationException($"Unknown ProcessingCommand: {commandLine.Command}");
             }
 
             this.SaveLastRunState(commandLine.SitePath, lastRunState);

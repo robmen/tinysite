@@ -8,11 +8,9 @@ using TinySite.Models.Query;
 
 namespace TinySite.Services
 {
-    public class QueryProcessor
+    public static class QueryProcessor
     {
         private static readonly Regex Tokenize = new Regex(@"("".+?"")|[^\s]+", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-
-        public IEnumerable<string> Tokens { get; private set; }
 
         public static QueryResult Parse(Site site, string query)
         {
@@ -23,7 +21,7 @@ namespace TinySite.Services
             // query documents every 10 where relativepath startswith "documents\posts\" descending date formaturl "posts/page/{0}"
             var tokens = ParseTokens(query).ToArray();
 
-            for (int i = 0; i < tokens.Length; ++i)
+            for (var i = 0; i < tokens.Length; ++i)
             {
                 var token = tokens[i].ToLowerInvariant();
 
@@ -55,7 +53,7 @@ namespace TinySite.Services
                         break;
 
                     default:
-                        throw new InvalidOperationException(String.Format("Unknown query token: {0}", token));
+                        throw new InvalidOperationException($"Unknown query token: {token}");
                 }
             }
 
