@@ -1,0 +1,47 @@
+version: 0.0.{build}
+
+image: Visual Studio 2015
+
+branches:
+  only:
+  - master
+
+skip_tags: true
+
+configuration: Release
+
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+
+before_build:
+- cmd: nuget restore
+
+build:
+  verbosity: minimal
+
+artifacts:
+  - path: 'src\**\*.nupkg'
+
+environment:
+  access_token:
+    secure: Cdow6TvcKRyrgFtLTKJIK8RcgbKyurMR4XxNaDc6Wal8Bufo+tIrwktoste0Ziof
+
+on_success:
+  - git config --global credential.helper store
+  - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
+  - git config --global user.email "rob@robmensching.com"
+  - git config --global user.name "Rob Mensching"
+  - git tag v%APPVEYOR_BUILD_VERSION%
+  - git push --tags origin master
+
+notifications:
+- provider: Email
+  to:
+  - rob@robmensching.com
+  on_build_success: true
+  on_build_failure: true
+  on_build_status_changed: true
