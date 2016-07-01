@@ -153,7 +153,8 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
   -->
+  <Target Name="AfterBuild">
+    <Exec Command='nuget pack tinysite.csproj -Tool -OutputDirectory $(OutputPath)' />
+  </Target>
 </Project>
