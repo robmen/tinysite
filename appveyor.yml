@@ -30,6 +30,11 @@ environment:
   access_token:
     secure: Cdow6TvcKRyrgFtLTKJIK8RcgbKyurMR4XxNaDc6Wal8Bufo+tIrwktoste0Ziof
 
+deploy:
+  provider: NuGet
+  api_key:
+    secure: QLCKYXCwKUJVsVq5jP9h1Brvqgr41vxdN9fNzhIKiMM0FFi38JdDA9KvUGsBWZmF
+
 on_success:
   - git config --global credential.helper store
   - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
