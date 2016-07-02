@@ -136,7 +136,7 @@ namespace TinySite.Services
                 switch (where.Operator)
                 {
                     case WhereOperator.Contains:
-                        result = -1 != str.IndexOf(s);
+                        result = -1 != str.IndexOf(s, StringComparison.Ordinal);
                         break;
 
                     case WhereOperator.Equals:
@@ -144,19 +144,19 @@ namespace TinySite.Services
                         break;
 
                     case WhereOperator.EndsWith:
-                        result = str.EndsWith(s);
+                        result = str.EndsWith(s, StringComparison.Ordinal);
                         break;
 
                     case WhereOperator.StartsWith:
-                        result = str.StartsWith(s);
+                        result = str.StartsWith(s, StringComparison.Ordinal);
                         break;
 
                     case WhereOperator.GreaterThan:
-                        result = (0 < str.CompareTo(s));
+                        result = (0 < String.CompareOrdinal(str, s));
                         break;
 
                     case WhereOperator.LessThan:
-                        result = (0 > str.CompareTo(s));
+                        result = (0 > String.CompareOrdinal(str, s));
                         break;
                 }
             }
