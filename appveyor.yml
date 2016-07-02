@@ -41,7 +41,7 @@ on_success:
   - git config --global user.email "rob@robmensching.com"
   - git config --global user.name "Rob Mensching"
   - git tag v%APPVEYOR_BUILD_VERSION%
-  - git push --tags origin master
+  - git push --tags origin HEAD:master
 
 notifications:
 - provider: Email
