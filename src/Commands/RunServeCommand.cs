@@ -7,12 +7,25 @@ namespace TinySite.Commands
 {
     public class RunServeCommand
     {
-        public SiteConfig Config { private get; set; }
+        public RunServeCommand(SiteConfig config, int port)
+        {
+            this.Config = config;
+            this.Port = port;
+        }
+
+        private SiteConfig Config { get; }
+
+        private int Port { get; }
 
         public void Execute()
         {
             var iise = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"IIS Express\iisexpress.exe");
             var args = String.Format("/path:\"{0}\" /systray:false", this.Config.OutputPath.TrimEnd('\\'));
+
+            if (this.Port > 0)
+            {
+                args += $" /port:{this.Port}";
+            }
 
             if (!File.Exists(iise))
             {

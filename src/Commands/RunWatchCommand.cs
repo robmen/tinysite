@@ -13,11 +13,12 @@ namespace TinySite.Commands
     {
         private object sync = new object();
 
-        public RunWatchCommand(SiteConfig config, IEnumerable<LastRunDocument> lastRunState, IDictionary<string, RenderingEngine> engines)
+        public RunWatchCommand(SiteConfig config, int port, IEnumerable<LastRunDocument> lastRunState, IDictionary<string, RenderingEngine> engines)
         {
             this.Config = config;
             this.Engines = engines;
             this.LastRunState = lastRunState;
+            this.Port = port;
 
             this.Paths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -34,6 +35,8 @@ namespace TinySite.Commands
         private IEnumerable<LastRunDocument> LastRunState { get; }
 
         private ISet<string> Paths { get; set; }
+
+        private int Port { get; }
 
         private EventWaitHandle[] Waits { get; set; }
 
@@ -55,8 +58,7 @@ namespace TinySite.Commands
 
                     thread.Start(this);
 
-                    var serve = new RunServeCommand();
-                    serve.Config = this.Config;
+                    var serve = new RunServeCommand(this.Config, this.Port);
                     serve.Execute();
                 }
             }

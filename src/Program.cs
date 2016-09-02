@@ -33,6 +33,12 @@ namespace TinySite
             //
             var commandLine = CommandLine.Parse(args);
 
+            if (commandLine.Help)
+            {
+                CommandLine.DisplayHelp();
+                return 0;
+            }
+
             if (commandLine.Errors.Any())
             {
                 foreach (var error in commandLine.Errors)
@@ -88,8 +94,7 @@ namespace TinySite
 
                 case ProcessingCommand.Serve:
                     {
-                        var command = new RunServeCommand();
-                        command.Config = config;
+                        var command = new RunServeCommand(config, commandLine.Port);
                         command.Execute();
                     }
                     break;
@@ -97,7 +102,7 @@ namespace TinySite
                 case ProcessingCommand.Watch:
                     {
                         var engines = RenderingEngine.Load();
-                        var command = new RunWatchCommand(config, lastRunState, engines);
+                        var command = new RunWatchCommand(config, commandLine.Port, lastRunState, engines);
                         command.Execute();
                     }
                     break;
