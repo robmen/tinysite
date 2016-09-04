@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using CommonMark;
+using Markdig;
 using TinySite.Models;
 using TinySite.Rendering;
 
@@ -15,8 +15,11 @@ namespace TinySite.Renderers
 
         public string Render(SourceFile sourceFile, string template, object data)
         {
-            var result = CommonMarkConverter.Convert(template);
-            
+            var pipeline = new MarkdownPipelineBuilder()
+                .UseAdvancedExtensions()
+                .Build();
+            var result = Markdown.ToHtml(template, pipeline);
+
             return result.Trim();
         }
 
