@@ -156,15 +156,15 @@ namespace RobMensching.TinySite.Test
 
         private static string NormalizeFeed(string text)
         {
-            var startUpdated = text.IndexOf("<updated>");
+            var startUpdated = text.IndexOf("<updated>", StringComparison.Ordinal);
 
             while (startUpdated > -1)
             {
-                var endUpdated = text.IndexOf("</updated>", startUpdated);
+                var endUpdated = text.IndexOf("</updated>", startUpdated, StringComparison.Ordinal);
 
                 text = text.Substring(0, startUpdated + 9) + "normalized" + text.Substring(endUpdated);
 
-                startUpdated = text.IndexOf("<updated>", endUpdated + 10);
+                startUpdated = text.IndexOf("<updated>", endUpdated + 10, StringComparison.Ordinal);
             }
 
             return text;

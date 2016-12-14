@@ -9,7 +9,7 @@ namespace TinySite.Services
 {
     public class RenderingEngine
     {
-        private object sync = new object();
+        private readonly object _sync = new object();
 
         private RenderingEngine(Type type)
         {
@@ -53,7 +53,7 @@ namespace TinySite.Services
         {
             if (this.Renderer == null)
             {
-                lock (sync)
+                lock (_sync)
                 {
                     if (this.Renderer == null)
                     {

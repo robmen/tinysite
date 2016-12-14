@@ -25,7 +25,7 @@ namespace RobMensching.TinySite.Test
         public void CanParseMetadata()
         {
             var path = Path.GetFullPath(@"data\documents\hasmeta.txt");
-            string expected = "This is text.\r\n   It has title metadata.";
+            var expected = "This is text.\r\n   It has title metadata.";
 
             var command = new ParseDocumentCommand(path);
             command.Execute();
