@@ -8,6 +8,9 @@ namespace TinySite.Services
 {
     public class ContentRendering
     {
+        private static readonly Regex _summarizeRegex = new Regex("<p>.*?</p>", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        private static readonly Regex _stripHtmlRegex = new Regex("<.*?>", RegexOptions.Compiled | RegexOptions.Singleline);
+
         public ContentRendering(RenderingTransaction transaction)
         {
             this.Transaction = transaction;
@@ -45,6 +48,11 @@ namespace TinySite.Services
             if (String.IsNullOrEmpty(document.Summary) && !String.IsNullOrEmpty(document.Content))
             {
                 document.Summary = Summarize(document.Content);
+            }
+
+            if (String.IsNullOrEmpty(document.Description) && !String.IsNullOrEmpty(document.Summary))
+            {
+                document.Description = StripHtml(document.Summary);
             }
 
             if (layout != null)
@@ -100,13 +108,19 @@ namespace TinySite.Services
         {
             string summary = null;
 
-            Match match = Regex.Match(content, "<p>.*?</p>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            var match = _summarizeRegex.Match(content);
             if (match.Success && match.Value != content)
             {
                 summary = match.Value;
             }
 
             return summary;
+        }
+
+        private string StripHtml(string content)
+        {
+            var stripped = _stripHtmlRegex.Replace(content, String.Empty);
+            return stripped;
         }
 
         private void AssignLayoutMetadataToDocument(DocumentFile document, LayoutFile layout)

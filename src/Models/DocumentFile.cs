@@ -40,6 +40,7 @@ namespace TinySite.Models
             this.Author = original.Author;
             this.Layout = original.Layout;
             this.Content = original.Content;
+            this.Description = original.Description;
             this.Draft = original.Draft;
             this.Id = original.Id;
             this.Order = original.Order;
@@ -67,17 +68,19 @@ namespace TinySite.Models
 
         internal bool Cloned { get; }
 
-        internal bool Partial { get; set; }
+        public bool Partial { get; internal set; }
 
-        internal bool Rendered { get; set; }
+        public bool Rendered { get; internal set; }
 
-        internal string RenderedContent { get; set; }
+        public string RenderedContent { get; internal set; }
 
         public Author Author { get; }
 
         public string Layout { get; }
 
         public string Content { get; set; }
+
+        public string Description { get; set; }
 
         public bool Draft { get; set; }
 

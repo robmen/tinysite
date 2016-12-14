@@ -33,6 +33,7 @@ namespace TinySite.Models.Dynamic
             data.Add(nameof(this.Document.Author), this.Document.Author);
             data.Add(nameof(this.Document.Layout), this.Document.Layout);
             data.Add(nameof(this.Document.Content), this.Document.Content);
+            data.Add(nameof(this.Document.Description), this.Document.Description);
             data.Add(nameof(this.Document.Draft), this.Document.Draft);
             data.Add(nameof(this.Document.Id), this.Document.Id);
             data.Add(nameof(this.Document.Order), this.Document.Order);
