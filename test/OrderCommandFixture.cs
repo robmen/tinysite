@@ -63,6 +63,35 @@ namespace RobMensching.TinySite.Test
         }
 
         [Fact]
+        public void CanLoadDatedDocuments()
+        {
+            var path = Path.GetFullPath(@"data\dated-documents\");
+
+            var command = new LoadDocumentsCommand();
+            command.Author = new Author();
+            command.DocumentsPath = path;
+            command.OutputRootPath = Path.GetFullPath("output");
+            command.RenderedExtensions = new[] { "md" };
+            command.RootUrl = "http://www.example.com/";
+            command.ApplicationUrl = "/foo";
+            command.Execute();
+
+            var documents = command.Documents.OrderByDescending(d => d.OutputRelativePath).ToList();
+            Assert.Equal(4, documents.Count);
+
+            Assert.Equal(@"parent\index.html", documents[0].OutputRelativePath);
+
+            Assert.Equal(@"2013-12-18", documents[1].Date.ToString("yyyy-MM-dd"));
+            Assert.Equal(@"parent\2013\12\18\c\index.html", documents[1].OutputRelativePath);
+
+            Assert.Equal(@"2013-12-17", documents[2].Date.ToString("yyyy-MM-dd"));
+            Assert.Equal(@"parent\2013\12\17\b\index.html", documents[2].OutputRelativePath);
+
+            Assert.Equal(@"parent\2011\11\5\a\index.html", documents[3].OutputRelativePath);
+            Assert.Equal(@"2011-11-05", documents[3].Date.ToString("yyyy-MM-dd"));
+        }
+
+        [Fact]
         public void CanOrderUnorderedDocuments()
         {
             var path = Path.GetFullPath(@"data\dated-documents\");

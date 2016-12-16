@@ -10,8 +10,28 @@ namespace TinySite.Commands
 {
     public class LoadDocumentsCommand
     {
-        private static readonly Regex DateFromFileName = new Regex(@"^\s*(?<year>\d{4})-(?<month>\d{1,2})-(?<day>\d{1,2})([Tt@](?<hour>\d{1,2})\.(?<minute>\d{1,2})(\.(?<second>\d{1,2}))?)?[-\s]\s*", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-        private static readonly Regex OrderFromFileName = new Regex(@"^\s*(?<order>\d+)\.[-\s]\s*", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+        private static readonly Regex DateFromFileName = new Regex(@"^(?<folder>.*\\)?  # may be prefixed by a realative path
+                                                                    (?<year>\d{4})      # must be 4 digit year
+                                                                    [\\-]               # may be a folder or - separator
+                                                                    (?<month>\d{1,2})   # may be a 1 or 2 digit month
+                                                                    [\\-]               # may be a folder or - separator
+                                                                    (?<day>\d{1,2})     # may be a 1 or 2 digit day
+                                                                    (                   # allow the time to be set as well
+                                                                     [Tt@]              # T or t or @ as a separator
+                                                                     (?<hour>\d{1,2})   # must be a 1 or 2 digit hour
+                                                                     \.                 # must be dot (not colon) separator
+                                                                     (?<minute>\d{1,2}) # must be a 1 or 2 digit minute
+                                                                     (                  # allow seconds to be set
+                                                                      \.
+                                                                      (?<second>\d{1,2})
+                                                                     )?                 # this says seconds are optional
+                                                                    )?                  # this says time is optional
+                                                                    [-\s\\]             # filename must be separated by a folder, a dash or whitespace
+                                                                    (?<filename>[^\\]+) # filename may be at the end (which means no director separators)
+                                                                    $", 
+                                                                    RegexOptions.IgnorePatternWhitespace | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Singleline | RegexOptions.Compiled);
+
+        private static readonly Regex OrderFromFileName = new Regex(@"^\s*(?<order>\d+)\.[-\s]\s*", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Singleline | RegexOptions.Compiled);
 
         public IEnumerable<AdditionalMetadataConfig> AdditionalMetadataForFiles { private get; set; }
 
@@ -94,6 +114,48 @@ namespace TinySite.Commands
 
             var outputRelativeFolder = Path.GetDirectoryName(outputRelativePath);
 
+            var disableDateFromFileName = parser.Metadata.GetAndRemove("DisableDateFromFileName", false);
+
+            if (!disableDateFromFileName)
+            {
+                var match = DateFromFileName.Match(outputRelativePath);
+
+                if (match.Success)
+                {
+                    outputRelativeFolder = match.Groups[1].Value;
+
+                    // If the parser metadata didn't specify the date, use the date from the filename.
+                    //
+                    if (!metadataDate.HasValue)
+                    {
+                        var year = Convert.ToInt32(match.Groups[2].Value, 10);
+                        var month = Convert.ToInt32(match.Groups[3].Value, 10);
+                        var day = Convert.ToInt32(match.Groups[4].Value, 10);
+                        var hour = match.Groups[5].Success ? Convert.ToInt32(match.Groups[5].Value, 10) : 0;
+                        var minute = match.Groups[6].Success ? Convert.ToInt32(match.Groups[6].Value, 10) : 0;
+                        var second = match.Groups[7].Success ? Convert.ToInt32(match.Groups[7].Value, 10) : 0;
+
+                        metadataDate = new DateTime(year, month, day, hour, minute, second);
+                    }
+
+                    fileName = match.Groups[8].Value;
+                }
+            }
+
+            var disableOrderFromFileName = parser.Metadata.GetAndRemove("DisableOrderFromFileName", false);
+
+            if (!disableOrderFromFileName)
+            {
+                var match = OrderFromFileName.Match(fileName);
+
+                if (match.Success)
+                {
+                    order = Convert.ToInt32(match.Groups[1].Value, 10);
+
+                    fileName = fileName.Substring(match.Length);
+                }
+            }
+
             // See if this file should be processed by any of the
             // rendering engines.
             //
@@ -124,46 +186,6 @@ namespace TinySite.Commands
 
             var layouts = GetLayouts(layoutName, targetExtension, file);
 
-            var disableDateFromFileName = parser.Metadata.GetAndRemove("DisableDateFromFileName", false);
-
-            if (!disableDateFromFileName)
-            {
-                var match = DateFromFileName.Match(fileName);
-
-                if (match.Success)
-                {
-                    // If the parser metadata didn't specify the date, use the date from the filename.
-                    //
-                    if (!metadataDate.HasValue)
-                    {
-                        var year = Convert.ToInt32(match.Groups[1].Value, 10);
-                        var month = Convert.ToInt32(match.Groups[2].Value, 10);
-                        var day = Convert.ToInt32(match.Groups[3].Value, 10);
-                        var hour = match.Groups[4].Success ? Convert.ToInt32(match.Groups[4].Value, 10) : 0;
-                        var minute = match.Groups[5].Success ? Convert.ToInt32(match.Groups[5].Value, 10) : 0;
-                        var second = match.Groups[6].Success ? Convert.ToInt32(match.Groups[6].Value, 10) : 0;
-
-                        metadataDate = new DateTime(year, month, day, hour, minute, second);
-                    }
-
-                    fileName = fileName.Substring(match.Length);
-                }
-            }
-
-            var disableOrderFromFileName = parser.Metadata.GetAndRemove("DisableOrderFromFileName", false);
-
-            if (!disableOrderFromFileName)
-            {
-                var match = OrderFromFileName.Match(fileName);
-
-                if (match.Success)
-                {
-                    order = Convert.ToInt32(match.Groups[1].Value, 10);
-
-                    fileName = fileName.Substring(match.Length);
-                }
-            }
-
             var parentId = String.IsNullOrEmpty(outputRelativeFolder) ? null : SanitizePath(outputRelativeFolder);
 
             var disableInsertDateIntoPath = parser.Metadata.GetAndRemove("DisableInsertDateIntoPath", false);
@@ -180,12 +202,7 @@ namespace TinySite.Commands
 
             // Sanitize the filename into a good URL.
             //
-            var sanitized = SanitizeEntryId(fileName);
-
-            if (!fileName.Equals(sanitized))
-            {
-                fileName = sanitized;
-            }
+            fileName = SanitizeEntryId(fileName);
 
             var disableSanitizePath = parser.Metadata.GetAndRemove("DisableSanitizePath", false);
 
@@ -307,7 +324,7 @@ namespace TinySite.Commands
             }
 
             id = Regex.Replace(id, @"[^\w\-\\/]+", "-"); // first, allow only words, underscores, dashes, and path separators.
-            return id.Trim('-').ToLowerInvariant(); // ensure the string does not start or end with dashes and lowercase it.
+            return id.Trim('/', '\\', '-').ToLowerInvariant(); // ensure the string does not start or end with path characters or dashes and lowercase it.
         }
     }
 }

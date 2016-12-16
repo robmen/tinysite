@@ -60,7 +60,7 @@
     <Content Include="data\additional-metadata\data\one.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="data\dated-documents\parent.html.md">
+    <Content Include="data\dated-documents\parent\index.html.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="data\additional-metadata\documents\foo\bar.html.md">
@@ -69,13 +69,13 @@
     <Content Include="data\additional-metadata\site.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="data\dated-documents\parent\2013-12-18.html.md">
+    <None Include="data\dated-documents\parent\2013-12-18 c.html.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="data\dated-documents\parent\2011\11-05.html.md">
+    <None Include="data\dated-documents\parent\2011\11-05 a.html.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="data\dated-documents\parent\2013-12-17.html.md">
+    <None Include="data\dated-documents\parent\2013-12-17 b.html.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Include="data\examples\blog\documents\index.html">
