@@ -226,6 +226,8 @@ namespace TinySite.Commands
 
             documentFile.Draft = (parser.Draft || documentFile.Date > DateTime.Now);
 
+            documentFile.Description = parser.Metadata.GetAndRemove<string>("description");
+
             documentFile.ExtensionsForRendering = extensionsForRendering;
 
             documentFile.AssignLayouts(layouts);
