@@ -9,15 +9,12 @@ namespace TinySite.Renderers
     [Render("markdown")]
     public class MarkdownRenderer : IRenderer
     {
-        public MarkdownRenderer()
-        {
-        }
-
         public string Render(SourceFile sourceFile, string template, object data)
         {
             var pipeline = new MarkdownPipelineBuilder()
                 .UseAdvancedExtensions()
                 .Build();
+
             var result = Markdown.ToHtml(template, pipeline);
 
             return result.Trim();

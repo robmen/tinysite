@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.CSharp.RuntimeBinder;
 using TinySite.Models;
 using TinySite.Models.Dynamic;
 
@@ -86,11 +87,16 @@ namespace TinySite.Services
                 {
                     contextDocument.Content = documentContent;
 
-                    dynamic data = new DynamicRenderDocument(contextDocument, contextLayout, this.Transaction.Site);
+                    var data = new DynamicRenderDocument(contextDocument, contextLayout, this.Transaction.Site);
 
                     var result = engine.Render(source, content, data);
 
                     return result;
+                }
+                catch (RuntimeBinderException e)
+                {
+                    Console.WriteLine("{0} : error TS0101: Internal failure while processing template. This almost always indicates a failure in a Razor template @Include() by this file. Additional detail: {1}", source.SourcePath, e.Message);
+                    return String.Empty;
                 }
                 finally
                 {

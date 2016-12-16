@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="DynamicRenderingObjectsFixture.cs" />
     <Compile Include="IntegrationFixture.cs" />
+    <Compile Include="RenderDocumentsCommandFixture.cs" />
     <Compile Include="QueryProcessorFixture.cs" />
     <Compile Include="OrderCommandFixture.cs" />
     <Compile Include="LoadLayoutsCommandFixture.cs" />
@@ -245,6 +246,21 @@
     <Content Include="data\examples_output\homepage\web.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="data\RenderDocumentsCommand\documents\nofoo.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="data\RenderDocumentsCommand\documents\foo.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="data\RenderDocumentsCommand\layouts\ifdefined.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="data\RenderDocumentsCommand\layouts\master.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="data\RenderDocumentsCommand\documents\test.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="data\test-documents\complex-metadata\metadata.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

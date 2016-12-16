@@ -8,16 +8,11 @@ namespace TinySite.Renderers
     [Render("less")]
     public class LessRenderer : IRenderer
     {
-        private object _renderLock = new object();
-
         public string Render(SourceFile sourceFile, string template, object data)
         {
-            lock (_renderLock)
-            {
-                var result = Less.Parse(template);
+            var result = Less.Parse(template);
 
-                return result;
-            }
+            return result;
         }
 
         public void Unload(IEnumerable<string> paths)

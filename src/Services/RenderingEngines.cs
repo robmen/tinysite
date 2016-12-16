@@ -63,7 +63,7 @@ namespace TinySite.Services
 
                 if (this.Renderer == null)
                 {
-                    throw new InvalidCastException(String.Format("The render of type '{0}' does not impliement IRender. Ensure your renderer inherits from IRender.", this.Type));
+                    throw new InvalidCastException($"The render of type '{this.Type}' does not implement IRenderer. Ensure your renderer inherits from IRenderer.");
                 }
             }
 
@@ -72,7 +72,7 @@ namespace TinySite.Services
 
         internal void Unload(IEnumerable<string> paths)
         {
-            this.Renderer.Unload(paths);
+            this.Renderer?.Unload(paths);
         }
     }
 }

@@ -1,0 +1,8 @@
+﻿@Raw(Model.Document.Blah)
+@if (Model.Document.Foo != "bar")
+{
+<title>@Model.Document.Title</title>
+<description>@Model.Document.Description</description>
+<summary>@Raw(Model.Document.Summary)</summary>
+<content>@Raw(Model.Document.Content)</content>
+}

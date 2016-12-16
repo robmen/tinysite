@@ -13,7 +13,7 @@ namespace TinySite.Renderers
     {
         private object _renderLock = new object();
 
-        private Dictionary<string, Func<object, string>> compiledTemplates = new Dictionary<string, Func<object, string>>();
+        private readonly Dictionary<string, Func<object, string>> _compiledTemplates = new Dictionary<string, Func<object, string>>();
 
         public string Render(SourceFile sourceFile, string template, object data)
         {
@@ -25,11 +25,11 @@ namespace TinySite.Renderers
                 {
                     Func<object, string> compiledTemplate;
 
-                    if (!this.compiledTemplates.TryGetValue(path, out compiledTemplate))
+                    if (!_compiledTemplates.TryGetValue(path, out compiledTemplate))
                     {
                         compiledTemplate = Handlebars.Compile(path, template);
 
-                        this.compiledTemplates.Add(path, compiledTemplate);
+                        _compiledTemplates.Add(path, compiledTemplate);
                     }
 
                     var result = compiledTemplate(data);
@@ -51,7 +51,7 @@ namespace TinySite.Renderers
             {
                 foreach (var path in paths)
                 {
-                    this.compiledTemplates.Remove(path);
+                    _compiledTemplates.Remove(path);
                 }
             }
         }

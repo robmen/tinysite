@@ -11,11 +11,11 @@ namespace TinySite.Renderers
     [Render("json")]
     public class JsonRenderer : IRenderer
     {
-        private object _renderLock = new object();
+        private readonly object _renderLock = new object();
 
         public string Render(SourceFile sourceFile, string template, dynamic data)
         {
-            var document = data.Document;
+            dynamic document = data["Document"];
 
             var content = String.Empty;
 
@@ -44,7 +44,7 @@ namespace TinySite.Renderers
                 catch (JsonReaderException e)
                 {
                     Console.Error.WriteLine("{0}({1},{2}): error JSON1 : {3}", sourceFile.SourcePath, e.LineNumber, e.LinePosition, e.Message);
-                    return null;
+                    return String.Empty;
                 }
             }
 

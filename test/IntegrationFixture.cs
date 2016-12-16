@@ -84,12 +84,9 @@ namespace RobMensching.TinySite.Test
 
         private static void SafeDeleteFolder(string outputPath)
         {
-            try
+            if (Directory.Exists(outputPath))
             {
                 Directory.Delete(outputPath, true);
-            }
-            catch (DirectoryNotFoundException)
-            {
             }
         }
 

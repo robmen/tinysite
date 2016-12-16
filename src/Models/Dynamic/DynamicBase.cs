@@ -45,24 +45,26 @@ namespace TinySite.Models.Dynamic
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            return this.TryGetValue(binder.Name, out result) || base.TryGetMember(binder, out result);
+            result = this[binder.Name];
+            return true;
         }
 
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
-            return this.TrySetValue(binder.Name, value) || base.TrySetMember(binder, value);
+            return this.TrySetValue(binder.Name, value);
         }
 
         public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
         {
-            object delegateObject;
-            if (this.TryGetValue(binder.Name, out delegateObject) && delegateObject is Delegate)
+            var delegated = this[binder.Name] as Delegate;
+            if (delegated != null)
             {
-                result = ((Delegate)delegateObject).DynamicInvoke(args);
+                result = delegated.DynamicInvoke(args);
                 return true;
             }
 
-            return base.TryInvokeMember(binder, args, out result);
+            result = null;
+            return false;
         }
 
         public override bool TryDeleteMember(DeleteMemberBinder binder)
@@ -79,7 +81,12 @@ namespace TinySite.Models.Dynamic
             get
             {
                 object value;
-                return this.TryGetValue(key, out value) ? value : null;
+                if (!this.TryGetValue(key, out value))
+                {
+                    return null;
+                }
+
+                return value;
             }
 
             set

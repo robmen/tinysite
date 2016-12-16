@@ -32,7 +32,7 @@ namespace RobMensching.TinySite.Test
             loadDocuments.RenderedExtensions = new[] { "md", "cshtml" };
             loadDocuments.RootUrl = "http://www.example.com/";
             loadDocuments.ApplicationUrl = "/app/sub";
-            var documents = loadDocuments.Execute().ToList();
+            var documents = loadDocuments.Execute().OrderBy(d => d.Name).ToList();
 
             var config = new SiteConfig() { OutputPath = outputPath, Url = "http://example.com", RootUrl = String.Empty, };
 
@@ -51,19 +51,21 @@ namespace RobMensching.TinySite.Test
             var title = "test";
 
             Assert.Equal(0, command.RenderedData);
-            Assert.Equal(1, command.RenderedDocuments);
-            Assert.Equal("This is the summary of the document with a link to [example.com](http://example.com).\r\n\r\nThis is additional content in the document.", documents[0].SourceContent);
-            Assert.Equal(content, documents[0].Content);
-            Assert.Equal(description, documents[0].Description);
-            Assert.Equal(summary, documents[0].Summary);
-            Assert.Equal(title, documents[0].Metadata.Get<string>("title"));
+            Assert.Equal(3, command.RenderedDocuments);
+            Assert.Equal("\r\n", documents[0].RenderedContent);
+
+            Assert.Equal("This is the summary of the document with a link to [example.com](http://example.com).\r\n\r\nThis is additional content in the document.", documents[2].SourceContent);
+            Assert.Equal(content, documents[2].Content);
+            Assert.Equal(description, documents[2].Description);
+            Assert.Equal(summary, documents[2].Summary);
+            Assert.Equal(title, documents[2].Metadata.Get<string>("title"));
 
             Assert.Equal(
                 $"<title>{title}</title>\r\n" +
                 $"<description>{description}</description>\r\n" +
                 $"<summary>{summary}</summary>\r\n" +
                 $"<content>{content}</content>",
-                documents[0].RenderedContent);
+                documents[2].RenderedContent);
         }
     }
 }
