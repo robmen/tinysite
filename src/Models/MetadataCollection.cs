@@ -41,13 +41,13 @@ namespace TinySite.Models
         {
             foreach (var kvp in this.Dictionary)
             {
-                try
-                {
-                    target.Add(kvp);
-                }
-                catch (ArgumentException)
+                if (target.ContainsKey(kvp.Key))
                 {
                     Console.WriteLine("Document metadata in: {0} cannot overwrite built in or existing metadata: \"{1}\" with value: \"{2}\"", path, kvp.Key, kvp.Value);
+                }
+                else
+                {
+                    target.Add(kvp);
                 }
             }
         }
