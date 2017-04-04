@@ -27,7 +27,7 @@ artifacts:
   - path: 'src\**\*.nupkg'
 
 environment:
-  access_token:
+  GITHUB_ACCESS_TOKEN:
     secure: Cdow6TvcKRyrgFtLTKJIK8RcgbKyurMR4XxNaDc6Wal8Bufo+tIrwktoste0Ziof
 
 deploy:
@@ -37,7 +37,7 @@ deploy:
 
 on_success:
   - git config --global credential.helper store
-  - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
+  - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:GITHUB_ACCESS_TOKEN):x-oauth-basic@github.com`n"
   - git config --global user.email "rob@robmensching.com"
   - git config --global user.name "Rob Mensching"
   - git tag v%APPVEYOR_BUILD_VERSION%
