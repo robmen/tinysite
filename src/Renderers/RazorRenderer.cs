@@ -80,6 +80,16 @@ namespace TinySite.Renderers
     {
         [Obsolete]
         public RazorRenderDynamicHelper Dynamic { get; } = new RazorRenderDynamicHelper();
+
+        public static bool Defined(object value)
+        {
+            return value != null;
+        }
+
+        public static bool Undefined(object value)
+        {
+            return value == null;
+        }
     }
 
     public class RazorRenderDynamicHelper
