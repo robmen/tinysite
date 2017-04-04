@@ -64,7 +64,15 @@ namespace TinySite.Extensions
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            return _dictionary.TryGetValue(binder.Name, out result) || base.TryGetMember(binder, out result);
+            if (!_dictionary.TryGetValue(binder.Name, out result))
+            {
+                if (binder.ReturnType.IsValueType)
+                {
+                    result = Activator.CreateInstance(binder.ReturnType);
+                }
+            }
+
+            return true;
         }
 
         public override bool TrySetMember(SetMemberBinder binder, object value)
