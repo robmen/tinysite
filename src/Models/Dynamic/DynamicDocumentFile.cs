@@ -21,6 +21,10 @@ namespace TinySite.Models.Dynamic
 
         private Site Site { get; }
 
+        public string Summary => this.Document.Summary;
+
+        public string SourceContent => this.Document.SourceContent;
+
         public DocumentFile GetDocument()
         {
             return this.Document;
@@ -43,8 +47,8 @@ namespace TinySite.Models.Dynamic
             data.Add(nameof(this.Document.NowStandardUtcDate), this.Document.NowStandardUtcDate);
             data.Add(nameof(this.Document.PaginateQuery), this.Document.PaginateQuery);
             data.Add(nameof(this.Document.ParentId), this.Document.ParentId);
-            data.Add(nameof(this.Document.SourceContent), this.Document.SourceContent);
-            data.Add(nameof(this.Document.Summary), this.Document.Summary);
+            data.Add(nameof(this.SourceContent), this.SourceContent);
+            data.Add(nameof(this.Summary), this.Summary);
             data.Add(nameof(this.Document.NextDocument), new Lazy<object>(GetNextDocument));
             data.Add(nameof(this.Document.ParentDocument), new Lazy<object>(GetParentDocument));
             data.Add(nameof(this.Document.PreviousDocument), new Lazy<object>(GetPreviousDocument));

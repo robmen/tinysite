@@ -52,20 +52,20 @@ namespace RobMensching.TinySite.Test
 
             Assert.Equal(0, command.RenderedData);
             Assert.Equal(3, command.RenderedDocuments);
-            Assert.Equal("\r\n", documents[0].RenderedContent);
+            Assert.Equal(String.Empty, documents[0].RenderedContent.Trim());
 
-            Assert.Equal("This is the summary of the document with a link to [example.com](http://example.com).\r\n\r\nThis is additional content in the document.", documents[2].SourceContent);
+            Assert.Equal("This is the summary of the document with a link to [example.com](http://example.com).\n\nThis is additional content in the document.", documents[2].SourceContent.Replace("\r\n", "\n"));
             Assert.Equal(content, documents[2].Content);
             Assert.Equal(description, documents[2].Description);
             Assert.Equal(summary, documents[2].Summary);
             Assert.Equal(title, documents[2].Metadata.Get<string>("title"));
 
             Assert.Equal(
-                $"<title>{title}</title>\r\n" +
-                $"<description>{description}</description>\r\n" +
-                $"<summary>{summary}</summary>\r\n" +
+                $"<title>{title}</title>\n" +
+                $"<description>{description}</description>\n" +
+                $"<summary>{summary}</summary>\n" +
                 $"<content>{content}</content>",
-                documents[2].RenderedContent);
+                documents[2].RenderedContent.Replace("\r\n", "\n"));
         }
     }
 }
