@@ -5,7 +5,7 @@
     <version>$version$</version>
     <title>$title$</title>
     <authors>$author$</authors>
-    <licenseUrl>https://github.com/robmen/tinysite/blob/master/LICENSE.TXT</licenseUrl>
+    <license type="file">LICENSE.txt</license>
     <projectUrl>https://github.com/robmen/tinysite</projectUrl>
     <developmentDependency>true</developmentDependency>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -17,5 +17,6 @@
     <file src="bin\$configuration$\$id$.exe.config" target="tools" />
     <file src="bin\$configuration$\$id$.pdb" target="tools" />
     <file src="bin\$configuration$\*.dll" target="tools" />
+    <file src="..\LICENSE.txt" target="" />
   </files>
 </package>
