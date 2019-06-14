@@ -1,34 +1,33 @@
-version: 0.0.{build}
-
-image: Visual Studio 2015
-
 branches:
   only:
-  - master
+    - master
 
-skip_tags: true
+image: Visual Studio 2017
 
+version: 0.0.0.{build}
 configuration: Release
 
-assembly_info:
-  patch: true
-  file: '**\AssemblyInfo.*'
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '{version}'
-
-before_build:
-- cmd: nuget restore
-
-build:
-  verbosity: minimal
-
-artifacts:
-  - path: 'src\**\*.nupkg'
-
 environment:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  NUGET_XMLDOC_MODE: skip
   GITHUB_ACCESS_TOKEN:
     secure: Cdow6TvcKRyrgFtLTKJIK8RcgbKyurMR4XxNaDc6Wal8Bufo+tIrwktoste0Ziof
+
+build_script:
+  - appveyor.cmd
+
+pull_requests:
+  do_not_increment_build_number: true
+
+nuget:
+  disable_publish_on_pr: true
+
+skip_branch_with_pr: true
+skip_tags: true
+
+artifacts:
+  - path: 'build\**\*.nupkg'
 
 deploy:
   provider: NuGet
@@ -44,9 +43,9 @@ on_success:
   - git push --tags origin HEAD:master
 
 notifications:
-- provider: Email
-  to:
-  - rob@robmensching.com
-  on_build_success: true
-  on_build_failure: true
-  on_build_status_changed: true
+  - provider: Email
+    to:
+    - rob@robmensching.com
+    on_build_success: true
+    on_build_failure: true
+    on_build_status_changed: true

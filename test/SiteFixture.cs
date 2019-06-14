@@ -27,7 +27,7 @@ namespace RobMensching.TinySite.Test
         [Fact]
         public void CanLoadSiteConfigWithSubsites()
         {
-            TimeZoneInfo tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+            var tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
             var dataFolder = Path.GetFullPath(@"data\");
 
             var command = new LoadSiteConfigCommand() { ConfigPath = dataFolder + "parent.config" };
@@ -35,7 +35,7 @@ namespace RobMensching.TinySite.Test
 
             Assert.Equal(dataFolder + @"parent_build\", config.OutputPath);
             Assert.NotEmpty(config.SubsiteConfigs);
-            Assert.Equal(1, config.SubsiteConfigs.Length);
+            Assert.Single(config.SubsiteConfigs);
             foreach (var subsite in config.SubsiteConfigs)
             {
                 Assert.Equal(config, subsite.Parent);
@@ -102,14 +102,14 @@ namespace RobMensching.TinySite.Test
             Assert.Equal(2, config.IgnoreFiles.Count());
 
             var match = config.IgnoreFiles.First();
-            Assert.True(match.IsMatch("foo.abc~"));
-            Assert.True(match.IsMatch("a.b~"));
-            Assert.False(match.IsMatch("foo.abc"));
-            Assert.False(match.IsMatch("a.b"));
+            Assert.Matches(match, "foo.abc~");
+            Assert.Matches(match, "a.b~");
+            Assert.DoesNotMatch(match, "foo.abc");
+            Assert.DoesNotMatch(match, "a.b");
 
             match = config.IgnoreFiles.Skip(1).Single();
-            Assert.True(match.IsMatch("bar.tmp"));
-            Assert.True(match.IsMatch("foo.TMP"));
+            Assert.Matches(match, "bar.tmp");
+            Assert.Matches(match, "foo.TMP");
         }
     }
 }

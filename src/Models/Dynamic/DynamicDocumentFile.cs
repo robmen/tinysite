@@ -49,12 +49,12 @@ namespace TinySite.Models.Dynamic
             data.Add(nameof(this.Document.ParentId), this.Document.ParentId);
             data.Add(nameof(this.SourceContent), this.SourceContent);
             data.Add(nameof(this.Summary), this.Summary);
-            data.Add(nameof(this.Document.NextDocument), new Lazy<object>(GetNextDocument));
-            data.Add(nameof(this.Document.ParentDocument), new Lazy<object>(GetParentDocument));
-            data.Add(nameof(this.Document.PreviousDocument), new Lazy<object>(GetPreviousDocument));
-            data.Add(nameof(this.Document.Book), new Lazy<object>(GetBook));
-            data.Add(nameof(this.Document.Chapter), new Lazy<object>(GetChapter));
-            data.Add(nameof(this.Document.Paginator), new Lazy<object>(GetPaginator));
+            data.Add(nameof(this.Document.NextDocument), new Lazy<object>(this.GetNextDocument));
+            data.Add(nameof(this.Document.ParentDocument), new Lazy<object>(this.GetParentDocument));
+            data.Add(nameof(this.Document.PreviousDocument), new Lazy<object>(this.GetPreviousDocument));
+            data.Add(nameof(this.Document.Book), new Lazy<object>(this.GetBook));
+            data.Add(nameof(this.Document.Chapter), new Lazy<object>(this.GetChapter));
+            data.Add(nameof(this.Document.Paginator), new Lazy<object>(this.GetPaginator));
 
             this.Document.Metadata?.AssignTo(this.Document.SourceRelativePath, data);
 
@@ -62,7 +62,7 @@ namespace TinySite.Models.Dynamic
             {
                 foreach (var query in this.Document.Queries)
                 {
-                    data.Add(query.Key, new Lazy<object>(() => ExecuteQuery(query.Value)));
+                    data.Add(query.Key, new Lazy<object>(() => this.ExecuteQuery(query.Value)));
                 }
             }
 

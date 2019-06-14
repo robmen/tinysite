@@ -1,160 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{149D1CD3-D93F-480C-86A9-9C69D842FD47}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFramework>net451</TargetFramework>
+    <LangVersion>latest</LangVersion>
     <RootNamespace>TinySite</RootNamespace>
-    <AssemblyName>tinysite</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <NuspecFile>tinysite.nuspec</NuspecFile>
+    <DebugType>embedded</DebugType>
+    <Description>tinySite - static site generator</Description>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="dotless.ClientOnly, Version=1.5.2.0, Culture=neutral, PublicKeyToken=96b446c9e63eae34, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotlessClientOnly.1.5.2\lib\dotless.ClientOnly.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FuManchu">
-      <HintPath>..\packages\FuManchu.1.3.0.0\lib\net45\FuManchu.dll</HintPath>
-    </Reference>
-    <Reference Include="Markdig, Version=0.7.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Markdig.0.7.4\lib\net40\Markdig.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Nustache.Core, Version=1.15.3.7, Culture=neutral, PublicKeyToken=efd6f3d8f76ecd9f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Nustache.1.15.3.7\lib\net20\Nustache.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SharpRazor, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpRazor.1.3\lib\net45\SharpRazor.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <PackageReference Include="dotLess.Core" Version="1.6.7" />
+    <PackageReference Include="FuManchu" Version="1.6.0" />
+    <PackageReference Include="Markdig" Version="0.17.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Nustache" Version="1.16.0.10" />
+    <PackageReference Include="SharpRazor" Version="1.3.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Commands\LoadDataFilesCommand.cs" />
-    <Compile Include="Commands\SetUnmodifiedCommand.cs" />
-    <Compile Include="Commands\LoadSiteConfigCommand.cs" />
-    <Compile Include="Commands\LoadLayoutsCommand.cs" />
-    <Compile Include="Commands\LoadFilesCommand.cs" />
-    <Compile Include="Commands\LoadDocumentsCommand.cs" />
-    <Compile Include="Commands\OrderCommand.cs" />
-    <Compile Include="Commands\PaginateCommand.cs" />
-    <Compile Include="Commands\CopyStaticFilesCommand.cs" />
-    <Compile Include="Commands\RunRenderCommand.cs" />
-    <Compile Include="Commands\RunServeCommand.cs" />
-    <Compile Include="Commands\RunWatchCommand.cs" />
-    <Compile Include="Commands\WriteDocumentsCommand.cs" />
-    <Compile Include="Extensions\CaseInsensitiveExpando.cs" />
-    <Compile Include="Extensions\QueueExtensions.cs" />
-    <Compile Include="Models\AdditionalMetadataConfig.cs" />
-    <Compile Include="Models\Author.cs" />
-    <Compile Include="Models\Book.cs" />
-    <Compile Include="Models\BookPage.cs" />
-    <Compile Include="Models\CommandLine.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Models\DataFile.cs" />
-    <Compile Include="Models\Dynamic\DynamicBookPage.cs" />
-    <Compile Include="Models\Dynamic\DynamicDataFile.cs" />
-    <Compile Include="Models\Dynamic\DynamicPage.cs" />
-    <Compile Include="Models\Dynamic\DynamicPagination.cs" />
-    <Compile Include="Models\Dynamic\DynamicPaginator.cs" />
-    <Compile Include="Models\Dynamic\DynamicRenderData.cs" />
-    <Compile Include="Models\Dynamic\DynamicSourceFile.cs" />
-    <Compile Include="Models\Dynamic\DynamicOutputFile.cs" />
-    <Compile Include="Models\Dynamic\DynamicLayoutFile.cs" />
-    <Compile Include="Models\Dynamic\DynamicStaticFile.cs" />
-    <Compile Include="Models\Dynamic\DynamicRenderDocument.cs" />
-    <Compile Include="Models\Dynamic\DynamicBook.cs" />
-    <Compile Include="Models\Dynamic\DynamicDocumentFile.cs" />
-    <Compile Include="Models\Dynamic\DynamicBase.cs" />
-    <Compile Include="Models\Dynamic\DynamicSite.cs" />
-    <Compile Include="Models\LastRunDocument.cs" />
-    <Compile Include="Models\LastRunContributingFile.cs" />
-    <Compile Include="Models\MetadataCollection.cs" />
-    <Compile Include="Models\SourceFile.cs" />
-    <Compile Include="Models\Page.cs" />
-    <Compile Include="Models\Pagination.cs" />
-    <Compile Include="Models\Paginator.cs" />
-    <Compile Include="Models\PartialsContent.cs" />
-    <Compile Include="Models\Query\QueryResult.cs" />
-    <Compile Include="Models\Query\OrderClause.cs" />
-    <Compile Include="Models\Query\OrderOperator.cs" />
-    <Compile Include="Models\Query\WhereClause.cs" />
-    <Compile Include="Models\Query\WhereOperator.cs" />
-    <Compile Include="Models\Statistics.cs" />
-    <Compile Include="Renderers\JsonRenderer.cs" />
-    <Compile Include="Renderers\LessRenderer.cs" />
-    <Compile Include="Renderers\HandlebarsRenderer.cs" />
-    <Compile Include="Renderers\RazorRenderer.cs" />
-    <Compile Include="Renderers\MarkdownRenderer.cs" />
-    <Compile Include="Renderers\MustacheRenderer.cs" />
-    <Compile Include="Rendering\IRenderer.cs" />
-    <Compile Include="Models\DocumentFile.cs" />
-    <Compile Include="Models\LayoutFileCollection.cs" />
-    <Compile Include="Models\LayoutFile.cs" />
-    <Compile Include="Models\OutputFile.cs" />
-    <Compile Include="Models\Site.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Commands\RenderDocumentsCommand.cs" />
-    <Compile Include="Commands\ParseDocumentCommand.cs" />
-    <Compile Include="Rendering\RenderAttribute.cs" />
-    <Compile Include="Services\ContentRendering.cs" />
-    <Compile Include="Services\QueryProcessor.cs" />
-    <Compile Include="Services\RenderingEngines.cs" />
-    <Compile Include="Services\RenderingTransaction.cs" />
-    <Compile Include="Models\SiteConfig.cs" />
-    <Compile Include="Models\StaticFile.cs" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All"/>
+    <PackageReference Include="Nerdbank.GitVersioning" Version="2.1.65" PrivateAssets="All" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+
+  <Target Name="SetNuspecProperties" AfterTargets="CoreBuild">
+    <PropertyGroup>
+      <NuspecBasePath>$(OutputPath)</NuspecBasePath>
+      <NuspecProperties>Configuration=$(Configuration);Id=$(MSBuildThisFileName);ProjectFolder=$(MSBuildProjectDirectory);Version=$(BuildVersionSimple);Authors=$(Authors);Copyright=$(Copyright);Description=$(Description);Title=$(Title)</NuspecProperties>
+    </PropertyGroup>
   </Target>
-  -->
-  <Target Name="AfterBuild" Condition=" '$(NCrunch)' == '' ">
-    <Exec Command="nuget pack tinysite.csproj -Tool -OutputDirectory $(OutputPath)" />
-  </Target>
+
 </Project>

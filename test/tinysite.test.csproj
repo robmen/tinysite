@@ -1,363 +1,118 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\xunit.runner.visualstudio.0.99.9-build1021\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.0.99.9-build1021\build\net20\xunit.runner.visualstudio.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project>
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AF1515CF-53DE-44BE-8979-D9582E7F296D}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RobMensching.TinySite.Test</RootNamespace>
-    <AssemblyName>tinysite.test</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>7439b0d7</NuGetPackageImportStamp>
+    <TargetFramework>net451</TargetFramework>
+    <BaseOutputSubPath>test\</BaseOutputSubPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Xml" />
-    <Reference Include="xunit">
-      <HintPath>..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\src\tinysite.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="DynamicRenderingObjectsFixture.cs" />
-    <Compile Include="IntegrationFixture.cs" />
-    <Compile Include="RenderDocumentsCommandFixture.cs" />
-    <Compile Include="QueryProcessorFixture.cs" />
-    <Compile Include="OrderCommandFixture.cs" />
-    <Compile Include="LoadLayoutsCommandFixture.cs" />
-    <Compile Include="LoadDocumentsCommandFixture.cs" />
-    <Compile Include="ParseDocumentCommandFixture.cs" />
-    <Compile Include="SiteFixture.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="data\additional-metadata\data\one.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\dated-documents\parent\index.html.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\additional-metadata\documents\foo\bar.html.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\additional-metadata\site.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\dated-documents\parent\2013-12-18 c.html.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\dated-documents\parent\2011\11-05 a.html.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\dated-documents\parent\2013-12-17 b.html.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\blog\documents\index.html" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\blog\documents\index.feed" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\blog\documents\posts\2014-04-01 First Blog Entry.html.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\blog\documents\posts\2014-04-02 Second Blog.html.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\blog\documents\posts\2014-04-03 Title Override.html.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\blog\documents\posts\2014-04-04 Date Override.html.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\blog\documents\posts\2014-04-06 Header if you Prefer.html.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\blog\files\web.config" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\blog\layouts\feed.mustache" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\blog\layouts\master.mustache" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\blog\layouts\post.mustache" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\blog\layouts\postpages.cshtml" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\blog\site.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\book\documents\01. Introduction.html.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\book\documents\02. About.html.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\book\documents\Introduction\01. Hello World.html.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\book\documents\Introduction\02. Getting Started.html.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\book\files\web.config" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\book\layouts\default.hb" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\book\layouts\footer.cshtml" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\book\layouts\master.cshtml" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\book\site.config" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\homepage\documents\about.html.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\homepage\documents\css\site.css.less" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\homepage\documents\data.html.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\homepage\documents\example.html.hb" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\homepage\documents\index-bottom.html.md.partial" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\homepage\documents\index-top.html.md.partial" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\homepage\documents\index.html.cshtml" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\homepage\files\web.config" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\homepage\layouts\data.cshtml" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\homepage\layouts\footer.cshtml" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\homepage\layouts\master.cshtml" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\homepage\layouts\partials.cshtml" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\homepage\site.config" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\blog\index.html" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\blog\posts\2014\4\1\first-blog-entry\index.html" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\blog\posts\2014\4\2\second-blog\index.html" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\blog\posts\2014\4\3\title-override\index.html" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\blog\posts\2014\4\5\date-override\index.html" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\blog\posts\2014\4\6\header-if-you-prefer\index.html" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\blog\posts\page\2\index.html" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\book\about\index.html" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\book\introduction\getting-started\index.html" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\book\introduction\hello-world\index.html" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\book\introduction\index.html" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\datasite\index.txt" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\homepage\about\index.html" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\homepage\css\site.css" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\homepage\data\index.html" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\homepage\example\index.html" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\homepage\index.html" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\blog\posts\feed\index.feed" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\blog\web.config" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\book\web.config" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples_output\homepage\web.config" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\RenderDocumentsCommand\documents\nofoo.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\RenderDocumentsCommand\documents\foo.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\RenderDocumentsCommand\layouts\ifdefined.cshtml" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\RenderDocumentsCommand\layouts\master.cshtml" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\RenderDocumentsCommand\documents\test.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\test-documents\complex-metadata\metadata.txt" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\test-documents\explicit-output\hasexplicitoutput.txt" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\documents\hastag.txt" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\documents\hastags.txt" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\documents\draft.txt" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\documents\hasmeta.txt" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\documents\nometa.txt" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\layouts\master.txt" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\site.config" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\parent.config" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\subsite\subsite.config" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\ordered-documents\parent.txt.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\ordered-documents\parent\Second Document\01. Sub-Second Document.txt" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\ordered-documents\parent\Second Document\02. Another Sub-Second Document.txt" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\datasite\data\news\one.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\datasite\documents\index.txt.cshtml" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\datasite\data\news\two.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\examples\datasite\site.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\layout-update-metadata\documents\a.txt.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\layout-update-metadata\layouts\add_data.hb" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\layout-update-metadata\layouts\master.hb" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\layout-update-metadata\site.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\ordered-documents\parent\Third Document From Metadata.txt.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\ordered-documents\parent\2. Second Document.txt.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\ordered-documents\parent\01. First Ordered Document.txt.md" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+
   <ItemGroup>
-    <Content Include="data\additional-metadata\data\one.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\dated-documents\parent\index.html.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\additional-metadata\documents\foo\bar.html.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\additional-metadata\site.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Include="data\dated-documents\parent\2013-12-18 c.html.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="data\dated-documents\parent\2011\11-05 a.html.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="data\dated-documents\parent\2013-12-17 b.html.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Content Include="data\examples\blog\documents\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\blog\documents\index.feed">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\blog\documents\posts\2014-04-01 First Blog Entry.html.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\blog\documents\posts\2014-04-02 Second Blog.html.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\blog\documents\posts\2014-04-03 Title Override.html.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\blog\documents\posts\2014-04-04 Date Override.html.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\blog\documents\posts\2014-04-06 Header if you Prefer.html.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\blog\files\web.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\blog\layouts\feed.mustache">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\blog\layouts\master.mustache">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\blog\layouts\post.mustache">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\blog\layouts\postpages.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\blog\site.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\book\documents\01. Introduction.html.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\book\documents\02. About.html.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\book\documents\Introduction\01. Hello World.html.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\book\documents\Introduction\02. Getting Started.html.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\book\files\web.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\book\layouts\default.hb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\book\layouts\footer.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\book\layouts\master.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\book\site.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\homepage\documents\about.html.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\homepage\documents\css\site.css.less">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\homepage\documents\data.html.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\homepage\documents\example.html.hb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\homepage\documents\index-bottom.html.md.partial">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\homepage\documents\index-top.html.md.partial">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\homepage\documents\index.html.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\homepage\files\web.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\homepage\layouts\data.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\homepage\layouts\footer.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\homepage\layouts\master.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\homepage\layouts\partials.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples\homepage\site.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\blog\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\blog\posts\2014\4\1\first-blog-entry\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\blog\posts\2014\4\2\second-blog\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\blog\posts\2014\4\3\title-override\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\blog\posts\2014\4\5\date-override\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\blog\posts\2014\4\6\header-if-you-prefer\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\blog\posts\page\2\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\book\about\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\book\introduction\getting-started\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\book\introduction\hello-world\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\book\introduction\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\datasite\index.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\homepage\about\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\homepage\css\site.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\homepage\data\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\homepage\example\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\homepage\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\blog\posts\feed\index.feed">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\blog\web.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\book\web.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\examples_output\homepage\web.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="data\RenderDocumentsCommand\documents\nofoo.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="data\RenderDocumentsCommand\documents\foo.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="data\RenderDocumentsCommand\layouts\ifdefined.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="data\RenderDocumentsCommand\layouts\master.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="data\RenderDocumentsCommand\documents\test.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Content Include="data\test-documents\complex-metadata\metadata.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\test-documents\explicit-output\hasexplicitoutput.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\documents\hastag.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\documents\hastags.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\documents\draft.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\documents\hasmeta.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\documents\nometa.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\layouts\master.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\site.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\parent.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="data\subsite\subsite.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="data\ordered-documents\parent.txt.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\ordered-documents\parent\Second Document\01. Sub-Second Document.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="data\ordered-documents\parent\Second Document\02. Another Sub-Second Document.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="data\examples\datasite\data\news\one.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Content Include="data\examples\datasite\documents\index.txt.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="data\examples\datasite\data\news\two.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="data\examples\datasite\site.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="data\layout-update-metadata\documents\a.txt.md" />
-    <None Include="data\layout-update-metadata\layouts\add_data.hb" />
-    <None Include="data\layout-update-metadata\layouts\master.hb" />
-    <None Include="data\layout-update-metadata\site.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="data\ordered-documents\parent\Third Document From Metadata.txt.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="data\ordered-documents\parent\2. Second Document.txt.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="data\ordered-documents\parent\01. First Ordered Document.txt.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="packages.config" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" PrivateAssets="All" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\src\tinysite.csproj">
-      <Project>{149d1cd3-d93f-480c-86a9-9c69d842fd47}</Project>
-      <Name>tinysite</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="data\layout-update-metadata\files\" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.0.99.9-build1021\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.0.99.9-build1021\build\net20\xunit.runner.visualstudio.props'))" />
-  </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

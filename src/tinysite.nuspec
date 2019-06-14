@@ -3,9 +3,8 @@
   <metadata>
     <id>$id$</id>
     <version>$version$</version>
-    <title>$title$</title>
-    <authors>$author$</authors>
-    <license type="file">LICENSE.txt</license>
+    <authors>$authors$</authors>
+    <license type="file">license/LICENSE.txt</license>
     <projectUrl>https://github.com/robmen/tinysite</projectUrl>
     <developmentDependency>true</developmentDependency>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -14,9 +13,7 @@
   </metadata>
 
   <files>
-    <file src="bin\$configuration$\$id$.exe.config" target="tools" />
-    <file src="bin\$configuration$\$id$.pdb" target="tools" />
-    <file src="bin\$configuration$\*.dll" target="tools" />
-    <file src="..\LICENSE.txt" target="" />
+    <file src="*" target="tools" />
+    <file src="$projectFolder$\..\LICENSE.txt" target="license" />
   </files>
 </package>

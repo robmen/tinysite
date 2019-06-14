@@ -27,7 +27,7 @@ namespace RobMensching.TinySite.Test
             order.Documents = command.Documents;
             order.Execute();
 
-            Assert.Equal(1, order.Books.Count());
+            Assert.Single(order.Books);
 
             var documents = command.Documents.OrderBy(d => d.Order).ToList();
 
@@ -109,7 +109,7 @@ namespace RobMensching.TinySite.Test
             order.Documents = command.Documents;
             order.Execute();
 
-            Assert.Equal(0, order.Books.Count());
+            Assert.Empty(order.Books);
         }
     }
 }

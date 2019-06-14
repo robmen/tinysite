@@ -13,7 +13,7 @@ namespace TinySite.Renderers
     {
         private object _renderLock = new object();
 
-        private readonly Dictionary<string, Func<object, string>> _compiledTemplates = new Dictionary<string, Func<object, string>>();
+        private readonly Dictionary<string, HandlebarTemplate> _compiledTemplates = new Dictionary<string, HandlebarTemplate>();
 
         public string Render(SourceFile sourceFile, string template, object data)
         {
@@ -23,9 +23,7 @@ namespace TinySite.Renderers
             {
                 try
                 {
-                    Func<object, string> compiledTemplate;
-
-                    if (!_compiledTemplates.TryGetValue(path, out compiledTemplate))
+                    if (!_compiledTemplates.TryGetValue(path, out var compiledTemplate))
                     {
                         compiledTemplate = Handlebars.Compile(path, template);
 
