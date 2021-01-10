@@ -10,6 +10,7 @@
   <link rel="alternate" type="type/html" href="http://example.com/blog/" />
   <link rel="self" type="application/atom+xml" href="" />
   <updated>normalized</updated>
+
   <entry>
     <id></id>
     <author>
@@ -18,18 +19,20 @@
       <uri>http://example.com/foo</uri>
     </author>
     <title>Header if you Prefer</title>
-    <summary type="html">&lt;p&gt;You don't usually have to, but you can use the YAML document markers
+    <summary type="html">&lt;p&gt;You don&#39;t usually have to, but you can use the YAML document markers
 &lt;code&gt;---&lt;/code&gt; (three dashs) to set apart the header of the document from the
 rest of the document. It is important to use the explicit markers if you
 want to have blank lines between items in the header.&lt;/p&gt;</summary>
-    <category term="" />
+    <category term="ignored" />
+    
     <link rel="alternate" type="text/html" href="" />
-    <content type="html">&lt;p&gt;You don't usually have to, but you can use the YAML document markers
+    <content type="html">&lt;p&gt;You don&#39;t usually have to, but you can use the YAML document markers
 &lt;code&gt;---&lt;/code&gt; (three dashs) to set apart the header of the document from the
 rest of the document. It is important to use the explicit markers if you
 want to have blank lines between items in the header.&lt;/p&gt;&lt;a href=''&gt;Read more...&lt;/a&gt;&lt;/p&gt;</content>
     <updated>normalized</updated>
   </entry>
+
   <entry>
     <id></id>
     <author>
@@ -49,6 +52,7 @@ just like with &lt;a href=&quot;/blog/posts/2014/4/3/title-override/&quot;&gt;ti
 the date.&lt;/p&gt;&lt;a href=''&gt;Read more...&lt;/a&gt;&lt;/p&gt;</content>
     <updated>normalized</updated>
   </entry>
+
   <entry>
     <id></id>
     <author>
@@ -61,7 +65,8 @@ the date.&lt;/p&gt;&lt;a href=''&gt;Read more...&lt;/a&gt;&lt;/p&gt;</content>
 By default the title comes from the filename. However, you can override
 the title by adding the &lt;code&gt;title&lt;/code&gt; metadata to the header of your blog
 entry to use a different title.&lt;/p&gt;</summary>
-    <category term="" />
+    <category term="ignored" />
+    
     <link rel="alternate" type="text/html" href="" />
     <content type="html">&lt;p&gt;The title for this blog entry is &lt;code&gt;This Title is &amp;gt; &amp;quot;Title Override&amp;quot;&lt;/code&gt;.
 By default the title comes from the filename. However, you can override
@@ -69,6 +74,7 @@ the title by adding the &lt;code&gt;title&lt;/code&gt; metadata to the header of
 entry to use a different title.&lt;/p&gt;&lt;a href=''&gt;Read more...&lt;/a&gt;&lt;/p&gt;</content>
     <updated>normalized</updated>
   </entry>
+
   <entry>
     <id></id>
     <author>
@@ -78,11 +84,13 @@ entry to use a different title.&lt;/p&gt;&lt;a href=''&gt;Read more...&lt;/a&gt;
     </author>
     <title>Second Blog</title>
     <summary type="html">&lt;p&gt;This is our second blog entry. This is still rendered by tinySite.&lt;/p&gt;</summary>
-    <category term="" />
+    <category term="ignored" />
+    
     <link rel="alternate" type="text/html" href="" />
     <content type="html">&lt;p&gt;This is our second blog entry. This is still rendered by tinySite.&lt;/p&gt;&lt;a href=''&gt;Read more...&lt;/a&gt;&lt;/p&gt;</content>
     <updated>normalized</updated>
   </entry>
+
   <entry>
     <id></id>
     <author>
@@ -92,9 +100,11 @@ entry to use a different title.&lt;/p&gt;&lt;a href=''&gt;Read more...&lt;/a&gt;
     </author>
     <title>First Blog Entry</title>
     <summary type="html">&lt;p&gt;This is our first blog entry. This is rendered by tinySite.&lt;/p&gt;</summary>
-    <category term="" />
+    <category term="ignored" />
+    
     <link rel="alternate" type="text/html" href="" />
     <content type="html">&lt;p&gt;This is our first blog entry. This is rendered by tinySite.&lt;/p&gt;&lt;a href=''&gt;Read more...&lt;/a&gt;&lt;/p&gt;</content>
     <updated>normalized</updated>
   </entry>
+
 </feed>
