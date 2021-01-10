@@ -10,7 +10,7 @@
   <link rel="alternate" type="type/html" href="{{site.fullUrl}}" />
   <link rel="self" type="application/atom+xml" href="{{document.fullUrl}}" />
   <updated>{{document.nowStandardUtcDate}}</updated>
-  {{#document.paginator.documents}}
+{{#document.paginator.documents}}
   <entry>
     <id>{{fullUrl}}</id>
     <author>
@@ -19,13 +19,12 @@
       <uri>{{author.url}}</uri>
     </author>
     <title>{{title}}</title>
-    <summary type="html">{{summary}}</summary>
-    {{#tags}}
+    <summary type="html">{{summary}}</summary>{{#tags}}
     <category term="{{this}}" />
     {{/tags}}
     <link rel="alternate" type="text/html" href="{{fullUrl}}" />
     <content type="html">{{summary}}&lt;a href='{{fullUrl}}'&gt;Read more...&lt;/a&gt;&lt;/p&gt;</content>
     <updated>{{standardUtcDate}}</updated>
   </entry>
-  {{/document.paginator.documents}}
+{{/document.paginator.documents}}
 </feed>
