@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using FuManchu;
 using TinySite.Models;
@@ -13,7 +14,7 @@ namespace TinySite.Renderers
     {
         private readonly object _renderLock = new object();
 
-        private readonly Dictionary<string, HandlebarTemplate> _compiledTemplates = new Dictionary<string, HandlebarTemplate>();
+        private readonly ConcurrentDictionary<string, HandlebarTemplate> _compiledTemplates = new ConcurrentDictionary<string, HandlebarTemplate>();
 
         public string Render(SourceFile sourceFile, string template, object data)
         {
@@ -23,12 +24,10 @@ namespace TinySite.Renderers
             {
                 try
                 {
-                    if (!_compiledTemplates.TryGetValue(path, out var compiledTemplate))
+                    var compiledTemplate = _compiledTemplates.GetOrAdd(path, key =>
                     {
-                        compiledTemplate = Handlebars.Compile(path, template);
-
-                        _compiledTemplates.Add(path, compiledTemplate);
-                    }
+                       return Handlebars.Compile(path, template);
+                    });
 
                     var result = compiledTemplate(data);
 
@@ -49,7 +48,7 @@ namespace TinySite.Renderers
             {
                 foreach (var path in paths)
                 {
-                    _compiledTemplates.Remove(path);
+                    _compiledTemplates.TryRemove(path, out _);
                 }
             }
         }
