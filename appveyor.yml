@@ -2,7 +2,7 @@ branches:
   only:
     - master
 
-image: Visual Studio 2017
+image: Visual Studio 2019
 
 version: 0.0.0.{build}
 configuration: Release
@@ -11,8 +11,6 @@ environment:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
   NUGET_XMLDOC_MODE: skip
-  GITHUB_ACCESS_TOKEN:
-    secure: Cdow6TvcKRyrgFtLTKJIK8RcgbKyurMR4XxNaDc6Wal8Bufo+tIrwktoste0Ziof
 
 build_script:
   - appveyor.cmd
@@ -32,15 +30,7 @@ artifacts:
 deploy:
   provider: NuGet
   api_key:
-    secure: QLCKYXCwKUJVsVq5jP9h1Brvqgr41vxdN9fNzhIKiMM0FFi38JdDA9KvUGsBWZmF
-
-on_success:
-  - git config --global credential.helper store
-  - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:GITHUB_ACCESS_TOKEN):x-oauth-basic@github.com`n"
-  - git config --global user.email "rob@robmensching.com"
-  - git config --global user.name "Rob Mensching"
-  - git tag v%APPVEYOR_BUILD_VERSION%
-  - git push --tags origin HEAD:master
+    secure: qLQsRLDdc7VHNtMFv+3hPywBraWg9Z8ISqevJ+/y4A+CirO6ck3YppxQbnmFDNGC
 
 notifications:
   - provider: Email

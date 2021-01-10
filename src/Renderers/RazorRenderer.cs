@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using Microsoft.CSharp.RuntimeBinder;
-using SharpRazor;
+using System.Web;
+using RazorEngineCore;
 using TinySite.Models;
 using TinySite.Rendering;
 using TinySite.Services;
@@ -14,13 +14,7 @@ namespace TinySite.Renderers
     public class RazorRenderer : IRenderer
     {
         private readonly object _renderLock = new object();
-
-        private Razorizer _razor;
-
-        public RazorRenderer()
-        {
-            this.InitializeRazorEngine();
-        }
+        private readonly ConcurrentDictionary<string, IRazorEngineCompiledTemplate<RazorRendererModel>> _templateCache = new ConcurrentDictionary<string, IRazorEngineCompiledTemplate<RazorRendererModel>>();
 
         public string Render(SourceFile sourceFile, string template, object data)
         {
@@ -28,17 +22,33 @@ namespace TinySite.Renderers
             {
                 try
                 {
-                    var compilation = _razor.Compile(sourceFile.FileName, template, sourceFile.SourcePath);
-                    compilation.Model = data;
+                    var compiledTemplate = _templateCache.GetOrAdd(sourceFile.SourcePath, key =>
+                    {
+                        var engine = new RazorEngine();
+                        return engine.Compile<RazorRendererModel>(template, options =>
+                        {
+                            options.AddUsing("System");
+                            options.AddUsing("System.Collections.Generic");
+                            options.AddUsing("System.IO");
+                            options.AddUsing("System.Linq");
+                        });
+                    });
 
-                    var result = compilation.Run();
+                    var result = compiledTemplate.Run(instance =>
+                    {
+                        instance.Model = data;
+                        instance.Render = this;
+                    });
+
                     return result;
                 }
-                catch (TemplateCompilationException e)
+                catch (RazorEngineCompilationException e)
                 {
-                    foreach (var error in e.Errors.Where(err => !err.IsWarning))
+                    foreach (var error in e.Errors)
                     {
-                        Console.WriteLine(error);
+                        var line = error.Location.GetMappedLineSpan();
+                        var msg = error.GetMessage();
+                        Console.WriteLine("{0}({1}): {2}", sourceFile.SourceRelativePath, line.StartLinePosition.Line - 1, msg);
                     }
 
                     return String.Empty;
@@ -50,75 +60,41 @@ namespace TinySite.Renderers
         {
             lock (_renderLock)
             {
-                this.InitializeRazorEngine();
+                foreach (var path in paths)
+                {
+                    _templateCache.TryRemove(path, out _);
+                }
             }
         }
+    }
 
-        private void InitializeRazorEngine()
-        {
-            _razor = new Razorizer(typeof(DynamicPageTemplate))
-            {
-                TemplateResolver = this.ResolveTemplate
-            };
-        }
+    public class RazorRendererModel : RazorEngineTemplateBase
+    {
+        internal RazorRenderer Render { get; set; }
 
-        private PageTemplate ResolveTemplate(string templatename)
+        public RazorRendererModel Dynamic => this;
+
+        public bool Defined(object value) => value != null;
+
+        public bool Undefined(object value) => value is null;
+
+        public object Encode(object value) => value is string str ? HttpUtility.HtmlEncode(str) : value;
+
+        public object Raw(object value) => value;
+
+        public string Include(string file) => this.Include(file, this.Model);
+
+        public string Include(string file, dynamic model)
         {
-            var id = Path.GetFileNameWithoutExtension(templatename);
+            var id = Path.GetFileNameWithoutExtension(file);
 
             if (RenderingTransaction.Current.Layouts.Contains(id))
             {
                 var layout = RenderingTransaction.Current.Layouts[id];
-                return _razor.Compile(templatename, layout.SourceContent, layout.SourcePath);
+                return this.Render.Render(layout, layout.SourceContent, model);
             }
 
             return null;
-        }
-    }
-
-    public class DynamicPageTemplate : PageTemplate<dynamic>
-    {
-        [Obsolete]
-        public RazorRenderDynamicHelper Dynamic { get; } = new RazorRenderDynamicHelper();
-
-        public static bool Defined(object value)
-        {
-            return value != null;
-        }
-
-        public static bool Undefined(object value)
-        {
-            return value == null;
-        }
-    }
-
-    public class RazorRenderDynamicHelper
-    {
-        public bool Defined(object value)
-        {
-            return value != null;
-        }
-
-        public bool Undefined(object value)
-        {
-            return !this.Defined(value);
-        }
-
-        public HtmlRawString Raw(object value)
-        {
-            if (value != null)
-            {
-                try
-                {
-                    var str = value.ToString();
-                    return new HtmlRawString(str);
-                }
-                catch (RuntimeBinderException)
-                {
-                }
-            }
-
-            return new HtmlRawString(null);
         }
     }
 }
