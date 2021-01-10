@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using TinySite;
 using Xunit;
 
@@ -145,7 +146,29 @@ namespace RobMensching.TinySite.Test
                     actualContents = NormalizeFeed(actualContents);
                 }
 
-                Assert.Equal(expectedContents, actualContents);
+                var expectedLines = expectedContents.Split('\n').Select((s, i) => $"{relativeFile}({i}): {s}").ToList();
+                var actualLines = actualContents.Split('\n').Select((s, i) => $"{relativeFile}({i}): {s}").ToList();
+
+                var index = 0;
+                for (; index < actualLines.Count; ++index)
+                {
+                    if (index >= expectedLines.Count)
+                    {
+                        break;
+                    }
+
+                    Assert.Equal(expectedLines[index], actualLines[index]);
+                }
+
+                for (; index < actualLines.Count; ++index)
+                {
+                    Assert.Equal(String.Empty, actualLines[index]);
+                }
+
+                for (; index < expectedLines.Count; ++index)
+                {
+                    Assert.Equal(expectedLines[index], String.Empty);
+                }
             }
 
             Assert.Empty(expectedSet);
