@@ -5,7 +5,7 @@ namespace TinySite.Models.Dynamic
 {
     public abstract class DynamicSourceFile : DynamicBase
     {
-        private SourceFile _sourceFile;
+        private readonly SourceFile _sourceFile;
 
         protected DynamicSourceFile(SourceFile file, MetadataCollection persistedMetadata = null)
             : base(file.SourceRelativePath, persistedMetadata)
@@ -31,9 +31,6 @@ namespace TinySite.Models.Dynamic
             };
         }
 
-        internal SourceFile GetSourceFile()
-        {
-            return _sourceFile;
-        }
+        internal SourceFile GetSourceFile() => _sourceFile;
     }
 }

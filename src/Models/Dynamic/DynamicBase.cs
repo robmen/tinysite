@@ -10,7 +10,7 @@ namespace TinySite.Models.Dynamic
     {
         protected DynamicBase(string sourceRelativePath, MetadataCollection persistedMetadata = null)
         {
-            this.Data = new Lazy<IDictionary<string, object>>(GetData);
+            this.Data = new Lazy<IDictionary<string, object>>(this.GetData);
 
             this.SourceRelativePath = sourceRelativePath;
 
@@ -56,8 +56,7 @@ namespace TinySite.Models.Dynamic
 
         public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
         {
-            var delegated = this[binder.Name] as Delegate;
-            if (delegated != null)
+            if (this[binder.Name] is Delegate delegated)
             {
                 result = delegated.DynamicInvoke(args);
                 return true;
@@ -80,13 +79,7 @@ namespace TinySite.Models.Dynamic
         {
             get
             {
-                object value;
-                if (!this.TryGetValue(key, out value))
-                {
-                    return null;
-                }
-
-                return value;
+                return this.TryGetValue(key, out var value) ? value : null;
             }
 
             set
@@ -138,7 +131,7 @@ namespace TinySite.Models.Dynamic
 
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
         {
-            return this.Data.Value.ToDictionary(kvp => kvp.Key, kvp => GetPossibleLazyValue(kvp.Value)).GetEnumerator();
+            return this.Data.Value.ToDictionary(kvp => kvp.Key, kvp => this.GetPossibleLazyValue(kvp.Value)).GetEnumerator();
         }
 
         public bool Remove(KeyValuePair<string, object> item)
@@ -155,9 +148,7 @@ namespace TinySite.Models.Dynamic
         {
             if (this.Data.Value.TryGetValue(key, out value))
             {
-                var lazy = value as Lazy<object>;
-
-                if (lazy != null)
+                if (value is Lazy<object> lazy)
                 {
                     value = lazy.Value;
                 }
@@ -176,9 +167,7 @@ namespace TinySite.Models.Dynamic
 
         private object GetPossibleLazyValue(object value)
         {
-            var lazy = value as Lazy<object>;
-
-            return (lazy != null) ? lazy.Value : value;
+            return (value is Lazy<object> lazy) ? lazy.Value : value;
         }
 
         private class DelayLoadReadOnlyCollection : ICollection<object>

@@ -10,7 +10,7 @@ namespace TinySite.Extensions
 {
     public class CaseInsensitiveExpando : DynamicObject, IDictionary<string, object>
     {
-        private IDictionary<string, object> _dictionary;
+        private readonly IDictionary<string, object> _dictionary;
 
         public CaseInsensitiveExpando()
         {
@@ -83,10 +83,10 @@ namespace TinySite.Extensions
 
         public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
         {
-            object delegateObject;
-            if (_dictionary.TryGetValue(binder.Name, out delegateObject) && delegateObject is Delegate)
+            if (_dictionary.TryGetValue(binder.Name, out var delegateObject) &&
+                delegateObject is Delegate del)
             {
-                result = ((Delegate)delegateObject).DynamicInvoke(args);
+                result = del.DynamicInvoke(args);
                 return true;
             }
 
@@ -105,7 +105,7 @@ namespace TinySite.Extensions
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
+            return this.GetEnumerator();
         }
 
         public bool ContainsKey(string key)
@@ -144,23 +144,21 @@ namespace TinySite.Extensions
             get { return _dictionary.Values; }
         }
 
-        public T GetOrDefault<T>(string key, T defaultValue = default(T))
+        public T GetOrDefault<T>(string key, T defaultValue = default)
         {
-            object result;
-            return _dictionary.TryGetValue(key, out result) ? (T)Convert.ChangeType(result, typeof(T)) : defaultValue;
+            return _dictionary.TryGetValue(key, out var result) ? (T)Convert.ChangeType(result, typeof(T)) : defaultValue;
         }
 
         public bool TryGet<T>(string key, out T value)
         {
-            object valueObject;
-            if (_dictionary.TryGetValue(key, out valueObject))
+            if (_dictionary.TryGetValue(key, out var valueObject))
             {
                 value = (T)valueObject;
                 return true;
             }
             else
             {
-                value = default(T);
+                value = default;
                 return false;
             }
         }
@@ -189,8 +187,7 @@ namespace TinySite.Extensions
 
         protected T Get<T>([CallerMemberName] string key = null)
         {
-            object value;
-            return _dictionary.TryGetValue(key, out value) ? (T)value : default(T);
+            return _dictionary.TryGetValue(key, out var value) ? (T)value : default;
         }
 
         protected void Set<T>(T value, [CallerMemberName] string key = null)
