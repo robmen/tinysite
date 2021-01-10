@@ -5,21 +5,21 @@ namespace TinySite.Models
 {
     public class MetadataCollection : IEnumerable<KeyValuePair<string, object>>
     {
+        private readonly Dictionary<string, object> _dictionary;
+
         public MetadataCollection()
         {
-            this.Dictionary = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            _dictionary = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
         }
 
         public MetadataCollection(MetadataCollection original)
         {
-            this.Dictionary = new Dictionary<string, object>(original.Dictionary);
+            _dictionary = new Dictionary<string, object>(original._dictionary);
         }
-
-        private Dictionary<string, object> Dictionary { get; set; }
 
         public void Add(string key, object value)
         {
-            this.Dictionary.Add(key, value);
+            _dictionary.Add(key, value);
         }
 
         internal void AssignFrom(string path, IDictionary<string, object> source)
@@ -39,35 +39,28 @@ namespace TinySite.Models
 
         public void AssignTo(string path, IDictionary<string, object> target)
         {
-            foreach (var kvp in this.Dictionary)
+            foreach (var kvp in _dictionary)
             {
-                if (target.ContainsKey(kvp.Key))
+                if (!target.TryAdd(kvp.Key, kvp.Value))
                 {
                     Console.WriteLine("Document metadata in: {0} cannot overwrite built in or existing metadata: \"{1}\" with value: \"{2}\"", path, kvp.Key, kvp.Value);
-                }
-                else
-                {
-                    target.Add(kvp);
                 }
             }
         }
 
         public bool Contains(string key)
         {
-            return this.Dictionary.ContainsKey(key);
+            return _dictionary.ContainsKey(key);
         }
 
-        public T Get<T>(string key, T defaultValue = default(T))
+        public T Get<T>(string key, T defaultValue = default)
         {
-            object result;
-            return this.Dictionary.TryGetValue(key, out result) ? (T)Convert.ChangeType(result, typeof(T)) : defaultValue;
+            return _dictionary.TryGetValue(key, out var result) ? (T)Convert.ChangeType(result, typeof(T)) : defaultValue;
         }
 
-        public T GetAndRemove<T>(string key, T defaultValue = default(T))
+        public T GetAndRemove<T>(string key, T defaultValue = default)
         {
-            object result;
-
-            if (!this.Dictionary.TryGetValue(key, out result))
+            if (!_dictionary.TryGetValue(key, out var result))
             {
                 return defaultValue;
             }
@@ -78,37 +71,36 @@ namespace TinySite.Models
 
         public bool TryGet<T>(string key, out T value)
         {
-            object valueObject;
-            if (this.Dictionary.TryGetValue(key, out valueObject))
+            if (_dictionary.TryGetValue(key, out var valueObject))
             {
                 value = (T)valueObject;
                 return true;
             }
             else
             {
-                value = default(T);
+                value = default;
                 return false;
             }
         }
 
         public void Overwrite(string key, object value)
         {
-            this.Dictionary[key] = value;
+            _dictionary[key] = value;
         }
 
         public bool Remove(string key)
         {
-            return this.Dictionary.Remove(key);
+            return _dictionary.Remove(key);
         }
 
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
         {
-            return this.Dictionary.GetEnumerator();
+            return _dictionary.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return this.Dictionary.GetEnumerator();
+            return _dictionary.GetEnumerator();
         }
     }
 }
