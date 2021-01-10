@@ -2,7 +2,7 @@
 <Project>
 
   <PropertyGroup>
-    <TargetFramework>net451</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <BaseOutputSubPath>test\</BaseOutputSubPath>
   </PropertyGroup>
 
@@ -13,105 +13,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="data\additional-metadata\data\one.json" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\dated-documents\parent\index.html.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\additional-metadata\documents\foo\bar.html.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\additional-metadata\site.json" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\dated-documents\parent\2013-12-18 c.html.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\dated-documents\parent\2011\11-05 a.html.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\dated-documents\parent\2013-12-17 b.html.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\blog\documents\index.html" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\blog\documents\index.feed" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\blog\documents\posts\2014-04-01 First Blog Entry.html.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\blog\documents\posts\2014-04-02 Second Blog.html.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\blog\documents\posts\2014-04-03 Title Override.html.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\blog\documents\posts\2014-04-04 Date Override.html.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\blog\documents\posts\2014-04-06 Header if you Prefer.html.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\blog\files\web.config" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\blog\layouts\feed.mustache" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\blog\layouts\master.mustache" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\blog\layouts\post.mustache" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\blog\layouts\postpages.cshtml" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\blog\site.json" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\book\documents\01. Introduction.html.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\book\documents\02. About.html.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\book\documents\Introduction\01. Hello World.html.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\book\documents\Introduction\02. Getting Started.html.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\book\files\web.config" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\book\layouts\default.hb" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\book\layouts\footer.cshtml" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\book\layouts\master.cshtml" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\book\site.config" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\homepage\documents\about.html.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\homepage\documents\css\site.css.less" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\homepage\documents\data.html.json" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\homepage\documents\example.html.hb" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\homepage\documents\index-bottom.html.md.partial" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\homepage\documents\index-top.html.md.partial" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\homepage\documents\index.html.cshtml" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\homepage\files\web.config" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\homepage\layouts\data.cshtml" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\homepage\layouts\footer.cshtml" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\homepage\layouts\master.cshtml" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\homepage\layouts\partials.cshtml" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\homepage\site.config" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\blog\index.html" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\blog\posts\2014\4\1\first-blog-entry\index.html" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\blog\posts\2014\4\2\second-blog\index.html" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\blog\posts\2014\4\3\title-override\index.html" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\blog\posts\2014\4\5\date-override\index.html" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\blog\posts\2014\4\6\header-if-you-prefer\index.html" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\blog\posts\page\2\index.html" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\book\about\index.html" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\book\introduction\getting-started\index.html" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\book\introduction\hello-world\index.html" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\book\introduction\index.html" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\datasite\index.txt" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\homepage\about\index.html" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\homepage\css\site.css" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\homepage\data\index.html" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\homepage\example\index.html" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\homepage\index.html" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\blog\posts\feed\index.feed" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\blog\web.config" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\book\web.config" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples_output\homepage\web.config" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\RenderDocumentsCommand\documents\nofoo.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\RenderDocumentsCommand\documents\foo.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\RenderDocumentsCommand\layouts\ifdefined.cshtml" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\RenderDocumentsCommand\layouts\master.cshtml" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\RenderDocumentsCommand\documents\test.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\test-documents\complex-metadata\metadata.txt" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\test-documents\explicit-output\hasexplicitoutput.txt" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\documents\hastag.txt" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\documents\hastags.txt" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\documents\draft.txt" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\documents\hasmeta.txt" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\documents\nometa.txt" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\layouts\master.txt" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\site.config" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\parent.config" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\subsite\subsite.config" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\ordered-documents\parent.txt.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\ordered-documents\parent\Second Document\01. Sub-Second Document.txt" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\ordered-documents\parent\Second Document\02. Another Sub-Second Document.txt" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\datasite\data\news\one.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\datasite\documents\index.txt.cshtml" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\datasite\data\news\two.json" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\examples\datasite\site.json" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\layout-update-metadata\documents\a.txt.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\layout-update-metadata\layouts\add_data.hb" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\layout-update-metadata\layouts\master.hb" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\layout-update-metadata\site.json" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\ordered-documents\parent\Third Document From Metadata.txt.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\ordered-documents\parent\2. Second Document.txt.md" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="data\ordered-documents\parent\01. First Ordered Document.txt.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="data\**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
     <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" PrivateAssets="All" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" PrivateAssets="All" />
   </ItemGroup>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />

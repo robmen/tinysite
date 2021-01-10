@@ -86,7 +86,7 @@ namespace TinySite
             {
                 case ProcessingCommand.Render:
                     {
-                        var engines = RenderingEngine.Load();
+                        var engines = RenderingEngine.Load(config);
                         var command = new RunRenderCommand(config, lastRunState, engines);
                         lastRunState = command.Execute();
                     }
@@ -101,7 +101,7 @@ namespace TinySite
 
                 case ProcessingCommand.Watch:
                     {
-                        var engines = RenderingEngine.Load();
+                        var engines = RenderingEngine.Load(config);
                         var command = new RunWatchCommand(config, commandLine.Port, lastRunState, engines);
                         command.Execute();
                     }
