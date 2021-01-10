@@ -4,8 +4,8 @@ layout: master
   @if (Dynamic.Defined(Model.Document.Paginator.Documents)) {
     foreach (var document in Model.Document.Paginator.Documents) {
   <div class="hentry summarized">
-    <h2 class="entry-title"><a href="@document.RelativeUrl">@document.Title</a></h2>
-    <div class="entry-meta"><p><a href="@document.Url" rel="bookmark" title="permalink to '@document.Title'">#</a> by <span class="vcard author"><a class="url fn" href="@document.Author.Url">@document.Author.Name</a></span> on <abbr class="published" title="@document.Date.Year-@document.Date.Month-@document.Date.Day">@document.FriendlyDate</abbr></p></div>
+    <h2 class="entry-title"><a href="@document.RelativeUrl">@Encode(document.Title)</a></h2>
+    <div class="entry-meta"><p><a href="@document.Url" rel="bookmark" title="permalink to '@Encode(document.Title)'">#</a> by <span class="vcard author"><a class="url fn" href="@document.Author.Url">@document.Author.Name</a></span> on <abbr class="published" title="@document.Date.Year-@document.Date.Month-@document.Date.Day">@document.FriendlyDate</abbr></p></div>
     <div class="entry-summary">@Raw(document.Summary)</div>
     <div class="entry-readmore"><a href="@document.RelativeUrl">Read more...</a></div>
   </div>

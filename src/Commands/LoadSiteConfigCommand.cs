@@ -36,7 +36,6 @@ namespace TinySite.Commands
             var config = new SiteConfig();
             config.Parent = this.Parent;
 
-            var ignoreFiles = new string[0];
             var subsites = new string[0];
 
             //var config = JsonConvert.DeserializeObject<SiteConfig>(json, settings);
@@ -92,9 +91,9 @@ namespace TinySite.Commands
             config.FilesPath = Path.Combine(root, "files\\");
             config.LayoutsPath = Path.Combine(root, "layouts\\");
 
-            config.OutputPath = config.OutputPath ?? Path.Combine(root, "build\\");
+            config.OutputPath ??= Path.Combine(root, "build\\");
             config.Url = config.Url.EnsureStartsWith("/");
-            config.RootUrl = config.RootUrl ?? "http://localhost/";
+            config.RootUrl ??= "http://localhost/";
 
             // If override output path was provided use that.
             config.OutputPath = String.IsNullOrEmpty(this.OutputPath) ? Path.GetFullPath(config.OutputPath) : Path.GetFullPath(this.OutputPath);

@@ -38,7 +38,7 @@ namespace RobMensching.TinySite.Test
 
             var site = new Site(config, Enumerable.Empty<DataFile>(), documents, Enumerable.Empty<StaticFile>(), collection);
 
-            var engines = RenderingEngine.Load(tinySiteAssembly);
+            var engines = RenderingEngine.Load(config, tinySiteAssembly);
 
             Statistics.Current = new Statistics();
 

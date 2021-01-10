@@ -11,7 +11,7 @@ namespace TinySite.Renderers
     [Render("handlebars")]
     public class HandlebarsRenderer : IRenderer
     {
-        private object _renderLock = new object();
+        private readonly object _renderLock = new object();
 
         private readonly Dictionary<string, HandlebarTemplate> _compiledTemplates = new Dictionary<string, HandlebarTemplate>();
 

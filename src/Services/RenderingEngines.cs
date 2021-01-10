@@ -11,16 +11,19 @@ namespace TinySite.Services
     {
         private readonly object _sync = new object();
 
-        private RenderingEngine(Type type)
+        private RenderingEngine(SiteConfig config, Type type)
         {
+            this.Config = config;
             this.Type = type;
         }
+
+        public SiteConfig Config { get; }
 
         public Type Type { get; set; }
 
         private IRenderer Renderer { get; set; }
 
-        public static IDictionary<string, RenderingEngine> Load(params Assembly[] assemblies)
+        public static IDictionary<string, RenderingEngine> Load(SiteConfig config, params Assembly[] assemblies)
         {
             if (assemblies.Length == 0)
             {
@@ -38,7 +41,7 @@ namespace TinySite.Services
 
             foreach (var renderType in renderTypes)
             {
-                var engine = new RenderingEngine(renderType.Type);
+                var engine = new RenderingEngine(config, renderType.Type);
 
                 foreach (var extension in renderType.Attributes.Select(a => a.Extension))
                 {
@@ -57,7 +60,15 @@ namespace TinySite.Services
                 {
                     if (this.Renderer == null)
                     {
-                        this.Renderer = Activator.CreateInstance(this.Type) as IRenderer;
+                        var constructor = this.Type.GetConstructor(new[] { typeof(SiteConfig) });
+                        if (constructor != null)
+                        {
+                            this.Renderer = (IRenderer)constructor.Invoke(new[] { this.Config });
+                        }
+                        else
+                        {
+                            this.Renderer = (IRenderer)Activator.CreateInstance(this.Type);
+                        }
                     }
                 }
 
@@ -70,9 +81,6 @@ namespace TinySite.Services
             return this.Renderer.Render(sourceFile, template, data);
         }
 
-        internal void Unload(IEnumerable<string> paths)
-        {
-            this.Renderer?.Unload(paths);
-        }
+        internal void Unload(IEnumerable<string> paths) => this.Renderer?.Unload(paths);
     }
 }
