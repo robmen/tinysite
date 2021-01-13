@@ -7,7 +7,6 @@ namespace TinySite.Models.Dynamic
     public class DynamicBookPage : DynamicBase
     {
         public DynamicBookPage(DocumentFile activeDocument, BookPage bookPage, Site site)
-            : base(null)
         {
             this.ActiveDocument = activeDocument;
             this.BookPage = bookPage;
@@ -25,10 +24,10 @@ namespace TinySite.Models.Dynamic
             return new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
             {
                 { nameof(this.BookPage.Chapter), this.BookPage.Chapter },
-                { "Active", new Lazy<object>(GetActive) },
-                { "SubPageActive", new Lazy<object>(GetSubPageActive) },
-                { nameof(this.BookPage.Document), new Lazy<object>(GetDocument) },
-                { nameof(this.BookPage.SubPages), new Lazy<object>(GetSubPages) },
+                { "Active", new Lazy<object>(this.GetActive) },
+                { "SubPageActive", new Lazy<object>(this.GetSubPageActive) },
+                { nameof(this.BookPage.Document), new Lazy<object>(this.GetDocument) },
+                { nameof(this.BookPage.SubPages), new Lazy<object>(this.GetSubPages) },
             };
         }
 

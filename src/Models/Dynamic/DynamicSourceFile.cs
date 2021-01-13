@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TinySite.Models.Dynamic
 {
-    public abstract class DynamicSourceFile : DynamicBase
+    public abstract class DynamicSourceFile : DynamicFileBase
     {
         private readonly SourceFile _sourceFile;
 
@@ -17,11 +17,11 @@ namespace TinySite.Models.Dynamic
         {
             return new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
             {
-                { nameof(_sourceFile.Date), _sourceFile.Date },
-                { nameof(_sourceFile.DateUtc), _sourceFile.DateUtc },
+                { nameof(_sourceFile.Date), new Lazy<object>(new DynamicDateTime(_sourceFile.Date)) },
+                { nameof(_sourceFile.DateUtc), new Lazy<object>(new DynamicDateTime(_sourceFile.DateUtc)) },
                 { nameof(_sourceFile.FriendlyDate), _sourceFile.FriendlyDate },
                 { nameof(_sourceFile.StandardUtcDate), _sourceFile.StandardUtcDate },
-                { nameof(_sourceFile.Modified), _sourceFile.Modified},
+                { nameof(_sourceFile.Modified), new Lazy<object>(new DynamicDateTime(_sourceFile.Modified)) },
                 { nameof(_sourceFile.FileName), _sourceFile.FileName},
                 { nameof(_sourceFile.Name), _sourceFile.Name},
                 { nameof(_sourceFile.Extension), _sourceFile.Extension },

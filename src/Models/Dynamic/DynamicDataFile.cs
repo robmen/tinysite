@@ -35,7 +35,7 @@ namespace TinySite.Models.Dynamic
             {
                 foreach (var query in this.DataFile.Queries)
                 {
-                    data.Add(query.Key, new Lazy<object>(() => ExecuteQuery(query.Value)));
+                    data.Add(query.Key, new Lazy<object>(() => this.ExecuteQuery(query.Value)));
                 }
             }
 

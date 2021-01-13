@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TinySite.Models.Dynamic
 {
-    public class DynamicSite : DynamicBase
+    public class DynamicSite : DynamicFileBase
     {
         public DynamicSite(DocumentFile activeDocument, Site site)
             : base(site.SitePath)

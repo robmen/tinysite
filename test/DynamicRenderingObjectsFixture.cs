@@ -30,7 +30,7 @@ namespace RobMensching.TinySite.Test
                 Assert.Equal(outputPath + "foo.html", d.OutputPath);
             }
         }
-        
+
         [Fact]
         public void CanCastDynamicDocumentToDocument()
         {

@@ -10,6 +10,26 @@ namespace RobMensching.TinySite.Test
     public class IntegrationFixture
     {
         [Fact]
+        public void DateTimeTest()
+        {
+            var blogPath = Path.GetFullPath(@"data\datetime-test");
+            var outputPath = Path.GetTempPath() + @"tinysite_test\datetime_build";
+
+            SafeDeleteFolder(outputPath);
+
+            RunTinySite(blogPath, outputPath);
+
+            var now = DateTime.Now;
+            var expected = String.Join('\n',
+                "<p>This is dt.txt</p>",
+                $"string {now:D}",
+                $"dotted {now.Year}.{now.Month}.{now.Day}");
+            var actual = File.ReadAllText(Path.Combine(outputPath, "dt.txt")).Replace("\r\n", "\n");
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
         public void BlogRendersCorrectly()
         {
             var blogPath = Path.GetFullPath(@"data\examples\blog");

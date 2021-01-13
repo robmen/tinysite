@@ -6,7 +6,6 @@ namespace TinySite.Models.Dynamic
     public class DynamicPage : DynamicBase
     {
         public DynamicPage(DocumentFile activeDocument, Page Page)
-            : base(null)
         {
             this.ActiveDocument = activeDocument;
             this.Page = Page;
