@@ -10,7 +10,7 @@ namespace RobMensching.TinySite.Test
         public void CanParseNoMetadata()
         {
             var path = Path.GetFullPath(@"data\documents\nometa.txt");
-            string expected = "This is text.\r\n   It has no metadata.";
+            var expected = "This is text.\n   It has no metadata.";
 
             var command = new ParseDocumentCommand(path);
             command.Execute();
@@ -18,7 +18,7 @@ namespace RobMensching.TinySite.Test
             Assert.Null(command.Date);
             Assert.False(command.Draft);
             Assert.Empty(command.Metadata);
-            Assert.Equal(expected.Replace("\r\n", "\n"), command.Content.Replace("\r\n", "\n"));
+            Assert.Equal(expected, command.Content.Replace("\r\n", "\n"));
         }
 
         [Fact]

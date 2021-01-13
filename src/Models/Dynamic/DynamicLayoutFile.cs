@@ -5,7 +5,7 @@ using TinySite.Services;
 
 namespace TinySite.Models.Dynamic
 {
-    public class DynamicLayoutFile : DynamicBase
+    public class DynamicLayoutFile : DynamicFileBase
     {
         public DynamicLayoutFile(DocumentFile activeDocument, LayoutFile layout, Site site)
             : base(layout.SourceRelativePath)
@@ -36,7 +36,7 @@ namespace TinySite.Models.Dynamic
             {
                 foreach (var query in this.Layout.Queries)
                 {
-                    data.Add(query.Key, new Lazy<object>(() => ExecuteQuery(query.Value)));
+                    data.Add(query.Key, new Lazy<object>(() => this.ExecuteQuery(query.Value)));
                 }
             }
 

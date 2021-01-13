@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TinySite.Models.Dynamic
 {
-    public class DynamicRenderData : DynamicBase
+    public class DynamicRenderData : DynamicFileBase
     {
         // These are fields because as properties their typical name (e.g. "Site" 
         // for "_site") would hide the dynamic properties we are trying to expose

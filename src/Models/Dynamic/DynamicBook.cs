@@ -6,7 +6,6 @@ namespace TinySite.Models.Dynamic
     public class DynamicBook : DynamicBase
     {
         public DynamicBook(DocumentFile activeDocument, Book book, Site site)
-            : base(null)
         {
             this.ActiveDocument = activeDocument;
             this.Book = book;
