@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace TinySite.Models.Dynamic
 {
-    public class DynamicRenderDocument : DynamicBase
+    public class DynamicRenderDocument : DynamicFileBase
     {
         // These are fields because as properties their typical name (e.g. "Document" 
         // for "_document") would hide the dynamic properties we are trying to expose
         // via the dictionary created by GetData().
         //
-        private DocumentFile _document;
-        private LayoutFile _layout;
-        private Site _site;
+        private readonly DocumentFile _document;
+        private readonly LayoutFile _layout;
+        private readonly Site _site;
 
         public DynamicRenderDocument(DocumentFile document, LayoutFile layout, Site site)
             : base(document.SourceRelativePath)
@@ -25,11 +25,11 @@ namespace TinySite.Models.Dynamic
         {
             return new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
             {
-                { "Document", new Lazy<object>(GetDocument) },
-                { "Layout", new Lazy<object>(GetLayout) },
-                { "Site", new Lazy<object>(GetSite) },
-                { "Books", new Lazy<object>(GetBooks) },
-                { "PartialsContent", new Lazy<object>(GetPartialsContent) },
+                { "Document", new Lazy<object>(this.GetDocument) },
+                { "Layout", new Lazy<object>(this.GetLayout) },
+                { "Site", new Lazy<object>(this.GetSite) },
+                { "Books", new Lazy<object>(this.GetBooks) },
+                { "PartialsContent", new Lazy<object>(this.GetPartialsContent) },
             };
         }
 

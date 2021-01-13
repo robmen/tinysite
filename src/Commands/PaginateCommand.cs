@@ -45,7 +45,7 @@ namespace TinySite.Commands
 
                     urlFormat = String.Concat(documentRelativeUrl, urlFormat.Replace('\\', '/').EnsureEndsWith("/"));
 
-                    for (int i = 1; i < pages; ++i)
+                    for (var i = 1; i < pages; ++i)
                     {
                         var paginator = this.CreatePaginator(i + 1, query.PageEvery, pages, documentRelativeUrl, urlFormat, pagedPosts);
 
@@ -113,7 +113,7 @@ namespace TinySite.Commands
 
         private IEnumerable<Page> CreatePages(int current, int start, int end, string baseUrl, string urlFormat)
         {
-            for (int i = start; i <= end; ++i)
+            for (var i = start; i <= end; ++i)
             {
                 var page = new Page();
                 page.Active = (i == current);
@@ -124,9 +124,6 @@ namespace TinySite.Commands
             }
         }
 
-        private string UrlForPage(int page, string baseUrl, string format)
-        {
-            return (page == 1) ? baseUrl : String.Format(format, page);
-        }
+        private string UrlForPage(int page, string baseUrl, string format) => (page == 1) ? baseUrl : String.Format(format, page);
     }
 }

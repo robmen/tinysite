@@ -5,7 +5,7 @@ using TinySite.Extensions;
 
 namespace TinySite.Models
 {
-    public abstract class SourceFile // : CaseInsensitiveExpando
+    public abstract class SourceFile
     {
         protected SourceFile(string path, string rootPath)
         {

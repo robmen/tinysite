@@ -6,7 +6,6 @@ namespace TinySite.Models.Dynamic
     public class DynamicPaginator : DynamicBase
     {
         public DynamicPaginator(DocumentFile activeDocument, Paginator Paginator, Site site)
-            : base(null)
         {
             this.ActiveDocument = activeDocument;
             this.Paginator = Paginator;

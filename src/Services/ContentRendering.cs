@@ -9,8 +9,8 @@ namespace TinySite.Services
 {
     public class ContentRendering
     {
-        private static readonly Regex _summarizeRegex = new Regex("<p>.*?</p>", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        private static readonly Regex _stripHtmlRegex = new Regex("<.*?>", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly Regex SummarizeRegex = new Regex("<p>.*?</p>", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        private static readonly Regex StripHtmlRegex = new Regex("<.*?>", RegexOptions.Compiled | RegexOptions.Singleline);
 
         public ContentRendering(RenderingTransaction transaction)
         {
@@ -21,9 +21,7 @@ namespace TinySite.Services
 
         public DataFile RenderDataContent(DataFile dataFile)
         {
-            RenderingEngine engine;
-
-            if (this.Transaction.Engines.TryGetValue(dataFile.Extension, out engine))
+            if (this.Transaction.Engines.TryGetValue(dataFile.Extension, out var engine))
             {
                 var data = new DynamicRenderData(dataFile, this.Transaction.Site);
 
@@ -48,12 +46,12 @@ namespace TinySite.Services
 
             if (String.IsNullOrEmpty(document.Summary) && !String.IsNullOrEmpty(document.Content))
             {
-                document.Summary = Summarize(document.Content);
+                document.Summary = this.Summarize(document.Content);
             }
 
             if (String.IsNullOrEmpty(document.Description) && !String.IsNullOrEmpty(document.Summary))
             {
-                document.Description = StripHtml(document.Summary);
+                document.Description = this.StripHtml(document.Summary);
             }
 
             if (layout != null)
@@ -77,9 +75,7 @@ namespace TinySite.Services
 
         private string RenderContentForExtension(SourceFile source, string content, string extension, DocumentFile contextDocument, string documentContent, LayoutFile contextLayout)
         {
-            RenderingEngine engine;
-
-            if (this.Transaction.Engines.TryGetValue(extension, out engine))
+            if (this.Transaction.Engines.TryGetValue(extension, out var engine))
             {
                 var backupContent = contextDocument.Content;
 
@@ -112,20 +108,18 @@ namespace TinySite.Services
 
         private string Summarize(string content)
         {
-            string summary = null;
-
-            var match = _summarizeRegex.Match(content);
+            var match = SummarizeRegex.Match(content);
             if (match.Success && match.Value != content)
             {
-                summary = match.Value;
+                return match.Value;
             }
 
-            return summary;
+            return null;
         }
 
         private string StripHtml(string content)
         {
-            var stripped = _stripHtmlRegex.Replace(content, String.Empty);
+            var stripped = StripHtmlRegex.Replace(content, String.Empty);
             return stripped;
         }
 

@@ -9,7 +9,7 @@ namespace TinySite.Models
     [DebuggerDisplay("DocumentFile: {Id}, Source: {SourceRelativePath}")]
     public class DocumentFile : OutputFile
     {
-        private object _lock = new object();
+        private readonly object _lock = new object();
 
         public DocumentFile(string path, string rootPath, string outputPath, string outputRootPath, string url, string rootUrl, Author author, MetadataCollection metadata, IDictionary<string, string> queries)
             : base(path, rootPath, outputPath, outputRootPath, rootUrl, url)

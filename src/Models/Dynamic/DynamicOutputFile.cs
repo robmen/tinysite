@@ -4,7 +4,7 @@ namespace TinySite.Models.Dynamic
 {
     public abstract class DynamicOutputFile : DynamicSourceFile
     {
-        private OutputFile _outputFile;
+        private readonly OutputFile _outputFile;
 
         protected DynamicOutputFile(OutputFile file)
             : base(file)

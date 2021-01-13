@@ -17,7 +17,7 @@ namespace TinySite.Extensions
             _dictionary = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
         }
 
-        public CaseInsensitiveExpando(IDictionary<string, object> existing)
+        public CaseInsensitiveExpando(IEnumerable<KeyValuePair<string, object>> existing)
         {
             _dictionary = new Dictionary<string, object>(existing, StringComparer.OrdinalIgnoreCase);
         }
@@ -173,9 +173,12 @@ namespace TinySite.Extensions
             switch (token.Type)
             {
                 case JTokenType.Object:
-                    return new CaseInsensitiveExpando(token.Children<JProperty>()
-                                .ToDictionary(prop => prop.Name,
-                                              prop => FromJToken(prop.Value)));
+                    return new CaseInsensitiveExpando(
+                                token.Children<JProperty>()
+                                     .Select(prop => new KeyValuePair<string, object>(
+                                         prop.Name, 
+                                         FromJToken(prop.Value))
+                                     ));
 
                 case JTokenType.Array:
                     return token.Select(FromJToken).ToList();

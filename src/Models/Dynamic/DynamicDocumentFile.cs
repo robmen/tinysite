@@ -25,10 +25,7 @@ namespace TinySite.Models.Dynamic
 
         public string SourceContent => this.Document.SourceContent;
 
-        public DocumentFile GetDocument()
-        {
-            return this.Document;
-        }
+        public DocumentFile GetDocument() => this.Document;
 
         protected override IDictionary<string, object> GetData()
         {
@@ -41,8 +38,8 @@ namespace TinySite.Models.Dynamic
             data.Add(nameof(this.Document.Draft), this.Document.Draft);
             data.Add(nameof(this.Document.Id), this.Document.Id);
             data.Add(nameof(this.Document.Order), this.Document.Order);
-            data.Add(nameof(this.Document.Now), this.Document.Now);
-            data.Add(nameof(this.Document.NowUtc), this.Document.NowUtc);
+            data.Add(nameof(this.Document.Now), new Lazy<object>(new DynamicDateTime(this.Document.Now)));
+            data.Add(nameof(this.Document.NowUtc), new Lazy<object>(new DynamicDateTime(this.Document.NowUtc)));
             data.Add(nameof(this.Document.NowFriendlyDate), this.Document.NowFriendlyDate);
             data.Add(nameof(this.Document.NowStandardUtcDate), this.Document.NowStandardUtcDate);
             data.Add(nameof(this.Document.PaginateQuery), this.Document.PaginateQuery);
