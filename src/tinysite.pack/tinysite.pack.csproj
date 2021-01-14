@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <Description>tinySite - static site generator</Description>
+    <NuspecFile>tinysite.nuspec</NuspecFile>
+  </PropertyGroup>
+
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
+  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.3.37" PrivateAssets="All" />
+  </ItemGroup>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <PropertyGroup>
+    <GenerateNuspecDependsOn>$(GenerateNuspecDependsOn);SetNuspecVersion</GenerateNuspecDependsOn>
+  </PropertyGroup>
+  <Target Name="SetNuspecVersion">
+    <PropertyGroup>
+      <NuspecBasePath>$(OutputPath)\publish\</NuspecBasePath>
+      <NuspecProperties>Id=tinysite;Authors=$(Authors);Copyright=$(Copyright);Description=$(Description)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);Version=$(Version);ProjectFolder=$(MSBuildThisFileDirectory)</NuspecProperties>
+    </PropertyGroup>
+
+    <Error Text="Cannot pack $(MSBuildThisFileName) until all projects are published to: '$(NuspecBasePath)'. Run appveyor.cmd to publish projects properly." Condition=" !Exists('$(NuspecBasePath)') " />
+  </Target>
+
+</Project>
