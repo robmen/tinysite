@@ -54,11 +54,21 @@
     Writes the sitemap.xml.
   ================================================================================================
   -->
+  <PropertyGroup>
+    <BuildSitemapDependsOn>
+      $(BuildSitemapDependsOn);
+      _CalculateHtmlFiles
+    </BuildSitemapDependsOn>
+  </PropertyGroup>
   <Target Name="BuildSitemap"
           Condition=" '$(SitemapRootUrl)'!='' "
-          DependsOnTargets="_GatherHtmlFiles"
-          Inputs="$(MSBuildAllProjects);@(_GatheredHtmlFiles)"
+          DependsOnTargets="$(BuildSitemapDependsOn)"
+          Inputs="$(MSBuildAllProjects);@(_CalculatedHtmlFiles)"
           Outputs="$(SitemapXmlFile)">
+
+    <ItemGroup>
+      <Url Include="$([System.String]::Copy('%(HtmlFile.Identity)').Replace('\', '/'))" />
+    </ItemGroup>
 
     <ItemGroup>
       <Line Include='&lt;?xml version="1.0" encoding="UTF-8"?&gt;' />
@@ -80,15 +90,11 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="_GatherHtmlFiles">
+  <Target Name="_CalculateHtmlFiles">
     <ItemGroup>
-      <_GatheredHtmlFiles Include="$(PublishFolder)**\*.html" Exclude="$(PublishFolder)block.html;$(PublishFolder)cookie.html;$(PublishFolder)blog\page\**;$(PublishFolder)downloads\**;$(PublishFolder)**\thank-you\**;$(PublishFolder)notfound\**" />
-      <HtmlFile Include="@(_GatheredHtmlFiles->'%(RecursiveDir)')" Condition=" '%(Filename)'=='index' " />
-      <HtmlFile Include="@(_GatheredHtmlFiles->'%(RecursiveDir)%(Filename)%(Extension)')" Condition=" '%(Filename)'!='index' " />
-
-      <Url Include="$([System.String]::Copy('%(HtmlFile.Identity)').Replace('\', '/'))" />
+      <_CalculatedHtmlFiles Include="$(PublishFolder)**\*.html" Exclude="@(SitemapExcludeFiles);$(SitemapExcludeFiles)" />
+      <HtmlFile Include="@(_CalculatedHtmlFiles->'%(RecursiveDir)')" Condition=" '%(Filename)'=='index' " />
+      <HtmlFile Include="@(_CalculatedHtmlFiles->'%(RecursiveDir)%(Filename)%(Extension)')" Condition=" '%(Filename)'!='index' " />
     </ItemGroup>
-
-     <!-- <Message Importance='high' Text="Url = %(Url.Identity)" /> -->
   </Target>
 </Project>
