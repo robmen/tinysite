@@ -9,7 +9,7 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <ItemGroup>
-    <ProjectReference Include="..\src\tinysite.csproj" />
+    <ProjectReference Include="..\tinysite\tinysite.csproj" />
   </ItemGroup>
 
   <ItemGroup>
