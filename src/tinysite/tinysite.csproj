@@ -6,16 +6,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <LangVersion>latest</LangVersion>
     <RootNamespace>TinySite</RootNamespace>
-    <NuspecFile>tinysite.nuspec</NuspecFile>
     <DebugType>embedded</DebugType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <Description>tinySite - static site generator</Description>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Include="build\*" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="Sdk\*" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="dotLess.Core" Version="1.6.7" />
@@ -29,11 +22,4 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="Nerdbank.GitVersioning" Version="3.3.37" PrivateAssets="All" />
   </ItemGroup>
-
-  <Target Name="SetNuspecProperties" AfterTargets="CoreBuild">
-    <PropertyGroup>
-      <NuspecBasePath>$(OutputPath)</NuspecBasePath>
-      <NuspecProperties>Configuration=$(Configuration);Id=$(MSBuildThisFileName);ProjectFolder=$(MSBuildProjectDirectory);Version=$(BuildVersionSimple);Authors=$(Authors);Copyright=$(Copyright);Description=$(Description);Title=$(Title)</NuspecProperties>
-    </PropertyGroup>
-  </Target>
 </Project>
