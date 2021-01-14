@@ -8,8 +8,14 @@
     <RootNamespace>TinySite</RootNamespace>
     <NuspecFile>tinysite.nuspec</NuspecFile>
     <DebugType>embedded</DebugType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Description>tinySite - static site generator</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="build\*" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Sdk\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="dotLess.Core" Version="1.6.7" />
@@ -30,5 +36,4 @@
       <NuspecProperties>Configuration=$(Configuration);Id=$(MSBuildThisFileName);ProjectFolder=$(MSBuildProjectDirectory);Version=$(BuildVersionSimple);Authors=$(Authors);Copyright=$(Copyright);Description=$(Description);Title=$(Title)</NuspecProperties>
     </PropertyGroup>
   </Target>
-
 </Project>

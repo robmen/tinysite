@@ -1,0 +1,8 @@
+<Project>
+  <PropertyGroup>
+    <TinySiteExe>..\..\..\..\build\Debug\netcoreapp3.1\tinySite.exe</TinySiteExe>
+    <SitemapRootUrl>https://www.firegiant.com/</SitemapRootUrl>
+  </PropertyGroup>
+
+  <Import Project="..\..\..\..\build\Debug\netcoreapp3.1\build\tinysite.targets" />
+</Project>
