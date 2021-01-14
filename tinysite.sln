@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 14.00
 # Visual Studio 2015
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tinysite", "src\tinysite.csproj", "{149D1CD3-D93F-480C-86A9-9C69D842FD47}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tinysite", "src\tinysite\tinysite.csproj", "{149D1CD3-D93F-480C-86A9-9C69D842FD47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tinysite.test", "test\tinysite.test.csproj", "{AF1515CF-53DE-44BE-8979-D9582E7F296D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tinysite.test", "src\tinysite.test\tinysite.test.csproj", "{AF1515CF-53DE-44BE-8979-D9582E7F296D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
