@@ -1,0 +1,6 @@
+layout: data
+
+{
+  "foo" : "foot",
+  "bar" : "bart"
+}

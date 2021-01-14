@@ -1,0 +1,11 @@
+<Project>
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TinySiteTargetsPath Condition=" '$(TinySiteTargetsPath)' == '' ">$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\build\tinySite.targets'))</TinySiteTargetsPath>
+  </PropertyGroup>
+
+  <Import Project="$(TinySiteTargetsPath)" />
+</Project>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>@Model.Document.Title</title>
+</head>
+<body>
+  <h1><a href="@Model.Site.Url">@Model.Site.Title</a></h1>
+
+  <hr />
+
+  <div class="content">
+    @Raw(Model.Document.Content)
+  </div>
+
+  <hr />
+
+@Include("footer.cshtml")
+</body>
+</html>

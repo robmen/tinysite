@@ -15,5 +15,7 @@
   <files>
     <file src="*" target="tools" />
     <file src="$projectFolder$\..\LICENSE.txt" target="license" />
+    <file src="$projectFolder$\build\*" target="build" />
+    <file src="$projectFolder$\Sdk\*" target="Sdk" />
   </files>
 </package>
