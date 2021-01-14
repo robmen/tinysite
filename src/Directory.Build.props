@@ -6,7 +6,7 @@
     <MSBuildWarningsAsMessages>MSB3246</MSBuildWarningsAsMessages>
 
     <ProjectName Condition=" '$(ProjectName)' == '' ">$(MSBuildProjectName)</ProjectName>
-    <BaseOutputPath>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)build\))$(BaseOutputSubPath)</BaseOutputPath>
+    <BaseOutputPath>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\build\))$(BaseOutputSubPath)</BaseOutputPath>
     <BaseIntermediateOutputPath>$(BaseOutputPath)obj\$(ProjectName)\</BaseIntermediateOutputPath>
     <OutputPath>$(BaseOutputPath)$(Configuration)\</OutputPath>
   </PropertyGroup>

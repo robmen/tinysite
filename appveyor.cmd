@@ -1,7 +1,8 @@
 @setlocal
 @pushd %~dp0
 
-dotnet pack -c Release
+dotnet publish -c Release src\tinysite
+dotnet pack -c Release src\tinysite.pack
 
 @popd
 @endlocal
