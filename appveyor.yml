@@ -4,7 +4,6 @@ branches:
 
 image: Visual Studio 2019
 
-version: 0.0.0.{build}
 configuration: Release
 
 environment:
