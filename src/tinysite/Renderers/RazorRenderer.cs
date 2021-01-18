@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Web;
+using System.Net;
 using RazorEngineCore;
 using TinySite.Models;
 using TinySite.Rendering;
@@ -72,13 +72,19 @@ namespace TinySite.Renderers
     {
         internal RazorRenderer Render { get; set; }
 
+        [Obsolete]
         public RazorRendererModel Dynamic => this;
 
         public bool Defined(object value) => value != null;
 
         public bool Undefined(object value) => value is null;
 
-        public object Encode(object value) => value is string str ? HttpUtility.HtmlEncode(str) : value;
+        [Obsolete]
+        public object Encode(object value) => value is string str ? WebUtility.HtmlEncode(str) : value;
+
+        public object HtmlEncode(object value) => value is string str ? WebUtility.HtmlEncode(str) : value;
+
+        public object UrlEncode(object value) => value is string str ? WebUtility.UrlEncode(str) : value;
 
         public object Raw(object value) => value;
 
