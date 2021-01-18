@@ -77,18 +77,25 @@ namespace RobMensching.TinySite.Test
             command.Execute();
 
             var documents = command.Documents.OrderByDescending(d => d.OutputRelativePath).ToList();
-            Assert.Equal(4, documents.Count);
+            Assert.Equal(5, documents.Count);
 
             Assert.Equal(@"parent\index.html", documents[0].OutputRelativePath);
 
-            Assert.Equal(@"2013-12-18", documents[1].Date.ToString("yyyy-MM-dd"));
-            Assert.Equal(@"parent\2013\12\18\c\index.html", documents[1].OutputRelativePath);
+            Assert.Equal(@"2021-01-09", documents[1].Date.ToString("yyyy-MM-dd"));
+            Assert.Equal(@"13:12:26", documents[1].Date.ToString("HH:mm:ss"));
+            Assert.Equal(@"parent\2021\1\9\d\index.html", documents[1].OutputRelativePath);
 
-            Assert.Equal(@"2013-12-17", documents[2].Date.ToString("yyyy-MM-dd"));
-            Assert.Equal(@"parent\2013\12\17\b\index.html", documents[2].OutputRelativePath);
+            Assert.Equal(@"2013-12-18", documents[2].Date.ToString("yyyy-MM-dd"));
+            Assert.Equal(@"00:00:00", documents[2].Date.ToString("HH:mm:ss"));
+            Assert.Equal(@"parent\2013\12\18\c\index.html", documents[2].OutputRelativePath);
 
-            Assert.Equal(@"parent\2011\11\5\a\index.html", documents[3].OutputRelativePath);
-            Assert.Equal(@"2011-11-05", documents[3].Date.ToString("yyyy-MM-dd"));
+            Assert.Equal(@"2013-12-17", documents[3].Date.ToString("yyyy-MM-dd"));
+            Assert.Equal(@"00:00:00", documents[3].Date.ToString("HH:mm:ss"));
+            Assert.Equal(@"parent\2013\12\17\b\index.html", documents[3].OutputRelativePath);
+
+            Assert.Equal(@"2011-11-05", documents[4].Date.ToString("yyyy-MM-dd"));
+            Assert.Equal(@"00:00:00", documents[4].Date.ToString("HH:mm:ss"));
+            Assert.Equal(@"parent\2011\11\5\a\index.html", documents[4].OutputRelativePath);
         }
 
         [Fact]
