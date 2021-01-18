@@ -16,6 +16,13 @@
     <SitemapFrequency Condition=" '$(SitemapFrequency)' == '' ">weekly</SitemapFrequency>
   </PropertyGroup>
 
+  <!--
+  ================================================================================================
+  Build
+
+    Runs tinySite to render the site and sitemap.
+  ================================================================================================
+  -->
   <Target Name="Build" DependsOnTargets="BuildStaticFiles;BuildSitemap" />
 
   <!--
@@ -97,4 +104,19 @@
       <HtmlFile Include="@(_CalculatedHtmlFiles->'%(RecursiveDir)%(Filename)%(Extension)')" Condition=" '%(Filename)'!='index' " />
     </ItemGroup>
   </Target>
+
+  <!--
+  ================================================================================================
+  Watch
+
+    Runs tinySite to watch the site and render on any changes.
+  ================================================================================================
+  -->
+  <Target Name="Watch">
+
+    <Exec Command="&quot;$(TinySiteExe)&quot; watch -o &quot;$(PublishFolder) &quot;"
+          WorkingDirectory="$(MSBuildProjectDirectory)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" />
+
+  </Target>
+
 </Project>
