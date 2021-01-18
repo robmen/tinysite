@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using TinySite.Extensions;
 using TinySite.Models;
 
 namespace TinySite.Commands

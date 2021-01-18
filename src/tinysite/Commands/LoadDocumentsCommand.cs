@@ -17,7 +17,8 @@ namespace TinySite.Commands
                                                                     [\\-]               # may be a folder or - separator
                                                                     (?<day>\d{1,2})     # may be a 1 or 2 digit day
                                                                     (                   # allow the time to be set as well
-                                                                     [Tt@]              # T or t or @ as a separator
+                                                                     \\?                # may be a folder 
+                                                                     [Tt@]              # Must start with T or t or @ as a time separator
                                                                      (?<hour>\d{1,2})   # must be a 1 or 2 digit hour
                                                                      \.                 # must be dot (not colon) separator
                                                                      (?<minute>\d{1,2}) # must be a 1 or 2 digit minute
@@ -184,7 +185,7 @@ namespace TinySite.Commands
 
             var layoutName = parser.Metadata.Get<string>("layout");
 
-            var layouts = GetLayouts(layoutName, targetExtension, file);
+            var layouts = this.GetLayouts(layoutName, targetExtension, file);
 
             var parentId = String.IsNullOrEmpty(outputRelativeFolder) ? null : SanitizePath(outputRelativeFolder);
 
