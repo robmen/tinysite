@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
-
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
   </PropertyGroup>
 
   <PropertyGroup>
     <TinySiteExe Condition=" '$(TinySiteExe)' == '' ">$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\tools\tinysite.exe'))</TinySiteExe>
-    <StaticIntermediateFolder>$(BaseIntermediateFolder)</StaticIntermediateFolder>
-    <PublishFolder Condition=" '$(PublishFolder)' == '' ">$(OutputPath)</PublishFolder>
-    <PublishFolder Condition=" '$(PublishFolder)' != '' and !HasTrailingSlash('$(PublishFolder)') ">$(PublishFolder)\</PublishFolder>
+    <TinySiteRootFolder Condition=" '$(TinySiteRootFolder)' == '' ">$(MSBuildProjectDirectory)</TinySiteRootFolder>
+    <TinySiteRootFolder Condition=" '$(TinySiteRootFolder)' != '' and !HasTrailingSlash('$(TinySiteRootFolder)') ">$(TinySiteRootFolder)\</TinySiteRootFolder>
+    <TinySiteIntermediateFolder Condition=" '$(TinySiteIntermediateFolder)' == '' ">$(BaseIntermediateFolder)</TinySiteIntermediateFolder>
+    <TinySiteIntermediateFolder Condition=" '$(TinySiteIntermediateFolder)' != '' and !HasTrailingSlash('$(TinySiteIntermediateFolder)') ">$(TinySiteIntermediateFolder)\</TinySiteIntermediateFolder>
+    <TinySitePublishFolder Condition=" '$(TinySitePublishFolder)' == '' ">$(OutputPath)</TinySitePublishFolder>
+    <TinySitePublishFolder Condition=" '$(TinySitePublishFolder)' != '' and !HasTrailingSlash('$(TinySitePublishFolder)') ">$(TinySitePublishFolder)\</TinySitePublishFolder>
 
-    <SitemapXmlFile>$(PublishFolder)sitemap.xml</SitemapXmlFile>
+    <SitemapXmlFile>$(TinySitePublishFolder)sitemap.xml</SitemapXmlFile>
     <SitemapFrequency Condition=" '$(SitemapFrequency)' == '' ">weekly</SitemapFrequency>
   </PropertyGroup>
 
   <!--
   ================================================================================================
-  Build
+  BuildSite
 
     Runs tinySite to render the site and sitemap.
   ================================================================================================
   -->
-  <Target Name="Build" DependsOnTargets="BuildStaticFiles;BuildSitemap" />
+  <Target Name="BuildSite" DependsOnTargets="BuildStaticFiles;BuildSitemap" />
 
   <!--
   ================================================================================================
@@ -37,20 +38,20 @@
           Inputs="@(StaticInput)"
           Outputs="@(StaticOutput)">
 
-    <Exec Command="&quot;$(TinySiteExe)&quot; render -o &quot;$(PublishFolder) &quot;"
-          WorkingDirectory="$(MSBuildProjectDirectory)" />
+    <Exec Command="&quot;$(TinySiteExe)&quot; render -o &quot;$(TinySitePublishFolder) &quot;"
+          WorkingDirectory="$(TinySiteRootFolder)" />
 
-    <Message Importance='high' Text="$(MSBuildProjectFile) -&gt; $(PublishFolder)" />
+    <Message Importance='high' Text="$(MSBuildProjectFile) -&gt; $(TinySitePublishFolder)" />
   </Target>
 
   <Target Name="_CalculateStaticInputsOutputs">
     <ItemGroup>
-      <StaticInput Include="$(MSBuildProjectDirectory)\site.json" />
-      <StaticInput Include="$(MSBuildProjectDirectory)\documents\**" />
-      <StaticInput Include="$(MSBuildProjectDirectory)\files\**" />
-      <StaticInput Include="$(MSBuildProjectDirectory)\layout\**" />
-      <StaticOutput Include="$(StaticIntermediateFolder)**" />
-      <StaticOutput Include="$(StaticIntermediateFolder)" Condition=" '@(StaticOutput)'=='' " />
+      <StaticInput Include="$(TinySiteRootFolder)site.json" />
+      <StaticInput Include="$(TinySiteRootFolder)documents\**" />
+      <StaticInput Include="$(TinySiteRootFolder)files\**" />
+      <StaticInput Include="$(TinySiteRootFolder)layout\**" />
+      <StaticOutput Include="$(TinySiteIntermediateFolder)**" />
+      <StaticOutput Include="$(TinySiteIntermediateFolder)" Condition=" '@(StaticOutput)'=='' " />
     </ItemGroup>
   </Target>
 
@@ -99,7 +100,7 @@
 
   <Target Name="_CalculateHtmlFiles">
     <ItemGroup>
-      <_CalculatedHtmlFiles Include="$(PublishFolder)**\*.html" Exclude="@(SitemapExcludeFiles);$(SitemapExcludeFiles)" />
+      <_CalculatedHtmlFiles Include="$(TinySitePublishFolder)**\*.html" Exclude="@(SitemapExcludeFiles);$(SitemapExcludeFiles)" />
       <HtmlFile Include="@(_CalculatedHtmlFiles->'%(RecursiveDir)')" Condition=" '%(Filename)'=='index' " />
       <HtmlFile Include="@(_CalculatedHtmlFiles->'%(RecursiveDir)%(Filename)%(Extension)')" Condition=" '%(Filename)'!='index' " />
     </ItemGroup>
@@ -114,8 +115,8 @@
   -->
   <Target Name="Watch">
 
-    <Exec Command="&quot;$(TinySiteExe)&quot; watch -o &quot;$(PublishFolder) &quot;"
-          WorkingDirectory="$(MSBuildProjectDirectory)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" />
+    <Exec Command="&quot;$(TinySiteExe)&quot; watch -o &quot;$(TinySitePublishFolder) &quot;"
+          WorkingDirectory="$(TinySiteRootFolder)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" />
 
   </Target>
 
