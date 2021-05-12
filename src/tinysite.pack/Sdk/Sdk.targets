@@ -7,5 +7,16 @@
     <TinySiteTargetsPath Condition=" '$(TinySiteTargetsPath)' == '' ">$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\build\tinySite.targets'))</TinySiteTargetsPath>
   </PropertyGroup>
 
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+
+  <!--
+  ================================================================================================
+  Build
+
+    Runs tinySite to render the site and sitemap.
+  ================================================================================================
+  -->
+  <Target Name="Build" DependsOnTargets="BuildStaticFiles;BuildSitemap" />
+
   <Import Project="$(TinySiteTargetsPath)" />
 </Project>
