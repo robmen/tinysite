@@ -18,8 +18,9 @@
   -->
   <PropertyGroup>
     <BuildDependsOn>
-      $(BuildDependsOn);
-      BuildSite
+      BeforeBuild;
+      BuildSite;
+      AfterBuild
     </BuildDependsOn>
   </PropertyGroup>
   <Target Name="Build" DependsOnTargets="$(BuildDependsOn)" />
