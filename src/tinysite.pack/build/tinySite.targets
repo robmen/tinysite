@@ -24,7 +24,14 @@
     Runs tinySite to render the site and sitemap.
   ================================================================================================
   -->
-  <Target Name="BuildSite" DependsOnTargets="BuildStaticFiles;BuildSitemap" />
+  <PropertyGroup>
+    <BuildSiteDependsOn>
+      $(BuildSiteDependsOn);
+      BuildStaticFiles;
+      BuildSitemap
+    </BuildSiteDependsOn>
+  </PropertyGroup>
+  <Target Name="BuildSite" DependsOnTargets="$(BuildSiteDependsOn)" />
 
   <!--
   ================================================================================================
@@ -33,8 +40,14 @@
     Runs tinySite to publish.
   ================================================================================================
   -->
+  <PropertyGroup>
+    <BuildStaticFilesDependsOn>
+      $(BuildStaticFilesDependsOn);
+      _CalculateStaticInputsOutputs
+    </BuildStaticFilesDependsOn>
+  </PropertyGroup>
   <Target Name="BuildStaticFiles"
-          DependsOnTargets="_CalculateStaticInputsOutputs"
+          DependsOnTargets="$(BuildStaticFilesDependsOn)"
           Inputs="@(StaticInput)"
           Outputs="@(StaticOutput)">
 
