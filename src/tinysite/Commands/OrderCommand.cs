@@ -69,17 +69,15 @@ namespace TinySite.Commands
 
                     foreach (var document in groupedDocuments)
                     {
-                        BookPage chapter;
-
-                        if (!documentsToChapter.TryGetValue(document, out chapter))
+                        if (!documentsToChapter.TryGetValue(document, out var chapter))
                         {
                             chapter = new BookPage(document, true);
+                            documentsToChapter.Add(document, chapter);
                         }
 
                         Debug.Assert(chapter.Document == document);
 
                         chapters.Add(chapter);
-                        documentsToChapter.Add(document, chapter);
                     }
 
                     var book = new Book(groupedDocuments.Key, chapters, parentDocument, null);
@@ -88,10 +86,8 @@ namespace TinySite.Commands
                 }
                 else
                 {
-                    BookPage chapter;
-
                     // If the parent document has not been processed yet, make it a chapter page now.
-                    if (!documentsToChapter.TryGetValue(parentDocument, out chapter))
+                    if (!documentsToChapter.TryGetValue(parentDocument, out var chapter))
                     {
                         chapter = new BookPage(parentDocument, true);
 

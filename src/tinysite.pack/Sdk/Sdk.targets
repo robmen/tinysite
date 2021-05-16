@@ -16,7 +16,13 @@
     Runs tinySite to render the site and sitemap.
   ================================================================================================
   -->
-  <Target Name="Build" DependsOnTargets="BuildStaticFiles;BuildSitemap" />
+  <PropertyGroup>
+    <BuildDependsOn>
+      $(BuildDependsOn);
+      BuildSite
+    </BuildDependsOn>
+  </PropertyGroup>
+  <Target Name="Build" DependsOnTargets="$(BuildDependsOn)" />
 
   <Import Project="$(TinySiteTargetsPath)" />
 </Project>
