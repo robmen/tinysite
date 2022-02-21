@@ -29,7 +29,7 @@ artifacts:
 deploy:
   provider: NuGet
   api_key:
-    secure: qLQsRLDdc7VHNtMFv+3hPywBraWg9Z8ISqevJ+/y4A+CirO6ck3YppxQbnmFDNGC
+    secure: gfDzSd8LeF+REbA4tZVJcyNf2R6/yqiwolvLx53eMVri895TGf0iWVlZzmRKk1MK
 
 notifications:
   - provider: Email
