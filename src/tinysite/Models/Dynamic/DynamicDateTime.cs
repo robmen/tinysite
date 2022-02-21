@@ -71,6 +71,11 @@ namespace TinySite.Models.Dynamic
 
         public string ToString(string format, IFormatProvider provider) => _date.ToString(format, provider);
 
+        public static implicit operator DynamicDateTime(DateTime value)
+        {
+            return new DynamicDateTime(value);
+        }
+
         public static bool operator ==(DynamicDateTime left, DynamicDateTime right)
         {
             if (left is null)
