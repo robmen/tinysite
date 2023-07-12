@@ -2,18 +2,18 @@
   <ItemGroup>
     <PackageVersion Include="dotLess.Core" Version="1.6.7" />
     <PackageVersion Include="FuManchu" Version="1.7.0" />
-    <PackageVersion Include="Markdig" Version="0.22.1" />
-    <PackageVersion Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageVersion Include="RazorEngineCore" Version="2020.10.1" />
+    <PackageVersion Include="Markdig" Version="0.31.0" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageVersion Include="RazorEngineCore" Version="2022.8.1" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
-    <PackageVersion Include="Nerdbank.GitVersioning" Version="3.3.37" />
+    <PackageVersion Include="Nerdbank.GitVersioning" Version="3.6.133" />
 
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.3.1" />
-    <PackageVersion Include="xunit" Version="2.4.2" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.5" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.6.3" />
+    <PackageVersion Include="xunit" Version="2.5.0" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.0" />
     <PackageVersion Include="xunit.assert" Version="2.4.2" />
   </ItemGroup>
 
